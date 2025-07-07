@@ -6,9 +6,9 @@ A third-party Bluesky client with a Windows Longhorn theme.
     ![The home page of the client. There is a section with four tabs. The first tab, titled "Discover," is selected. Above it is a box for posting, with the default text "Whats Up?".](tease4.png)
 ## Compatibility
 ✔ Windows 11 / Server 2025 (Only works with pre-24H2 version of Windows 11. 24H2 and later will not work without modifications to explorer.)  
-✔ Windows 10 / Server (2016/2019/2022)
+✔ Windows 10 / Server (2016/2019/2022)  
 ✔ Windows 8.x / Server 2012  
-🟡 Windows 7 (Client launches, but doesn't log in.)
+🟡 Windows 7 (Client launches, but doesn't log in.)  
 🟡 Windows Server 2008 R2 (Untested, but I assume it doesn't works) (Client launches, but doesn't log in.)
 🟡* Windows Vista / Windows Server 2008 and before (With SP2) (.NET 4.7.2 is not normally support on Windows Vista, but I believe there might be a way to install it.) (Client launches, but doesn't log in.)
 ❓ Windows Betas / Insider Builds (They might work, but compatibilty isn't guaranteed)
