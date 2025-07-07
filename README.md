@@ -5,7 +5,7 @@ A third-party Bluesky client with a Windows Longhorn theme.
     ![My profile is open.](tease3.png)
     ![The home page of the client. There is a section with four tabs. The first tab, titled "Discover," is selected. Above it is a box for posting, with the default text "Whats Up?".](tease4.png)
 ## Compatibility
-✔ Windows 11 / Server 2025
+✔ Windows 11 / Server 2025  
 ✔ Windows 10 / Server (2016/2019/2022)  
 ✔ Windows 8.x / Server 2012  
 🟡 Windows 7 (Client launches, but doesn't log in.)  
