@@ -1,6 +1,5 @@
 # Longhorn Bluesky
-A third-party Bluesky client designed with a Windows Longhorn-like aesthetic.  
-It hasn't been released yet, but I'll put this here for later.
+A third-party Bluesky client with a Windows Longhorn theme.  
 ## Credits
 - DoofusMcGoofus - Programming, Design  
 - MondySpartan - Original Concept  
