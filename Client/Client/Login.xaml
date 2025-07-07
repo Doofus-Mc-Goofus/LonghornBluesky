@@ -1,0 +1,54 @@
+﻿<Page x:Class="Client.Login"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="800"
+      Title="Login" UseLayoutRounding="True" Unloaded="Page_Unloaded">
+    <Grid>
+        <Grid.Background>
+            <RadialGradientBrush>
+                <GradientStop Color="#FFF5FCFF" Offset="1"/>
+                <GradientStop Color="White" Offset="0"/>
+            </RadialGradientBrush>
+        </Grid.Background>
+        <Rectangle>
+            <Rectangle.Fill>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFE0F6FF"/>
+                    <GradientStop Color="Transparent" Offset="1"/>
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+        <Image x:Name="BG" Source="/res/clouds.jpg" Stretch="Fill" Opacity="0.1" Focusable="True" MouseDown="Image_MouseDown"/>
+        <Image x:Name="Wordmark" Source="/res/wordmark.png" Margin="0,0,0,100" HorizontalAlignment="Center" VerticalAlignment="Center" MouseDown="Image_MouseDown" Height="64"/>
+        <StackPanel x:Name="LoginPage" HorizontalAlignment="Center" VerticalAlignment="Center" Width="500" Height="210" Margin="0,189,0,0" Visibility="Collapsed">
+            <Label Content="Account:" Padding="0,0,0,5"/>
+            <TextBox x:Name="UserBox" Width="500" Text="Username or email address" Margin="0,0,0,10" LostKeyboardFocus="UserBox_LostKeyboardFocus" GotKeyboardFocus="UserBox_GotKeyboardFocus" Foreground="Gray"/>
+            <Grid>
+                <PasswordBox x:Name="PassBox" Width="500" Margin="0,0,0,10" Foreground="Gray" GotKeyboardFocus="PassBox_GotKeyboardFocus" LostKeyboardFocus="PassBox_LostKeyboardFocus" FontFamily="Segoe UI"/>
+                <Label x:Name="PasswordPreviewText" Foreground="Gray" Content="Password" Padding="5,0,0,0" VerticalContentAlignment="Center" Height="22" VerticalAlignment="Top" IsHitTestVisible="False"/>
+            </Grid>
+            <CheckBox x:Name="HostCheckBox" Content="Use custom hosting provider" Margin="0,0,0,5" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
+            <StackPanel x:Name="ServWrapPanel" Margin="0,0,0,5" Visibility="Collapsed">
+                <Label Content="Server address:" Padding="0,0,0,5"/>
+                <TextBox x:Name="HostProv" Width="500" Text="https://bsky.social" Foreground="Gray" LostKeyboardFocus="HostProv_LostKeyboardFocus" GotKeyboardFocus="HostProv_GotKeyboardFocus"/>
+            </StackPanel>
+            <CheckBox x:Name="RememberCheckBox" Content="Remember me" Margin="0,0,0,5"/>
+            <Label x:Name="Error" Content="Error message." Padding="0" Margin="0,0,0,5" Foreground="#FFB33C3C" FontFamily="Segoe UI Semibold" Visibility="Collapsed"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock x:Name="CreateAccount" Text="Create account..." Foreground="{DynamicResource ö}" Margin="0,0,20,0" Cursor="Hand" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave"/>
+                <TextBlock x:Name="LoginGuest" Text="Login as guest..." Foreground="{DynamicResource ö}" Margin="0,0,20,0" Cursor="Hand" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave"/>
+                <TextBlock x:Name="ForgotPassword" Text="I forgot my password." Foreground="{DynamicResource ö}" Cursor="Hand" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave"/>
+            </StackPanel>
+        </StackPanel>
+        <TextBlock x:Name="SupportText" Text="Support" Foreground="{DynamicResource ö}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,15" Cursor="Hand" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" MouseUp="Support_Click" Visibility="Collapsed"/>
+        <Image x:Name="PassBoxButton" Source="/res/signinbutton-1.png" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="530,107,0,0" MouseDown="PassBoxButton_MouseDown" MouseEnter="PassBoxButton_MouseEnter" MouseLeave="PassBoxButton_MouseLeave" MouseUp="PassBoxButton_MouseLeave" Visibility="Collapsed"/>
+        <Grid x:Name="WelcomePage" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Label x:Name="Welcome" Content="Welcome" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="Segoe UI Semilight"/>
+            <ProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,95,0,0" Width="500" Height="20" IsIndeterminate="True" Background="#FFB1BED2" Foreground="#FF94C832"/>
+            <Label x:Name="WelcomeText" Padding="0" Content="Please wait..." Margin="0,140,0,0"/>
+        </Grid>
+    </Grid>
+</Page>

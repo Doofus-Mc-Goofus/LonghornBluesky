@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="Client.User"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Client"
+             mc:Ignorable="d" 
+             d:DesignWidth="540" Unloaded="UserControl_Unloaded">
+    <Grid Margin="15,0,15,0">
+        <Rectangle x:Name="TheBackground" RadiusX="3" RadiusY="3" Stroke="#FF9FBDD2" Margin="-25,0,-25,0" Focusable="True">
+            <Rectangle.Fill>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#BFDCF0FF"/>
+                    <GradientStop Color="#7FCDE9FF" Offset="1"/>
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+        <Grid>
+            <Rectangle x:Name="SelectPost" Margin="-15,1,-15,1" Fill="#3FFFFFFF" MouseEnter="SelectPost_MouseEnter" MouseLeave="SelectPost_MouseLeave" MouseUp="SelectPost_MouseUp" Opacity="0"/>
+            <Image x:Name="PFP" Source="/res/usertile.png" Width="32" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top">
+                <Image.Effect>
+                    <DropShadowEffect Opacity="0.33" BlurRadius="5" ShadowDepth="2"/>
+                </Image.Effect>
+            </Image>
+            <Image x:Name="Frame" Source="/res/PFPFrameSmal.png" Width="32" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top"/>
+            <TextBlock x:Name="Username" Margin="40,9,0,0" Foreground="#FF0D467A" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="SelectPost_MouseEnter" MouseLeave="SelectPost_MouseLeave" MouseUp="SelectPost_MouseUp"/>
+            <TextBlock x:Name="Fullname" FontStyle="Italic" Foreground="#FF9AA6B1" Margin="40,26,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="SelectPost_MouseEnter" MouseLeave="SelectPost_MouseLeave" MouseUp="SelectPost_MouseUp"/>
+            <Button x:Name="Follow" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,10,0,0" Content="Follow" Padding="16,1,16,1" Click="Follow_Click" Visibility="Collapsed"/>
+            <TextBlock x:Name="Bio" Margin="0,46,0,8" TextWrapping="Wrap" Width="{Binding ActualWidth, ElementName=wrapPanel, Mode=OneWay}" MouseEnter="SelectPost_MouseEnter" MouseLeave="SelectPost_MouseLeave" MouseUp="SelectPost_MouseUp"/>
+        </Grid>
+    </Grid>
+</UserControl>

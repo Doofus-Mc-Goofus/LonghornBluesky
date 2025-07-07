@@ -1,0 +1,28 @@
+﻿<Window x:Class="Client.Viewer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Photo Viewer" Height="400" Width="300" Background="Black" UseLayoutRounding="True" MinWidth="400" MinHeight="300" Icon="/res/PhotoViewerIcon.png" Unloaded="Window_Unloaded">
+    <Grid>
+        <Label x:Name="Error" Content="Loading..." HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+        <Image x:Name="TheImage" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Hidden" Source="/res/usertile.png" SizeChanged="TheImage_SizeChanged"/>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Image x:Name="TheActualImage" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </ScrollViewer>
+        <Image Stretch="None" Source="/res/ViewerFrame.png" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
+        <Image x:Name="Slideshow" Source="/res/ViewerSlideshowNormal.png" Height="48" VerticalAlignment="Bottom" Margin="0,0,0,7" HorizontalAlignment="Center" MouseEnter="Slideshow_MouseEnter" MouseLeave="Slideshow_MouseLeave" MouseDown="Slideshow_MouseDown" MouseUp="Slideshow_MouseUp"/>
+        <Image x:Name="Next" Source="/res/ViewerForwardNormal.png" Height="25" VerticalAlignment="Bottom" Margin="95,0,0,17" HorizontalAlignment="Center" MouseEnter="Next_MouseEnter" MouseLeave="Next_MouseLeave" MouseDown="Next_MouseDown" MouseUp="Next_MouseUp"/>
+        <Image x:Name="Back" Source="/res/ViewerBackNormal.png" Height="25" VerticalAlignment="Bottom" Margin="0,0,95,17" HorizontalAlignment="Center" MouseDown="Back_MouseDown" MouseEnter="Back_MouseEnter" MouseLeave="Back_MouseLeave" MouseUp="Back_MouseUp"/>
+        <Image x:Name="Zoom" HorizontalAlignment="Center" VerticalAlignment="Bottom" Stretch="None" Source="/res/ViewerZoomNormal.png" Opacity="1" Margin="0,0,223,17" MouseEnter="Zoom_MouseEnter" MouseLeave="Zoom_MouseLeave" MouseDown="Zoom_MouseDown" MouseUp="Zoom_MouseUp"/>
+        <Rectangle x:Name="ZoomBox" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,223,54" Width="31" Height="120" Fill="White" Stroke="Silver" Visibility="Collapsed"/>
+        <Slider x:Name="ZoomSlider" Orientation="Vertical" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,224,59" Width="22" Height="110" TickPlacement="BottomRight" Value="3" SmallChange="0.5" Maximum="8" Interval="2" ValueChanged="ZoomSlider_ValueChanged" IsMoveToPointEnabled="True" Visibility="Collapsed" />
+        <Grid x:Name="Download" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="190,0,0,17" Width="27" Height="25" ToolTip="Download" MouseLeave="Button_MouseLeave" MouseEnter="Button_MouseEnter" MouseDown="Button_MouseDown" MouseUp="Download_MouseUp">
+            <Image HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None" Source="/res/DownloadIcon.png"/>
+        </Grid>
+        <Grid x:Name="Print" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="268,0,0,17" Width="27" Height="25" ToolTip="Print" MouseLeave="Button_MouseLeave" MouseEnter="Button_MouseEnter" MouseDown="Button_MouseDown" MouseUp="Print_MouseUp">
+            <Image HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="None" Source="/res/PrintIcon.png"/>
+        </Grid>
+    </Grid>
+</Window>
