@@ -81,7 +81,7 @@ namespace Client
             Login loginpage = new Login(this);
             this.Content = loginpage;
             HKCU_AddKey(@"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", "Client.exe", 11000);
-            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.1.0");
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.1.1");
             if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "Ver") == "")
             {
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Remember", "false");
