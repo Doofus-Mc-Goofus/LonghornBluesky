@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
 using FishyFlip;
 using FishyFlip.Lexicon.App.Bsky.Feed;
+using FishyFlip.Lexicon.Com.Atproto.Repo;
 using FishyFlip.Models;
 using Newtonsoft.Json.Linq;
 
@@ -35,6 +35,25 @@ namespace Client
             Post post = new Post(JObject.Parse(JObject.Parse(thread.Value.ToString())["thread"].ToString()), dashboard, aTProtocol, true, false, false);
             _ = PostGrid.Children.Add(post);
             posts.Add(post);
+            WhatsUpControl whatsUpControl = new WhatsUpControl(aTProtocol, dashboard)
+            {
+                Margin = new Thickness(0, 20, 0, -6)
+            };
+            ReplyRefDef replyRefDef = new ReplyRefDef();
+            switch (JObject.Parse(JObject.Parse(thread.Value.ToString())["thread"].ToString())["post"]["record"]["reply"])
+            {
+                case null:
+                    replyRefDef.Parent = StrongRef.FromJson(JObject.Parse(JObject.Parse(thread.Value.ToString())["thread"].ToString())["post"].ToString());
+                    replyRefDef.Root = StrongRef.FromJson(JObject.Parse(JObject.Parse(thread.Value.ToString())["thread"].ToString())["post"].ToString());
+                    break;
+                default:
+                    replyRefDef.Parent = StrongRef.FromJson(JObject.Parse(JObject.Parse(thread.Value.ToString())["thread"].ToString())["post"].ToString());
+                    replyRefDef.Root = StrongRef.FromJson(JObject.Parse(JObject.Parse(thread.Value.ToString())["thread"].ToString())["post"]["record"]["reply"]["root"].ToString());
+                    break;
+            }
+            System.Windows.Forms.Clipboard.SetText(JObject.Parse(JObject.Parse(thread.Value.ToString())["thread"].ToString()).ToString());
+            whatsUpControl.ReplyTrans(replyRefDef);
+            _ = Stackie.Children.Add(whatsUpControl);
             if (JObject.Parse(thread.Value.ToString())["thread"]["replies"] != null)
             {
                 JArray pingas = JArray.Parse(JObject.Parse(thread.Value.ToString())["thread"]["replies"].ToString());
@@ -53,7 +72,7 @@ namespace Client
         }
         private void Swaus(object sender, EventArgs e)
         {
-            FeedGrid.Margin = new Thickness(0, PostStack.ActualHeight, 0, 0);
+            FeedGrid.Margin = new Thickness(0, Stackie.ActualHeight, 0, 0);
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)

@@ -9,7 +9,6 @@ using System.Windows.Media.Imaging;
 using FishyFlip;
 using FishyFlip.Lexicon;
 using FishyFlip.Lexicon.App.Bsky.Actor;
-using FishyFlip.Lexicon.App.Bsky.Graph;
 using FishyFlip.Lexicon.Com.Atproto.Repo;
 using FishyFlip.Models;
 using INI;
@@ -48,7 +47,7 @@ namespace Client
         {
             Result<ProfileViewDetailed> result = await aTProtocol.GetProfileAsync(session.Did);
             result.Switch(
-            async success =>
+            success =>
             {
                 Username.Text = success.DisplayName;
                 Bio.Text = success.Description;

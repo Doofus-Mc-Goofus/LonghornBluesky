@@ -19,13 +19,15 @@
                     </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
-            <TabControl Background="{x:Null}" Padding="0" BorderThickness="0" VerticalAlignment="Top" Margin="0,-2,0,0">
-                <TabItem Visibility="Collapsed">
-                    <StackPanel x:Name="PostStack" LayoutUpdated="Swaus">
-                        <Grid x:Name="PostGrid" Width="{Binding ActualWidth, ElementName=PostStack, Mode=OneWay}" VerticalAlignment="Top"/>
-                    </StackPanel>
-                </TabItem>
-            </TabControl>
+            <StackPanel x:Name="Stackie" VerticalAlignment="Top">
+                <TabControl Background="{x:Null}" Padding="0" BorderThickness="0" VerticalAlignment="Top" Margin="0,-2,0,0">
+                    <TabItem Visibility="Collapsed">
+                        <StackPanel x:Name="PostStack" LayoutUpdated="Swaus">
+                            <Grid x:Name="PostGrid" Width="{Binding ActualWidth, ElementName=PostStack, Mode=OneWay}" VerticalAlignment="Top"/>
+                        </StackPanel>
+                    </TabItem>
+                </TabControl>
+            </StackPanel>
             <Grid x:Name="FeedGrid" Focusable="True" Margin="0,0,0,0" Visibility="Collapsed">
                 <TabControl x:Name="FeedTabControl" Padding="0" ScrollViewer.CanContentScroll="True" BorderThickness="0" Background="{x:Null}" Panel.ZIndex="1">
                     <TabItem x:Name="Tab" Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="#FF9FBDD2" Visibility="Collapsed">

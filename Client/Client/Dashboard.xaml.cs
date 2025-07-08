@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Media;
 using System.Runtime.InteropServices;
@@ -31,13 +30,13 @@ namespace Client
         private JArray feeds;
         private byte selectobjectsidebar;
 
-[DllImport("urlmon.dll")]
+        [DllImport("urlmon.dll")]
         [PreserveSig]
         [return: MarshalAs(UnmanagedType.Error)]
-        static extern int CoInternetSetFeatureEnabled(
-int FeatureEntry,
-[MarshalAs(UnmanagedType.U4)] int dwFlags,
-bool fEnable);
+        private static extern int CoInternetSetFeatureEnabled(
+        int FeatureEntry,
+        [MarshalAs(UnmanagedType.U4)] int dwFlags,
+        bool fEnable);
         public Dashboard(Session session, ATProtocol aTProtocol)
         {
             InitializeComponent();
@@ -61,10 +60,10 @@ bool fEnable);
                     Lists.Visibility = Visibility.Collapsed;
                 }
             }
-            var prefresult = await aTProtocol.GetPreferencesAsync();
+            Result<GetPreferencesOutput> prefresult = await aTProtocol.GetPreferencesAsync();
             JObject obj = JObject.Parse(prefresult.Value.ToString());
             JArray arr = JArray.Parse(obj["preferences"].ToString());
-            var i = 0;
+            int i = 0;
             while (arr[i].SelectToken("$type").ToString() != "app.bsky.actor.defs#savedFeedsPrefV2")
             {
                 i++;
@@ -73,7 +72,7 @@ bool fEnable);
             JArray feeds = JArray.Parse(items.ToString());
             this.feeds = feeds;
             Home homePage = new Home(feeds, aTProtocol, this);
-            PageFrame.NavigationService.Navigate(homePage);
+            _ = PageFrame.NavigationService.Navigate(homePage);
             Result<ProfileViewDetailed> result = await aTProtocol.GetProfileAsync(session.Did);
             result.Switch(
             success =>
@@ -123,7 +122,7 @@ bool fEnable);
         {
             Profile ProfilePage = new Profile(ATDid.Create(Did), aTProtocol, session, this);
             PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
-            PageFrame.NavigationService.Navigate(ProfilePage);
+            _ = PageFrame.NavigationService.Navigate(ProfilePage);
             if (session.Did.ToString() == ATDid.Create(Did).ToString())
             {
                 Profile_Text.FontFamily = new System.Windows.Media.FontFamily("Segoe UI Semibold");
@@ -142,7 +141,7 @@ bool fEnable);
         {
             FollowPage ProfilePage = new FollowPage(ATDid.Create(Did), aTProtocol, isBy, this, number);
             PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
-            PageFrame.NavigationService.Navigate(ProfilePage);
+            _ = PageFrame.NavigationService.Navigate(ProfilePage);
             selectobjectsidebar = 0;
             HideOthersSidebar();
         }
@@ -154,14 +153,14 @@ bool fEnable);
         {
             PostPage PostPage = new PostPage(Uri, aTProtocol, this);
             PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
-            PageFrame.NavigationService.Navigate(PostPage);
+            _ = PageFrame.NavigationService.Navigate(PostPage);
             selectobjectsidebar = 0;
             HideOthersSidebar();
         }
         public void NavigateToProfileEdit(EditProf Did)
         {
             PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
-            PageFrame.NavigationService.Navigate(Did);
+            _ = PageFrame.NavigationService.Navigate(Did);
             selectobjectsidebar = 0;
             HideOthersSidebar();
         }
@@ -175,7 +174,7 @@ bool fEnable);
             Home homePage = new Home(feeds, aTProtocol, this);
             homePage.Transfer(embedRecord);
             PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
-            PageFrame.NavigationService.Navigate(homePage);
+            _ = PageFrame.NavigationService.Navigate(homePage);
         }
         private void Label_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -224,7 +223,7 @@ bool fEnable);
             HideOthersSidebar();
             Home homePage = new Home(feeds, aTProtocol, this);
             PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
-            PageFrame.NavigationService.Navigate(homePage);
+            _ = PageFrame.NavigationService.Navigate(homePage);
         }
 
         private void Explore_MouseEnter(object sender, MouseEventArgs e)
@@ -253,7 +252,7 @@ bool fEnable);
             HideOthersSidebar();
             HandleableError usororer = new HandleableError(new ATError(418, new ErrorDetail("", "I'm a teapot")));
             PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
-            PageFrame.NavigationService.Navigate(usororer);
+            _ = PageFrame.NavigationService.Navigate(usororer);
         }
         private void Notifs_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -281,7 +280,7 @@ bool fEnable);
             HideOthersSidebar();
             HandleableError usororer = new HandleableError(new ATError(418, new ErrorDetail("", "I'm a teapot")));
             PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
-            PageFrame.NavigationService.Navigate(usororer);
+            _ = PageFrame.NavigationService.Navigate(usororer);
         }
         private void HideOthersSidebar()
         {
@@ -353,7 +352,7 @@ bool fEnable);
             HideOthersSidebar();
             HandleableError usororer = new HandleableError(new ATError(418, new ErrorDetail("", "I'm a teapot")));
             PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
-            PageFrame.NavigationService.Navigate(usororer);
+            _ = PageFrame.NavigationService.Navigate(usororer);
         }
 
         private void Feeds_MouseEnter(object sender, MouseEventArgs e)
@@ -382,7 +381,7 @@ bool fEnable);
             HideOthersSidebar();
             HandleableError usororer = new HandleableError(new ATError(418, new ErrorDetail("", "I'm a teapot")));
             PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
-            PageFrame.NavigationService.Navigate(usororer);
+            _ = PageFrame.NavigationService.Navigate(usororer);
         }
 
         private void Lists_MouseEnter(object sender, MouseEventArgs e)
@@ -411,7 +410,7 @@ bool fEnable);
             HideOthersSidebar();
             HandleableError usororer = new HandleableError(new ATError(418, new ErrorDetail("", "I'm a teapot")));
             PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
-            PageFrame.NavigationService.Navigate(usororer);
+            _ = PageFrame.NavigationService.Navigate(usororer);
         }
 
         private void Profile_MouseEnter(object sender, MouseEventArgs e)
@@ -440,11 +439,11 @@ bool fEnable);
             HideOthersSidebar();
             Profile myProfilePage = new Profile(session.Did, aTProtocol, session, this);
             PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
-            PageFrame.NavigationService.Navigate(myProfilePage);
+            _ = PageFrame.NavigationService.Navigate(myProfilePage);
         }
         private void NavServiceOnNavigated(object sender, NavigationEventArgs args)
         {
-            PageFrame.NavigationService.RemoveBackEntry();
+            _ = PageFrame.NavigationService.RemoveBackEntry();
             GC.Collect();
             PageFrame.NavigationService.Navigated -= NavServiceOnNavigated;
         }
@@ -475,7 +474,7 @@ bool fEnable);
             HideOthersSidebar();
             Settings CPL = new Settings(aTProtocol, session, this);
             PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
-            PageFrame.NavigationService.Navigate(CPL);
+            _ = PageFrame.NavigationService.Navigate(CPL);
         }
 
         private void PFPFrame_MouseUp(object sender, MouseButtonEventArgs e)

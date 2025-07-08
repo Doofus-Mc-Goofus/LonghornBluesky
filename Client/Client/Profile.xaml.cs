@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using Duende.IdentityModel.OidcClient;
 using FishyFlip;
 using FishyFlip.Lexicon.App.Bsky.Actor;
 using FishyFlip.Lexicon.App.Bsky.Feed;
 using FishyFlip.Lexicon.App.Bsky.Graph;
 using FishyFlip.Lexicon.Com.Atproto.Repo;
 using FishyFlip.Models;
+using INI;
 using Newtonsoft.Json.Linq;
 
 namespace Client
@@ -53,6 +54,17 @@ namespace Client
         }
         private async Task Load()
         {
+            if (File.Exists("config.ini"))
+            {
+                IniFile myIni = new IniFile("config.ini");
+                if (myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "0")
+                {
+                    // Hide unfinished things
+                    Feeds.Visibility = Visibility.Collapsed;
+                    StarterPacks.Visibility = Visibility.Collapsed;
+                    Lists.Visibility = Visibility.Collapsed;
+                }
+            }
             Result<ProfileViewDetailed> result = await aTProtocol.GetProfileAsync(ATDid);
             result.Switch(
             async success =>

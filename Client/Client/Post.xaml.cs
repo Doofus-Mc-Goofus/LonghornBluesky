@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -14,7 +13,6 @@ using System.Windows.Threading;
 using FishyFlip;
 using FishyFlip.Lexicon;
 using FishyFlip.Lexicon.App.Bsky.Feed;
-using FishyFlip.Lexicon.Com.Atproto.Moderation;
 using FishyFlip.Lexicon.Com.Atproto.Repo;
 using FishyFlip.Lexicon.Community.Lexicon.Interaction;
 using FishyFlip.Models;
@@ -809,7 +807,6 @@ namespace Client
             {
                 posts[i].UnloadPost();
             }
-
             RepostIcon.MouseEnter -= SelectPost_MouseEnter;
             RepostIcon.MouseLeave -= SelectPost_MouseLeave;
             RepostIcon.MouseUp -= SelectPost_MouseUp;

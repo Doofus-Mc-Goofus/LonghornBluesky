@@ -1,13 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using FishyFlip;
-using FishyFlip.Lexicon.App.Bsky.Actor;
 using FishyFlip.Models;
 using INI;
 
@@ -39,50 +37,30 @@ namespace Client
         }
         private void Back_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (isRoot)
-            {
-                Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackDisabled.png"));
-            }
-            else
-            {
-                Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackPressed.png"));
-            }
+            Back.Source = isRoot
+                ? new BitmapImage(new Uri("pack://application:,,,/res/BackDisabled.png"))
+                : new BitmapImage(new Uri("pack://application:,,,/res/BackPressed.png"));
         }
 
         private void Back_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (isRoot)
-            {
-                Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackDisabled.png"));
-            }
-            else
-            {
-                Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackHover.png"));
-            }
+            Back.Source = isRoot
+                ? new BitmapImage(new Uri("pack://application:,,,/res/BackDisabled.png"))
+                : new BitmapImage(new Uri("pack://application:,,,/res/BackHover.png"));
         }
 
         private void Back_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (isRoot)
-            {
-                Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackDisabled.png"));
-            }
-            else
-            {
-                Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackNormal.png"));
-            }
+            Back.Source = isRoot
+                ? new BitmapImage(new Uri("pack://application:,,,/res/BackDisabled.png"))
+                : new BitmapImage(new Uri("pack://application:,,,/res/BackNormal.png"));
         }
 
         private void Back_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (isRoot)
-            {
-                Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackDisabled.png"));
-            }
-            else
-            {
-                Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackHover.png"));
-            }
+            Back.Source = isRoot
+                ? new BitmapImage(new Uri("pack://application:,,,/res/BackDisabled.png"))
+                : new BitmapImage(new Uri("pack://application:,,,/res/BackHover.png"));
         }
         private void Account_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -387,7 +365,7 @@ namespace Client
             selectobjectsidebar = 0;
             HideOthersSidebar();
             AboutBox aboutBox = new AboutBox();
-            aboutBox.ShowDialog();
+            _ = aboutBox.ShowDialog();
         }
         private void NavServiceOnNavigated(object sender, NavigationEventArgs args)
         {
