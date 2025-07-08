@@ -14,6 +14,7 @@ using System.Windows.Threading;
 using FishyFlip;
 using FishyFlip.Lexicon;
 using FishyFlip.Lexicon.App.Bsky.Feed;
+using FishyFlip.Lexicon.Com.Atproto.Moderation;
 using FishyFlip.Lexicon.Com.Atproto.Repo;
 using FishyFlip.Lexicon.Community.Lexicon.Interaction;
 using FishyFlip.Models;
@@ -39,6 +40,7 @@ namespace Client
         private readonly DispatcherTimer timer = new DispatcherTimer();
         private readonly List<BitmapImage> bitmapImages = new List<BitmapImage>();
         private readonly List<BitmapImage> bigmacImages = new List<BitmapImage>();
+        private readonly List<Post> posts = new List<Post>();
         public Post(JObject post, Dashboard dashboard, ATProtocol aTProtocol, bool isFocused, bool isPinned, bool isReply)
         {
             InitializeComponent();
@@ -129,6 +131,7 @@ namespace Client
                         Post postControl = new Post(postdata, dashboard, aTProtocol, false, false, true);
                         ParentPost.Children.Insert(0, postControl);
                         ParentPost.Visibility = Visibility.Visible;
+                        posts.Add(postControl);
                     }
                     catch
                     {
@@ -142,6 +145,7 @@ namespace Client
                             Post rootpostControl = new Post(rootpostdata, dashboard, aTProtocol, false, false, true);
                             RootPost.Children.Insert(0, rootpostControl);
                             RootPost.Visibility = Visibility.Visible;
+                            posts.Add(rootpostControl);
                         }
                     }
                     catch
@@ -164,6 +168,7 @@ namespace Client
                 {
                     JObject postdata = JObject.Parse(post["parent"].ToString());
                     Post postControl = new Post(postdata, dashboard, aTProtocol, false, false, true);
+                    posts.Add(postControl);
                     ParentPost.Children.Insert(0, postControl);
                     ParentPost.Visibility = Visibility.Visible;
                 }
@@ -602,6 +607,20 @@ namespace Client
                     Images.Visibility = Visibility.Collapsed;
                 }
             }
+            if (JArray.Parse(post["post"]["labels"].ToString()).Count > 0)
+            {
+                ContentHidden.Visibility = Visibility.Visible;
+                wrapPanel.Children.Remove(Images);
+                ContentHidden.Content = Images;
+                Images.Margin = new Thickness(0, 0, 0, 5);
+                string strings = string.Empty;
+                for (int i = 0; i < JArray.Parse(post["post"]["labels"].ToString()).Count - 1; i++)
+                {
+                    strings += JArray.Parse(post["post"]["labels"].ToString())[0]["val"].ToString() + ", ";
+                }
+                strings += JArray.Parse(post["post"]["labels"].ToString())[0]["val"].ToString();
+                ContentHidden.Header = "Content Hidden (" + strings + ")";
+            }
         }
 
         private void Grid_Unloaded(object sender, RoutedEventArgs e)
@@ -783,10 +802,14 @@ namespace Client
             // System.Windows.Forms.Clipboard.SetText(post.ToString());
         }
 
-        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        public void UnloadPost()
         {
             // The sun is leaking
-            Unloaded -= UserControl_Unloaded;
+            for (int i = 0; i < posts.Count; i++)
+            {
+                posts[i].UnloadPost();
+            }
+
             RepostIcon.MouseEnter -= SelectPost_MouseEnter;
             RepostIcon.MouseLeave -= SelectPost_MouseLeave;
             RepostIcon.MouseUp -= SelectPost_MouseUp;
@@ -869,6 +892,12 @@ namespace Client
             {
                 bigmacImages[i] = null;
             }
+        }
+
+        private void ReportContext_Click(object sender, RoutedEventArgs e)
+        {
+            // fix
+            // ReportModeration reportModeration = new ReportModeration(ATObject.Create(post["post"]["author"]["did"].ToString()), Text.Text, aTProtocol);
         }
     }
 }

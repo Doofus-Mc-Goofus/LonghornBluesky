@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,6 +9,7 @@ using System.Windows.Navigation;
 using FishyFlip;
 using FishyFlip.Lexicon.App.Bsky.Actor;
 using FishyFlip.Models;
+using INI;
 
 namespace Client
 {
@@ -20,32 +22,67 @@ namespace Client
         private readonly Session session;
         private readonly Dashboard dashboard;
         private byte selectobjectsidebar;
-
+#pragma warning disable IDE0044 // Add readonly modifier
+        private bool isRoot = true;
+#pragma warning restore IDE0044 // Add readonly modifier
         public Settings(ATProtocol aTProtocol, Session session, Dashboard dashboard)
         {
             InitializeComponent();
             this.session = session;
             this.aTProtocol = aTProtocol;
             this.dashboard = dashboard;
+            IniFile myIni = new IniFile("config.ini");
+            if (File.Exists("config.ini") && myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "2")
+            {
+                Secret.Visibility = Visibility.Visible;
+            }
         }
         private void Back_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackPressed.png"));
+            if (isRoot)
+            {
+                Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackDisabled.png"));
+            }
+            else
+            {
+                Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackPressed.png"));
+            }
         }
 
         private void Back_MouseEnter(object sender, MouseEventArgs e)
         {
-            Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackHover.png"));
+            if (isRoot)
+            {
+                Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackDisabled.png"));
+            }
+            else
+            {
+                Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackHover.png"));
+            }
         }
 
         private void Back_MouseLeave(object sender, MouseEventArgs e)
         {
-            Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackNormal.png"));
+            if (isRoot)
+            {
+                Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackDisabled.png"));
+            }
+            else
+            {
+                Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackNormal.png"));
+            }
         }
 
         private void Back_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackHover.png"));
+            if (isRoot)
+            {
+                Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackDisabled.png"));
+            }
+            else
+            {
+                Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackHover.png"));
+            }
         }
         private void Account_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -376,6 +413,52 @@ namespace Client
             // fix
             SizeChanged -= Page_SizeChanged;
             Unloaded -= Page_Unloaded;
+            Back.MouseEnter -= Back_MouseEnter;
+            Back.MouseLeave -= Back_MouseLeave;
+            Back.MouseDown -= Back_MouseDown;
+            Back.MouseUp -= Back_MouseUp;
+            rect.MouseUp -= Rectangle_MouseUp;
+            Account.MouseEnter -= Account_MouseEnter;
+            Account.MouseLeave -= Account_MouseLeave;
+            Account.MouseUp -= Account_MouseUp;
+            Account.Children.Clear();
+            Privacy.MouseEnter -= Privacy_MouseEnter;
+            Privacy.MouseLeave -= Privacy_MouseLeave;
+            Privacy.MouseUp -= Privacy_MouseUp;
+            Privacy.Children.Clear();
+            Moderation.MouseEnter -= Moderation_MouseEnter;
+            Moderation.MouseLeave -= Moderation_MouseLeave;
+            Moderation.MouseUp -= Moderation_MouseUp;
+            Moderation.Children.Clear();
+            Content.MouseEnter -= CAM_MouseEnter;
+            Content.MouseLeave -= CAM_MouseLeave;
+            Content.MouseUp -= CAM_MouseUp;
+            Content.Children.Clear();
+            Personalization.MouseEnter -= Personalization_MouseEnter;
+            Personalization.MouseLeave -= Personalization_MouseLeave;
+            Personalization.MouseUp -= Personalization_MouseUp;
+            Personalization.Children.Clear();
+            Accessibility.MouseEnter -= Accessibility_MouseEnter;
+            Accessibility.MouseLeave -= Accessibility_MouseLeave;
+            Accessibility.MouseUp -= Accessibility_MouseUp;
+            Accessibility.Children.Clear();
+            Language.MouseEnter -= Language_MouseEnter;
+            Language.MouseLeave -= Language_MouseLeave;
+            Language.MouseUp -= Language_MouseUp;
+            Language.Children.Clear();
+            Help.MouseEnter -= Help_MouseEnter;
+            Help.MouseLeave -= Help_MouseLeave;
+            Help.MouseUp -= Help_MouseUp;
+            Help.Children.Clear();
+            About.MouseEnter -= About_MouseEnter;
+            About.MouseLeave -= About_MouseLeave;
+            About.MouseUp -= About_MouseUp;
+            About.Children.Clear();
+            Secret.Children.Clear();
+            homie.Children.Clear();
+            test.Children.Clear();
+            ((Grid)aegaegaegag.Content).Children.Clear();
+            aegaegaegag.Content = null;
         }
     }
 }

@@ -17,6 +17,7 @@ using FishyFlip;
 using FishyFlip.Lexicon;
 using FishyFlip.Lexicon.App.Bsky.Embed;
 using FishyFlip.Lexicon.App.Bsky.Feed;
+using FishyFlip.Lexicon.Fyi.Unravel.Frontpage;
 using FishyFlip.Models;
 using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
@@ -39,6 +40,8 @@ namespace Client
         private readonly List<string> feedCursor = new List<string>();
         private readonly List<string> feedUriString = new List<string>();
         private EmbedRecord quotePost = null;
+        private readonly List<Post> posts = new List<Post>();
+        private readonly List<ScrollViewer> scrollViewers = new List<ScrollViewer>();
         public Home(JArray feeds, ATProtocol aTProtocol, Dashboard dashboard)
         {
             InitializeComponent();
@@ -97,7 +100,7 @@ namespace Client
                             VerticalScrollBarVisibility = ScrollBarVisibility.Auto
                         };
                         scrollViewer.ScrollChanged += ScrollViewer_ScrollChanged;
-                        scrollViewer.Unloaded += ScrollViewer_Unloaded;
+                        scrollViewers.Add(scrollViewer);
                         feedgrid.Children.Add(scrollViewer);
                         item.Tag = stacker;
                         item.Content = feedgrid;
@@ -130,7 +133,7 @@ namespace Client
                                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto
                             };
                             scrollViewer.ScrollChanged += ScrollViewer_ScrollChanged;
-                            scrollViewer.Unloaded += ScrollViewer_Unloaded;
+                            scrollViewers.Add(scrollViewer);
                             feedgrid.Children.Add(scrollViewer);
                             item.Tag = stacker;
                             item.Content = feedgrid;
@@ -152,21 +155,11 @@ namespace Client
             FeedTabControl.SelectedIndex = 1;
         }
 
-        private void ScrollViewer_Unloaded(object sender, RoutedEventArgs e)
-        {
-            ((ScrollViewer)sender).ScrollChanged -= ScrollViewer_ScrollChanged;
-            ((ScrollViewer)sender).Unloaded -= ScrollViewer_Unloaded;
-        }
-
-        private async Task LoadFeed(StackPanel stackPanel, bool ignore)
+        private async Task LoadFeed(StackPanel stackPanel)
         {
             if (!stillLoading)
             {
                 stillLoading = true;
-                if (stackPanel.Children.Count > 0 && !ignore)
-                {
-                    return;
-                }
                 ATUri AtUri;
                 JArray feedlist;
                 try
@@ -179,6 +172,7 @@ namespace Client
                         JObject postdata = JObject.Parse(feedlist[i].ToString());
                         Post post = new Post(postdata, dashboard, aTProtocol, false, false, false);
                         stackPanel.Children.Add(post);
+                        posts.Add(post);
                     }
                     // MessageBox.Show(feedCursor);
                     // I think i'd be a lot happier if I didn't force myself to work on this constantly.
@@ -200,6 +194,7 @@ namespace Client
                             JObject postdata = JObject.Parse(feedlist[i].ToString());
                             Post post = new Post(postdata, dashboard, aTProtocol, false, false, false);
                             _ = stackPanel.Children.Add(post);
+                            posts.Add(post);
                         }
                         if (feedlist.Count > 0)
                         {
@@ -722,7 +717,7 @@ namespace Client
         {
             if (((ScrollViewer)sender).ScrollableHeight - ((ScrollViewer)sender).VerticalOffset <= 320)
             {
-                _ = LoadFeed((StackPanel)((ScrollViewer)sender).Content, true);
+                _ = LoadFeed((StackPanel)((ScrollViewer)sender).Content);
             }
         }
 
@@ -740,6 +735,14 @@ namespace Client
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
+            for (int i = 0; i < posts.Count; i++)
+            {
+                posts[i].UnloadPost();
+            }
+            for (int i = 0; i < scrollViewers.Count; i++)
+            {
+                scrollViewers[i].ScrollChanged -= ScrollViewer_ScrollChanged;
+            }
             Unloaded -= Page_Unloaded;
             WhatsUpGrid.LayoutUpdated -= WhatsUpGrid_LayoutUpdated;
             WhatsUp.LostKeyboardFocus -= WhatsUp_LostKeyboardFocus;

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using Duende.IdentityModel.OidcClient;
 using FishyFlip;
 using FishyFlip.Lexicon.App.Bsky.Actor;
 using FishyFlip.Lexicon.App.Bsky.Feed;
@@ -28,6 +30,12 @@ namespace Client
         private bool stillLoading = false;
         private readonly string[] cursors = new string[7];
         private bool isFollowing = false;
+        private ATUri Blocking;
+        private bool isBlocking = false;
+        private string actualBio;
+        private readonly List<Post> posts = new List<Post>();
+        private readonly List<ScrollViewer> scrollViewers = new List<ScrollViewer>();
+
         public Profile(ATDid Uri, ATProtocol aTProtocol, Session session, Dashboard dashboard)
         {
             InitializeComponent();
@@ -54,6 +62,26 @@ namespace Client
                 Fullname.Text = "@" + success.Handle.Handle;
                 Fullname.ToolTip = "@" + success.Handle.Handle;
                 Bio.Text = success.Description;
+                if (success.Viewer.BlockedBy == true)
+                {
+                    actualBio = success.Description;
+                    Bio.Text = "This user has blocked you.";
+                    FeedGrid.Visibility = Visibility.Collapsed;
+                    Follow.Visibility = Visibility.Collapsed;
+                    Overflow.Visibility = Visibility.Collapsed;
+                    detailsStack.Visibility = Visibility.Collapsed;
+                }
+                if (success.Viewer.Blocking != null)
+                {
+                    Bio.Text = "This user has been blocked.";
+                    FeedGrid.Visibility = Visibility.Collapsed;
+                    Follow.Visibility = Visibility.Collapsed;
+                    Overflow.Visibility = Visibility.Collapsed;
+                    detailsStack.Visibility = Visibility.Collapsed;
+                    Blocking = success.Viewer.Blocking;
+                    isBlocking = true;
+                    Unblock.Visibility = Visibility.Visible;
+                }
                 try
                 {
                     PFP.Source = new BitmapImage(new Uri(success.Avatar));
@@ -96,9 +124,12 @@ namespace Client
                         isbeingFollowed = true;
                     }
                 }
-                FeedGrid.Visibility = Visibility.Visible;
-                await GetPinnedPost(success);
-                await LoadPosts(PostsStack);
+                if (success.Viewer.BlockedBy != true && success.Viewer.Blocking == null)
+                {
+                    FeedGrid.Visibility = Visibility.Visible;
+                    await GetPinnedPost(success);
+                    await LoadPosts(PostsStack);
+                }
             },
             error =>
             {
@@ -113,6 +144,7 @@ namespace Client
                 Result<GetPostThreadOutput> pinnedpost = await aTProtocol.GetPostThreadAsync(success.PinnedPost.Uri, 0, 0);
                 Post post = new Post(JObject.Parse(JObject.Parse(pinnedpost.Value.ToString())["thread"].ToString()), dashboard, aTProtocol, false, true, false);
                 _ = PostsStack.Children.Add(post);
+                posts.Add(post);
             }
             catch
             {
@@ -129,40 +161,58 @@ namespace Client
             if (!stillLoading)
             {
                 stillLoading = true;
-                JArray feedlist = new JArray();
-                JObject postresultparse = new JObject();
-                if (FeedTabControl.SelectedIndex <= 3)
+                try
                 {
-                    Result<GetAuthorFeedOutput> postsresult = await aTProtocol.GetAuthorFeedAsync(ATDid, 10, cursors[FeedTabControl.SelectedIndex], GetFilterType(FeedTabControl.SelectedIndex), false);
-                    feedlist = JArray.Parse(JObject.Parse(postsresult.Value.ToString())["feed"].ToString());
-                    postresultparse = JObject.Parse(postsresult.Value.ToString());
-                }
-                else if (FeedTabControl.SelectedIndex == 4)
-                {
-                    Result<GetActorLikesOutput> postsresult = await aTProtocol.GetActorLikesAsync(ATDid, 10, cursors[FeedTabControl.SelectedIndex]);
-                    feedlist = JArray.Parse(JObject.Parse(postsresult.Value.ToString())["feed"].ToString());
-                    postresultparse = JObject.Parse(postsresult.Value.ToString());
-                }
-                else
-                {
+                    JArray feedlist = new JArray();
+                    JObject postresultparse = new JObject();
+                    if (FeedTabControl.SelectedIndex <= 3)
+                    {
+                        Result<GetAuthorFeedOutput> postsresult = await aTProtocol.GetAuthorFeedAsync(ATDid, 10, cursors[FeedTabControl.SelectedIndex], GetFilterType(FeedTabControl.SelectedIndex), false);
+                        feedlist = JArray.Parse(JObject.Parse(postsresult.Value.ToString())["feed"].ToString());
+                        postresultparse = JObject.Parse(postsresult.Value.ToString());
+                    }
+                    else if (FeedTabControl.SelectedIndex == 4)
+                    {
+                        Result<GetActorLikesOutput> postsresult = await aTProtocol.GetActorLikesAsync(ATDid, 10, cursors[FeedTabControl.SelectedIndex]);
+                        feedlist = JArray.Parse(JObject.Parse(postsresult.Value.ToString())["feed"].ToString());
+                        postresultparse = JObject.Parse(postsresult.Value.ToString());
+                    }
+                    else
+                    {
 
+                    }
+                    for (int i = 0; i < feedlist.Count; i++)
+                    {
+                        JObject postdata = JObject.Parse(feedlist[i].ToString());
+                        Post post = new Post(postdata, dashboard, aTProtocol, false, false, false);
+                        _ = stackPanel.Children.Add(post);
+                        posts.Add(post);
+                    }
+                    if (feedlist.Count > 0)
+                    {
+                        DateTime dateTime = feedlist[feedlist.Count - 1]["reason"] != null
+                        ? (DateTime)feedlist[feedlist.Count - 1]["reason"]["indexedAt"]
+                        : (DateTime)feedlist[feedlist.Count - 1]["post"]["record"]["createdAt"];
+                        if (FeedTabControl.SelectedIndex <= 3)
+                        {
+                            cursors[FeedTabControl.SelectedIndex] = dateTime.ToString("yyyy-MM-dd") + "T" + dateTime.ToString("HH:mm:ss") + "Z";
+                        }
+                        else if (FeedTabControl.SelectedIndex == 4)
+                        {
+                            cursors[FeedTabControl.SelectedIndex] = postresultparse["cursor"].ToString();
+                        }
+                    }
                 }
-                for (int i = 0; i < feedlist.Count; i++)
+                catch (Exception ex)
                 {
-                    JObject postdata = JObject.Parse(feedlist[i].ToString());
-                    Post post = new Post(postdata, dashboard, aTProtocol, false, false, false);
-                    _ = stackPanel.Children.Add(post);
-                }
-                DateTime dateTime = feedlist[feedlist.Count - 1]["reason"] != null
-                    ? (DateTime)feedlist[feedlist.Count - 1]["reason"]["indexedAt"]
-                    : (DateTime)feedlist[feedlist.Count - 1]["post"]["record"]["createdAt"];
-                if (FeedTabControl.SelectedIndex <= 3)
-                {
-                    cursors[FeedTabControl.SelectedIndex] = dateTime.ToString("yyyy-MM-dd") + "T" + dateTime.ToString("HH:mm:ss") + "Z";
-                }
-                else if (FeedTabControl.SelectedIndex == 4)
-                {
-                    cursors[FeedTabControl.SelectedIndex] = postresultparse["cursor"].ToString();
+                    try
+                    {
+                        _ = MessageBox.Show(ex.Message.ToString() + "\n" + ex.InnerException.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    catch
+                    {
+                        _ = MessageBox.Show(ex.Message.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
                 stillLoading = false;
             }
@@ -277,9 +327,54 @@ namespace Client
             dashboard.NavigateToProfileEdit(editProf);
         }
 
-        private void BlockContext_Click(object sender, RoutedEventArgs e)
+        private async void BlockContext_Click(object sender, RoutedEventArgs e)
         {
-
+            if (isBlocking)
+            {
+                // I know this may come across as harsh to some, but I believe everyone in this story should die.
+                Result<DeleteRecordOutput> result = await aTProtocol.DeleteBlockAsync(Blocking.Did, Blocking.Rkey);
+                result.Switch(
+                    success =>
+                    {
+                        Bio.Text = actualBio;
+                        FeedGrid.Visibility = Visibility.Visible;
+                        Follow.Visibility = Visibility.Visible;
+                        Overflow.Visibility = Visibility.Visible;
+                        detailsStack.Visibility = Visibility.Visible;
+                        Unblock.Visibility = Visibility.Collapsed;
+                        isBlocking = false;
+                    },
+                    error =>
+                    {
+                        _ = MessageBox.Show($"Error: {error.StatusCode} {error.Detail}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    });
+            }
+            else
+            {
+                Block block = new Block
+                {
+                    CreatedAt = DateTime.Now,
+                    Subject = ATDid
+                };
+                Result<CreateRecordOutput> result = await aTProtocol.CreateBlockAsync(block);
+                result.Switch(
+                    success =>
+                    {
+                        actualBio = Bio.Text;
+                        Bio.Text = "This user has been blocked.";
+                        FeedGrid.Visibility = Visibility.Collapsed;
+                        Follow.Visibility = Visibility.Collapsed;
+                        Overflow.Visibility = Visibility.Collapsed;
+                        detailsStack.Visibility = Visibility.Collapsed;
+                        Unblock.Visibility = Visibility.Visible;
+                        isBlocking = true;
+                        Blocking = success.Uri;
+                    },
+                    error =>
+                    {
+                        _ = MessageBox.Show($"Error: {error.StatusCode} {error.Detail}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    });
+            }
         }
 
         private void FollowersNum_MouseUp(object sender, MouseButtonEventArgs e)
@@ -295,6 +390,14 @@ namespace Client
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
             // fix
+            for (int i = 0; i < posts.Count; i++)
+            {
+                posts[i].UnloadPost();
+            }
+            for (int i = 0; i < scrollViewers.Count; i++)
+            {
+                scrollViewers[i].ScrollChanged -= ScrollViewer_ScrollChanged;
+            }
             Unloaded -= Page_Unloaded;
             test.LayoutUpdated -= Wrapper_LayoutUpdated;
             Rectangular.MouseUp -= Rectangle_MouseUp;
@@ -322,6 +425,7 @@ namespace Client
             StarterPacksStack.Children.Clear();
             ListsStack.Children.Clear();
             FeedTabControl.Items.Clear();
+            detailsStack.Children.Clear();
             test.Children.Clear();
             wrapper.Children.Clear();
             ((Grid)Content).Children.Clear();

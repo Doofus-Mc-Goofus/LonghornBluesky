@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Media;
 using System.Runtime.InteropServices;
@@ -47,6 +48,19 @@ bool fEnable);
         public async Task Load()
         {
             PlayWelcomeSound();
+            if (File.Exists("config.ini"))
+            {
+                IniFile myIni = new IniFile("config.ini");
+                if (myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "0")
+                {
+                    // Hide unfinished things
+                    Explore.Visibility = Visibility.Collapsed;
+                    Notifs.Visibility = Visibility.Collapsed;
+                    Chat.Visibility = Visibility.Collapsed;
+                    Feeds.Visibility = Visibility.Collapsed;
+                    Lists.Visibility = Visibility.Collapsed;
+                }
+            }
             var prefresult = await aTProtocol.GetPreferencesAsync();
             JObject obj = JObject.Parse(prefresult.Value.ToString());
             JArray arr = JArray.Parse(obj["preferences"].ToString());

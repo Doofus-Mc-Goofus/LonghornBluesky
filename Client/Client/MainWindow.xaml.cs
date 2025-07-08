@@ -63,7 +63,7 @@ namespace Client
             _ = MessageBox.Show(message + "\n\nThe client will now create a log and close.", "Fatal Error", MessageBoxButton.OK, MessageBoxImage.Error);
             using (FileStream fs = File.Create(DateTime.Now.Ticks + ".log"))
             {
-                byte[] info = new UTF8Encoding(true).GetBytes(message);
+                byte[] info = new UTF8Encoding(true).GetBytes(e.Exception.Message + "\n\n" + list);
                 fs.Write(info, 0, info.Length);
             }
             e.Handled = true;
@@ -81,7 +81,7 @@ namespace Client
             Login loginpage = new Login(this);
             this.Content = loginpage;
             HKCU_AddKey(@"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", "Client.exe", 11000);
-            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.1.0-pre");
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.1.0");
             if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "Ver") == "")
             {
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Remember", "false");

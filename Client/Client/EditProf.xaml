@@ -51,7 +51,7 @@
                     <TextBox x:Name="Username" Text="Display Name" Foreground="Gray" GotKeyboardFocus="Username_GotKeyboardFocus" LostKeyboardFocus="Username_LostKeyboardFocus"/>
                     <Label Content="Description:" Padding="0,15,0,5" Foreground="#FF0D467A" FontFamily="Segoe UI Semibold" MouseUp="Rectangle_MouseUp"/>
                     <TextBox x:Name="Bio" TextWrapping="Wrap" Text="Tell us a bit about yourself" Height="86" Foreground="Gray" LostKeyboardFocus="Bio_LostKeyboardFocus" GotKeyboardFocus="Bio_GotKeyboardFocus"/>
-                    <StackPanel x:Name="SecretFeatures">
+                    <StackPanel x:Name="SecretFeatures" Visibility="Collapsed">
                         <Label Content="Profile Color:" Padding="0,15,0,5" Foreground="#FF0D467A" FontFamily="Segoe UI Semibold" MouseUp="Rectangle_MouseUp"/>
                         <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
                             <Grid>

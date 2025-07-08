@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignWidth="540" Unloaded="UserControl_Unloaded">
+             d:DesignWidth="540">
     <Grid Margin="15,0,15,0">
         <Rectangle x:Name="TheBackground" RadiusX="3" RadiusY="3" Stroke="#FF9FBDD2" Margin="-25,0,-25,0" Focusable="True">
             <Rectangle.Fill>
@@ -39,6 +39,14 @@
                 <TextBlock x:Name="Fullname" FontStyle="Italic" Foreground="#FF9AA6B1" Margin="40,26,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="SelectPost_MouseEnter" MouseLeave="SelectPost_MouseLeave" MouseUp="SelectPost_MouseUp"/>
                 <StackPanel x:Name="wrapPanel" Margin="0,46,0,32" >
                     <TextBlock x:Name="Text" TextWrapping="Wrap" Width="{Binding ActualWidth, ElementName=wrapPanel, Mode=OneWay}" MouseEnter="SelectPost_MouseEnter" MouseLeave="SelectPost_MouseLeave" MouseUp="SelectPost_MouseUp"/>
+                    <Expander x:Name="ContentHidden" Header="Content Hidden" BorderBrush="#FF9FBDD2" Padding="5" Visibility="Collapsed" Margin="0,10,0,5">
+                        <Expander.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#BFEDF7FF"/>
+                                <GradientStop Color="#7FE0F1FF" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Expander.Background>
+                    </Expander>
                     <StackPanel x:Name="Images" Orientation="Horizontal" Margin="0,10,0,5" Visibility="Collapsed"/>
                     <Grid x:Name="Quote" Margin="10,10,10,5" Visibility="Collapsed">
                         <Rectangle RadiusX="3" RadiusY="3" Stroke="#FF9FBDD2" Margin="-10,0,-10,0">
@@ -112,7 +120,7 @@
                             <Separator/>
                             <MenuItem Header="Mute account"/>
                             <MenuItem Header="Block account"/>
-                            <MenuItem Header="Report post"/>
+                            <MenuItem Header="Report post" Click="ReportContext_Click"/>
                         </ContextMenu>
                     </Image.ContextMenu>
                 </Image>

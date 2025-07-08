@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using FishyFlip;
 using FishyFlip.Lexicon.App.Bsky.Feed;
 using FishyFlip.Models;
@@ -17,6 +19,7 @@ namespace Client
         private readonly ATProtocol aTProtocol;
         private readonly string uri;
         private readonly Dashboard dashboard;
+        private readonly List<Post> posts = new List<Post>();
         public PostPage(string uri, ATProtocol aTProtocol, Dashboard dashboard)
         {
             InitializeComponent();
@@ -31,6 +34,7 @@ namespace Client
             Result<GetPostThreadOutput> thread = await aTProtocol.GetPostThreadAsync(ATUri.Create(uri), 6, 10);
             Post post = new Post(JObject.Parse(JObject.Parse(thread.Value.ToString())["thread"].ToString()), dashboard, aTProtocol, true, false, false);
             _ = PostGrid.Children.Add(post);
+            posts.Add(post);
             if (JObject.Parse(thread.Value.ToString())["thread"]["replies"] != null)
             {
                 JArray pingas = JArray.Parse(JObject.Parse(thread.Value.ToString())["thread"]["replies"].ToString());
@@ -41,6 +45,7 @@ namespace Client
                     {
                         Post reply = new Post(JObject.Parse(pingas[i].ToString()), dashboard, aTProtocol, false, false, false);
                         _ = ReplyStack.Children.Add(reply);
+                        posts.Add(reply);
                     }
                 }
             }
@@ -53,6 +58,10 @@ namespace Client
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
+            for (int i = 0; i < posts.Count; i++)
+            {
+                posts[i].UnloadPost();
+            }
             Unloaded -= Page_Unloaded;
             PostStack.LayoutUpdated -= Swaus;
             ReplyStack.Children.Clear();

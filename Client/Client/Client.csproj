@@ -369,6 +369,9 @@
     <Compile Include="Profile.xaml.cs">
       <DependentUpon>Profile.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ReportModeration.xaml.cs">
+      <DependentUpon>ReportModeration.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
@@ -430,6 +433,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profile.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ReportModeration.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -639,6 +646,7 @@
     <Resource Include="res\Bitmap602.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="res\themes\slate.png" />
     <Resource Include="res\HelpIconHD.png" />
     <Resource Include="res\RegionIcon.png" />
     <Resource Include="res\AccessibilityIcon.png" />
