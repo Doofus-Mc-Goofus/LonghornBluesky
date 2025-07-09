@@ -51,7 +51,6 @@ namespace Client
                     replyRefDef.Root = StrongRef.FromJson(JObject.Parse(JObject.Parse(thread.Value.ToString())["thread"].ToString())["post"]["record"]["reply"]["root"].ToString());
                     break;
             }
-            System.Windows.Forms.Clipboard.SetText(JObject.Parse(JObject.Parse(thread.Value.ToString())["thread"].ToString()).ToString());
             whatsUpControl.ReplyTrans(replyRefDef);
             _ = Stackie.Children.Add(whatsUpControl);
             if (JObject.Parse(thread.Value.ToString())["thread"]["replies"] != null)

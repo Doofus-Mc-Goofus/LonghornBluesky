@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using FishyFlip;
+using FishyFlip.Lexicon;
 using FishyFlip.Lexicon.App.Bsky.Actor;
 using FishyFlip.Lexicon.App.Bsky.Feed;
 using FishyFlip.Lexicon.App.Bsky.Graph;
@@ -441,6 +442,12 @@ namespace Client
             test.Children.Clear();
             wrapper.Children.Clear();
             ((Grid)Content).Children.Clear();
+        }
+
+        private void ReportContext_Click(object sender, RoutedEventArgs e)
+        {
+            // ReportModeration reportModeration = new ReportModeration(tvp.Post.Record, Username.Text, aTProtocol);
+            // reportModeration.Show();
         }
     }
 }

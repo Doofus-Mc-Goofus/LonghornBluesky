@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client"
         mc:Ignorable="d"
-        Title="ReportModeration" Height="240" Width="480" Closing="Window_Closing">
+        Title="ReportModeration" Height="280" Width="480" Closing="Window_Closing">
     <Grid>
         <Grid.Background>
             <RadialGradientBrush>
@@ -25,7 +25,7 @@
         <Grid x:Name="MainPage">
             <StackPanel x:Name="ReportMain" Margin="10,10,10,5">
                 <Label Content="Submit Report" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="16" Padding="0,0,0,16" Foreground="#FF0D467A"/>
-                <TextBlock x:Name="Description" Text="You have chosen to submit a report regarding the ___ &quot;___&quot;. Please enter the details below and submit the report to us." Padding="0,0,0,10" TextWrapping="Wrap"/>
+                <TextBlock x:Name="Description" Text="You have chosen to submit a report regarding the ___ &quot;___&quot;. Please enter the details below and submit the report to us." Padding="0,0,0,10" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" MaxHeight="74"/>
                 <Label Content="Report reason:" Padding="0,0,0,5"/>
                 <ComboBox x:Name="Reason" LostKeyboardFocus="HostProv_LostKeyboardFocus" GotKeyboardFocus="HostProv_GotKeyboardFocus" Margin="0,0,0,10" Padding="5,3,5,3">
                     <ComboBoxItem Content="Misleading" ToolTip="Impersonation or false claims about identity or affiliation" Tag="com.atproto.moderation.defs.reasonMisleading"/>

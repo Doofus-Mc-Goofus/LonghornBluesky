@@ -86,8 +86,8 @@
                     </Grid>
                 </StackPanel>
                 <StackPanel x:Name="statsWrapPanel" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,10" Orientation="Horizontal">
-                    <Image x:Name="ReplyIcon" VerticalAlignment="Bottom" Source="/res/RepliesIcon.png" Width="16" Height="16" HorizontalAlignment="Left" Margin="0,0,5,0" Cursor="Hand" MouseUp="Reply_MouseUp"/>
-                    <TextBlock x:Name="RepliesNumb" Text="0" Foreground="#FF5389BB" MouseLeave="Label_MouseLeave" MouseEnter="Label_MouseEnter" Cursor="Hand"/>
+                    <Image x:Name="ReplyIcon" VerticalAlignment="Bottom" Source="/res/RepliesIcon.png" Width="16" Height="16" HorizontalAlignment="Left" Margin="0,0,5,0"/>
+                    <TextBlock x:Name="RepliesNumb" Text="0" Foreground="#FF5389BB"/>
                     <Grid Width="25"/>
                     <Image x:Name="RepostIconThingy" VerticalAlignment="Bottom" Source="/res/RepostIcon.png" Width="16" Height="16" HorizontalAlignment="Left" Margin="0,0,5,0" Cursor="Hand" MouseUp="Repost_Click">
                         <Image.ContextMenu>
@@ -100,7 +100,14 @@
                             <DropShadowEffect x:Name="RepostGlow" ShadowDepth="0" Color="#FF82BFE3" BlurRadius="6" Opacity="0"/>
                         </Image.Effect>
                     </Image>
-                    <TextBlock x:Name="RepostNumb" Text="0" Foreground="#FF5389BB" MouseLeave="Label_MouseLeave" MouseEnter="Label_MouseEnter" Cursor="Hand"/>
+                    <TextBlock x:Name="RepostNumb" Text="0" Foreground="#FF5389BB" MouseLeave="Label_MouseLeave" MouseEnter="Label_MouseEnter" Cursor="Hand" MouseUp="RepostContext_Click">
+                        <TextBlock.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem x:Name="ViewRepost" Header="View reposts"/>
+                                <MenuItem x:Name="ViewQuote" Header="View quotes"/>
+                            </ContextMenu>
+                        </TextBlock.ContextMenu>
+                    </TextBlock>
                     <Grid Width="25"/>
                     <Image x:Name="LikeIcon" VerticalAlignment="Bottom" Source="/res/emoji/015.png" Width="16" Height="16" HorizontalAlignment="Left" Margin="0,0,5,0" Cursor="Hand" MouseUp="Like_MouseUp">
                         <Image.Effect>
@@ -118,9 +125,11 @@
                             <MenuItem Header="Mute thread"/>
                             <MenuItem Header="Mute words and tags"/>
                             <Separator/>
-                            <MenuItem Header="Mute account"/>
-                            <MenuItem Header="Block account"/>
-                            <MenuItem Header="Report post" Click="ReportContext_Click"/>
+                            <MenuItem x:Name="MuteAccount" Header="Mute account"/>
+                            <MenuItem x:Name="BlockAccount" Header="Block account"/>
+                            <MenuItem x:Name="ReportPost" Header="Report post" Click="ReportContext_Click"/>
+                            <MenuItem x:Name="EditInteraction" Header="Edit interaction settings" Visibility="Collapsed"/>
+                            <MenuItem x:Name="DeletePost" Header="Delete post" Click="DeletePost_Click" Visibility="Collapsed"/>
                         </ContextMenu>
                     </Image.ContextMenu>
                 </Image>

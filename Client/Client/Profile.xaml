@@ -80,7 +80,7 @@
                             <MenuItem Header="Add to lists"/>
                             <MenuItem x:Name="MuteContext" Header="Mute account"/>
                             <MenuItem x:Name="BlockContext" Header="Block account" Click="BlockContext_Click"/>
-                            <MenuItem x:Name="ReportContext" Header="Report account"/>
+                            <MenuItem x:Name="ReportContext" Header="Report account" Click="ReportContext_Click"/>
                         </ContextMenu>
                     </Button.ContextMenu>
                 </Button>

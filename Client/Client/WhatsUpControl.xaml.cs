@@ -42,6 +42,10 @@ namespace Client
             WhatsUpImages.Children.Clear();
             canEdit = true;
         }
+        public void FocusWhatsUp()
+        {
+            WhatsUp.Focus();
+        }
         private void Rectangle_MouseUp(object sender, MouseButtonEventArgs e)
         {
             _ = WhatsUpGrid.Focus();

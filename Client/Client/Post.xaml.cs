@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Media;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -13,10 +14,12 @@ using System.Windows.Threading;
 using FishyFlip;
 using FishyFlip.Lexicon;
 using FishyFlip.Lexicon.App.Bsky.Feed;
+using FishyFlip.Lexicon.App.Bsky.Unspecced;
 using FishyFlip.Lexicon.Com.Atproto.Repo;
 using FishyFlip.Lexicon.Community.Lexicon.Interaction;
 using FishyFlip.Models;
 using M3U8Parser;
+using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
 
 namespace Client
@@ -109,6 +112,14 @@ namespace Client
             if (isReposted)
             {
                 RepostGlow.Opacity = 100;
+            }
+            if (aTProtocol.Session.Did.Handler == post["post"]["author"]["did"].ToString())
+            {
+                MuteAccount.Visibility = Visibility.Collapsed;
+                BlockAccount.Visibility = Visibility.Collapsed;
+                ReportPost.Visibility = Visibility.Collapsed;
+                EditInteraction.Visibility = Visibility.Visible;
+                DeletePost.Visibility = Visibility.Visible;
             }
             UpdateTime();
             if (isReply)
@@ -247,12 +258,6 @@ namespace Client
             }
             if (!isFocused)
             {
-                RepliesNumb.MouseEnter -= Label_MouseEnter;
-                RepliesNumb.MouseLeave -= Label_MouseLeave;
-                RepliesNumb.MouseEnter += SelectPost_MouseEnter;
-                RepliesNumb.MouseLeave += SelectPost_MouseLeave;
-                RepliesNumb.MouseUp += SelectPost_MouseUp;
-                RepliesNumb.Cursor = Cursors.Arrow;
                 RepostNumb.MouseEnter -= Label_MouseEnter;
                 RepostNumb.MouseLeave -= Label_MouseLeave;
                 RepostNumb.MouseEnter += SelectPost_MouseEnter;
@@ -746,6 +751,13 @@ namespace Client
         {
             ((Image)sender).ContextMenu.IsOpen = true;
         }
+        private void RepostContext_Click(object sender, MouseButtonEventArgs e)
+        {
+            if (isFocused)
+            {
+                ((TextBlock)sender).ContextMenu.IsOpen = true;
+            }
+        }
         private async void RepostContext(object sender, RoutedEventArgs e)
         {
             Result<GetPostThreadOutput> thread = await aTProtocol.GetPostThreadAsync(ATUri.Create(post["post"]["uri"].ToString()));
@@ -794,12 +806,6 @@ namespace Client
             StrongRef quote = StrongRef.FromJson(post["post"].ToString());
             dashboard.QuotePost(new FishyFlip.Lexicon.App.Bsky.Embed.EmbedRecord(quote));
         }
-
-        private void Reply_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            // System.Windows.Forms.Clipboard.SetText(post.ToString());
-        }
-
         public void UnloadPost()
         {
             // The sun is leaking
@@ -846,12 +852,6 @@ namespace Client
             DeletedQuote.MouseEnter -= SelectPost_MouseEnter;
             DeletedQuote.MouseLeave -= SelectPost_MouseLeave;
             DeletedQuote.MouseUp -= SelectPost_MouseUp;
-            ReplyIcon.MouseUp -= Reply_MouseUp;
-            RepliesNumb.MouseEnter -= Label_MouseEnter;
-            RepliesNumb.MouseLeave -= Label_MouseLeave;
-            RepliesNumb.MouseEnter -= SelectPost_MouseEnter;
-            RepliesNumb.MouseLeave -= SelectPost_MouseLeave;
-            RepliesNumb.MouseUp -= SelectPost_MouseUp;
             RepostIconThingy.MouseUp -= Repost_Click;
             Repost.Click -= RepostContext;
             Quote1.Click -= QuoteContext;
@@ -891,10 +891,73 @@ namespace Client
             }
         }
 
-        private void ReportContext_Click(object sender, RoutedEventArgs e)
+        private async void ReportContext_Click(object sender, RoutedEventArgs e)
         {
             // fix
-            // ReportModeration reportModeration = new ReportModeration(ATObject.Create(post["post"]["author"]["did"].ToString()), Text.Text, aTProtocol);
+            var result = await aTProtocol.GetPostThreadAsync(ATUri.Create(post["post"]["uri"].ToString()));
+            result.Switch(
+                success =>
+                {
+                    switch (success.Thread)
+                    {
+                        case ThreadViewPost tvp:
+                            string fish = Text.Text.Substring(0, 50);
+                            if (fish.Length == 50)
+                            {
+                                fish += "...";
+                            }
+                            ReportModeration reportModeration = new ReportModeration(tvp.Post.Record, fish, aTProtocol);
+                            reportModeration.Show();
+                            break;
+                    }
+                },
+                error =>
+                {
+
+                });
+        }
+
+        private async void DeletePost_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this post? If you delete this post, you will not be able to recover it.", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
+            {
+                Result<DeleteRecordOutput> result2 = await aTProtocol.DeletePostAsync(aTProtocol.Session.Did, ATUri.Create(post["post"]["uri"].ToString()).Rkey);
+                result2.Switch(
+                    success =>
+                    {
+                        SoundPlayer soundPlayer = new SoundPlayer(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "DELETE"));
+                        soundPlayer.Play();
+                        if (post["parent"] != null)
+                        {
+                            dashboard.NavigateToPost(post["parent"]["post"]["uri"].ToString());
+                        }
+                        else if (post["reply"] != null)
+                        {
+                            if (post["reply"]["parent"] != null)
+                            {
+                                dashboard.NavigateToPost(post["reply"]["parent"]["uri"].ToString());
+                            }
+                        }
+                        else
+                        {
+                            dashboard.NavigateToProfile(post["post"]["author"]["did"].ToString());
+                        }
+                    },
+                    error =>
+                    {
+                        _ = MessageBox.Show(error.Detail.Error + "\n\n" + error.Detail.Message + "\n\n" + error.Detail.StackTrace, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    });
+            }
+        }
+        public string HKCU_GetString(string path, string key)
+        {
+            try
+            {
+                RegistryKey rk = Registry.CurrentUser.OpenSubKey(path);
+                return rk == null ? "" : (string)rk.GetValue(key);
+            }
+            catch { return ""; }
         }
     }
 }

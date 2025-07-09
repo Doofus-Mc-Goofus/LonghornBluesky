@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -21,6 +22,7 @@ namespace Client
         private readonly Dashboard dashboard;
         private string cursor = "";
         private bool isLoading = false;
+        private readonly List<User> users = new List<User>();
         public FollowPage(ATDid Uri, ATProtocol aTProtocol, bool isBy, Dashboard dashboard, int number)
         {
             InitializeComponent();
@@ -45,6 +47,7 @@ namespace Client
                         // fix this
                         User user = new User(JObject.Parse(bingus["follows"][i].ToString()), dashboard, aTProtocol);
                         _ = ReplyStack.Children.Add(user);
+                        users.Add(user);
                     }
                     cursor = bingus["cursor"].ToString();
                 }
@@ -57,6 +60,7 @@ namespace Client
                     {
                         User user = new User(JObject.Parse(bingus["followers"][i].ToString()), dashboard, aTProtocol);
                         _ = ReplyStack.Children.Add(user);
+                        users.Add(user);
                     }
                     cursor = bingus["cursor"].ToString();
                 }
@@ -94,6 +98,10 @@ namespace Client
         private void Page_Unloaded(object sender, System.Windows.RoutedEventArgs e)
         {
             // fix
+            for (int i = 0; i < users.Count; i++)
+            {
+                users[i].UnloadUser();
+            }
             Unloaded -= Page_Unloaded;
             ReplyStack.Children.Clear();
             FeedTabControl.Items.Clear();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Media;
 using System.Net.Http;
 using System.Runtime;
 using System.Text;
@@ -81,7 +82,7 @@ namespace Client
             Login loginpage = new Login(this);
             this.Content = loginpage;
             HKCU_AddKey(@"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", "Client.exe", 11000);
-            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.1.1");
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.1.2");
             if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "Ver") == "")
             {
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Remember", "false");
@@ -127,11 +128,8 @@ namespace Client
                 notifyIcon1.BalloonTipText = "Click here to install the updates now";
                 notifyIcon1.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
                 notifyIcon1.ShowBalloonTip(10000);
-                MediaPlayer mediaPlayer = new MediaPlayer();
-                mediaPlayer.Open(new Uri(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "UPDATEALERT"), UriKind.RelativeOrAbsolute));
-                mediaPlayer.Play();
-                mediaPlayer.MediaFailed += MediaPlayer_MediaFailed;
-                mediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
+                SoundPlayer soundPlayer = new SoundPlayer(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "UPDATEALERT"));
+                soundPlayer.Play();
             }
         }
 
@@ -166,7 +164,7 @@ namespace Client
                         StartInfo = new ProcessStartInfo
                         {
                             FileName = @"explorer",
-                            Arguments = @"https://github.com/Doofus-Mc-Goofus/LonghornBluesky"
+                            Arguments = @"https://github.com/Doofus-Mc-Goofus/LonghornBluesky/releases/latest"
                         }
                     };
                     _ = await Task.Run(process.Start);

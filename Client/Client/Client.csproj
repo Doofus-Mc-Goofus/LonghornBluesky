@@ -350,6 +350,9 @@
     <Compile Include="EditProf.xaml.cs">
       <DependentUpon>EditProf.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Explore.xaml.cs">
+      <DependentUpon>Explore.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FollowPage.xaml.cs">
       <DependentUpon>FollowPage.xaml</DependentUpon>
     </Compile>
@@ -393,6 +396,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="EditProf.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Explore.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -653,6 +660,8 @@
     <Resource Include="res\Bitmap602.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="res\guest.png" />
+    <Resource Include="res\Orb.png" />
     <Resource Include="res\themes\slate.png" />
     <Resource Include="res\HelpIconHD.png" />
     <Resource Include="res\RegionIcon.png" />

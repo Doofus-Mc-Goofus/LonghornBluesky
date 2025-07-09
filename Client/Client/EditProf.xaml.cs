@@ -82,7 +82,7 @@ namespace Client
                 DisplayName = Username.Text
             };
             // fix
-            Result<PutRecordOutput> result = await aTProtocol.Actor.PutProfileAsync("", profile);
+            Result<PutRecordOutput> result = await aTProtocol.PutProfileAsync(session.Did, "", profile);
             _ = MessageBox.Show(result.Value.ToString());
             dashboard.NavigateToProfile(ATDid.ToString());
         }

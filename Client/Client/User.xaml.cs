@@ -128,11 +128,9 @@ namespace Client
             }
         }
 
-        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        public void UnloadUser()
         {
             // fix
-            Unloaded -= UserControl_Unloaded;
-            Unloaded -= UserControl_Unloaded;
             SelectPost.MouseEnter -= SelectPost_MouseEnter;
             SelectPost.MouseLeave -= SelectPost_MouseLeave;
             SelectPost.MouseUp -= SelectPost_MouseUp;

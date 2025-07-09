@@ -53,7 +53,7 @@ namespace Client
                 if (myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "0")
                 {
                     // Hide unfinished things
-                    Explore.Visibility = Visibility.Collapsed;
+                    // Explore.Visibility = Visibility.Collapsed;
                     Notifs.Visibility = Visibility.Collapsed;
                     Chat.Visibility = Visibility.Collapsed;
                     Feeds.Visibility = Visibility.Collapsed;
@@ -245,14 +245,14 @@ namespace Client
 
         private void Explore_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Explore_Text.FontFamily = new System.Windows.Media.FontFamily("Segoe UI Semibold");
+            Explore_Text.FontFamily = new FontFamily("Segoe UI Semibold");
             Explore_BG.Visibility = Visibility.Visible;
             Explore_BG.Opacity = 1;
             selectobjectsidebar = 2;
             HideOthersSidebar();
-            HandleableError usororer = new HandleableError(new ATError(418, new ErrorDetail("", "I'm a teapot")));
+            Explore explore = new Explore(aTProtocol, this);
             PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
-            _ = PageFrame.NavigationService.Navigate(usororer);
+            _ = PageFrame.NavigationService.Navigate(explore);
         }
         private void Notifs_MouseEnter(object sender, MouseEventArgs e)
         {

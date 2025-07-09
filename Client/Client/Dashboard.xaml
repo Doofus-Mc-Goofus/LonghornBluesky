@@ -122,6 +122,16 @@
                                 </Rectangle.Fill>
                             </Rectangle>
                             <Image Source="/res/MailIcon.png" Height="24" HorizontalAlignment="Left" Margin="14,0,0,0"/>
+                            <Grid x:Name="NotifNumbGrid" Margin="26,0,0,0" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="Collapsed">
+                                <Grid.Background>
+                                    <ImageBrush ImageSource="/res/Orb.png"/>
+                                </Grid.Background>
+                                <Label x:Name="NotifNumb" HorizontalAlignment="Left" VerticalAlignment="Top" Height="16" Padding="3,0,3,0" HorizontalContentAlignment="Center" Foreground="White" VerticalContentAlignment="Center" MinWidth="16" Content="0" Background="{x:Null}">
+                                    <Label.Effect>
+                                        <DropShadowEffect ShadowDepth="0" BlurRadius="4" Color="#FF0D467A"/>
+                                    </Label.Effect>
+                                </Label>
+                            </Grid>
                             <Label x:Name="Notifs_Text" Foreground="#FF0D467A" Content="Notifications" VerticalContentAlignment="Center" Margin="42,0,0,0"/>
                         </Grid>
                         <Grid x:Name="Chat" Width="240" Height="32" Margin="0,0,0,2" MouseEnter="Chat_MouseEnter" MouseLeave="Chat_MouseLeave" MouseUp="Chat_MouseUp">
