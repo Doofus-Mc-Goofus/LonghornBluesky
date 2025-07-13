@@ -44,7 +44,7 @@ namespace Client
         }
         public void FocusWhatsUp()
         {
-            WhatsUp.Focus();
+            _ = WhatsUp.Focus();
         }
         private void Rectangle_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -528,6 +528,7 @@ namespace Client
             WhatsUpImages.Children.Clear();
             textwrapper.Children.Clear();
             wrapper.Children.Clear();
+            GC.SuppressFinalize(this);
         }
     }
 }

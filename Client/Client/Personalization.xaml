@@ -1,0 +1,99 @@
+﻿<Page x:Class="Client.Personalization"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Client"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="500"
+      Title="Personalization" UseLayoutRounding="True" Unloaded="Page_Unloaded">
+    <Grid x:Name="homie" Margin="20">
+        <Rectangle x:Name="rect" RadiusX="3" RadiusY="3" Stroke="#54E0F6FF" MouseUp="Rectangle_MouseUp" Focusable="True">
+            <Rectangle.Effect>
+                <DropShadowEffect ShadowDepth="5" Opacity="0.33" BlurRadius="10" Direction="270"/>
+            </Rectangle.Effect>
+            <Rectangle.Fill>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#CCCEEAFF"/>
+                    <GradientStop Color="#7FCDE9FF" Offset="1"/>
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+        <StackPanel Margin="10,10,10,42">
+            <StackPanel x:Name="Secret">
+                <Expander>
+                    <Expander.Header>
+                        <TextBlock Text="Themes" Foreground="#FF0D467A" FontFamily="Segoe UI Semibold"/>
+                    </Expander.Header>
+                    <StackPanel Margin="0,10,0,0">
+                        <Label Content="Visual Styles:" Padding="0,0,0,5" />
+                        <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
+                            <Grid>
+                                <Rectangle Fill="White" Stroke="#FFABADB3"/>
+                                <StackPanel x:Name="VisualStyleStack" Orientation="Horizontal" Margin="5">
+                                    <Grid Width="48" Margin="5,0,5,0" Visibility="Collapsed">
+                                        <Rectangle Fill="#CCFF5A5A">
+                                            <Rectangle.OpacityMask>
+                                                <ImageBrush ImageSource="/res/ThemeFrameMask.png"/>
+                                            </Rectangle.OpacityMask>
+                                        </Rectangle>
+                                        <Image Source="/res/ThemeFrame.png"/>
+                                        <Image Source="/res/JadeIcon.png" Width="32" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+                                    </Grid>
+                                    <StackPanel Width="48" Margin="5" ToolTip="Jade">
+                                        <Image Source="/res/JadeIcon.png" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+                                        <TextBlock VerticalAlignment="Bottom" Text="Jade" HorizontalAlignment="Center" MaxWidth="48" TextWrapping="Wrap" TextAlignment="Center" Margin="0,5,0,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </ScrollViewer>
+                    </StackPanel>
+                </Expander>
+                <Separator/>
+            </StackPanel>
+            <Expander>
+                <Expander.Header>
+                    <TextBlock Text="Sounds" Foreground="#FF0D467A" FontFamily="Segoe UI Semibold"/>
+                </Expander.Header>
+                <StackPanel Margin="0,10,0,0">
+                    <Label Content="Notification Sound:" Padding="0,0,0,5" />
+                    <ComboBox x:Name="NOTIFBOX" Margin="0,0,0,10" SelectedIndex="0">
+                        <ComboBoxItem Content="Longhorn Notification" ToolTip="LH_NOTIF.wav"/>
+                    </ComboBox>
+                    <Label Content="Alert Sound:" Padding="0,0,0,5" />
+                    <ComboBox x:Name="ALERTBOX" Margin="0,0,0,10" SelectedIndex="0">
+                        <ComboBoxItem Content="Longhorn Alert" ToolTip="LH_ALERT.wav"/>
+                    </ComboBox>
+                    <Label Content="Important Alert Sound:" Padding="0,0,0,5" />
+                    <ComboBox x:Name="IMPORTANTALERTBOX" Margin="0,0,0,10" SelectedIndex="0">
+                        <ComboBoxItem Content="Longhorn Important Alert" ToolTip="LH_UPDATEALERT.wav"/>
+                    </ComboBox>
+                    <Label Content="Posting Sound:" Padding="0,0,0,5" />
+                    <ComboBox x:Name="POSTBOX" Margin="0,0,0,10" SelectedIndex="0">
+                        <ComboBoxItem Content="Longhorn Posting" ToolTip="LH_POST.wav"/>
+                    </ComboBox>
+                    <Label Content="Deleting Sound:" Padding="0,0,0,5" />
+                    <ComboBox x:Name="DELETEBOX" Margin="0,0,0,10" SelectedIndex="0">
+                        <ComboBoxItem Content="Longhorn Deleting" ToolTip="LH_DELETE.wav"/>
+                    </ComboBox>
+                    <CheckBox Margin="0,0,0,7" Content="Playing logon and logoff sounds" Checked="LogCheck" Unchecked="LogUncheck"/>
+                    <StackPanel x:Name="LogSounds" Visibility="Collapsed">
+                        <Label Content="Logon Sound:" Padding="0,0,0,5" />
+                        <ComboBox x:Name="LOGONBOX" Margin="0,0,0,10" SelectedIndex="0">
+                            <ComboBoxItem Content="Longhorn Logon" ToolTip="LH_WELCOME.wav"/>
+                        </ComboBox>
+                        <Label Content="Logoff Sound:" Padding="0,0,0,5" />
+                        <ComboBox x:Name="LOGOFFBOX" Margin="0,0,0,10" SelectedIndex="0">
+                            <ComboBoxItem Content="Longhorn Logoff" ToolTip="LH_ACCOUNTDELETE.wav"/>
+                        </ComboBox>
+                    </StackPanel>
+                </StackPanel>
+            </Expander>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+            <Button x:Name="OK" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="OK" Padding="0,1,0,1" Width="70" Click="OK_Click" Margin="0,0,7,0"/>
+            <Button x:Name="Cancel" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Cancel" Padding="0,1,0,1" Width="70" Click="Cancel_Click" Margin="0,0,7,0"/>
+            <Button x:Name="Apply" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Apply" Padding="0,1,0,1" Width="70" Click="Apply_Click"/>
+        </StackPanel>
+    </Grid>
+</Page>

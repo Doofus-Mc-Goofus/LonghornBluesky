@@ -176,17 +176,18 @@ namespace Client
                 stillLoading = true;
                 try
                 {
+                    int numb = FeedTabControl.SelectedIndex;
                     JArray feedlist = new JArray();
                     JObject postresultparse = new JObject();
-                    if (FeedTabControl.SelectedIndex <= 3)
+                    if (numb <= 3)
                     {
-                        Result<GetAuthorFeedOutput> postsresult = await aTProtocol.GetAuthorFeedAsync(ATDid, 10, cursors[FeedTabControl.SelectedIndex], GetFilterType(FeedTabControl.SelectedIndex), false);
+                        Result<GetAuthorFeedOutput> postsresult = await aTProtocol.GetAuthorFeedAsync(ATDid, 10, cursors[numb], GetFilterType(numb), false);
                         feedlist = JArray.Parse(JObject.Parse(postsresult.Value.ToString())["feed"].ToString());
                         postresultparse = JObject.Parse(postsresult.Value.ToString());
                     }
-                    else if (FeedTabControl.SelectedIndex == 4)
+                    else if (numb == 4)
                     {
-                        Result<GetActorLikesOutput> postsresult = await aTProtocol.GetActorLikesAsync(ATDid, 10, cursors[FeedTabControl.SelectedIndex]);
+                        Result<GetActorLikesOutput> postsresult = await aTProtocol.GetActorLikesAsync(ATDid, 10, cursors[numb]);
                         feedlist = JArray.Parse(JObject.Parse(postsresult.Value.ToString())["feed"].ToString());
                         postresultparse = JObject.Parse(postsresult.Value.ToString());
                     }
@@ -206,13 +207,13 @@ namespace Client
                         DateTime dateTime = feedlist[feedlist.Count - 1]["reason"] != null
                         ? (DateTime)feedlist[feedlist.Count - 1]["reason"]["indexedAt"]
                         : (DateTime)feedlist[feedlist.Count - 1]["post"]["record"]["createdAt"];
-                        if (FeedTabControl.SelectedIndex <= 3)
+                        if (numb <= 3)
                         {
-                            cursors[FeedTabControl.SelectedIndex] = dateTime.ToString("yyyy-MM-dd") + "T" + dateTime.ToString("HH:mm:ss") + "Z";
+                            cursors[numb] = dateTime.ToString("yyyy-MM-dd") + "T" + dateTime.ToString("HH:mm:ss") + "Z";
                         }
-                        else if (FeedTabControl.SelectedIndex == 4)
+                        else if (numb == 4)
                         {
-                            cursors[FeedTabControl.SelectedIndex] = postresultparse["cursor"].ToString();
+                            cursors[numb] = postresultparse["cursor"].ToString();
                         }
                     }
                 }
@@ -442,12 +443,35 @@ namespace Client
             test.Children.Clear();
             wrapper.Children.Clear();
             ((Grid)Content).Children.Clear();
+            GC.SuppressFinalize(this);
         }
 
         private void ReportContext_Click(object sender, RoutedEventArgs e)
         {
             // ReportModeration reportModeration = new ReportModeration(tvp.Post.Record, Username.Text, aTProtocol);
             // reportModeration.Show();
+        }
+        private void DisposeImage(BitmapImage image)
+        {
+            if (image != null)
+            {
+                try
+                {
+                    using (MemoryStream ms = new MemoryStream(new byte[] { 0x0 }))
+                    {
+                        image.StreamSource = ms;
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
+
+        private void CopyLink_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.Clipboard.SetText("at://" + ATDid.ToString());
+            _ = MessageBox.Show("Copied link to profile", "", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

@@ -88,6 +88,7 @@ namespace Client
             PostGrid.Children.Clear();
             PostStack.Children.Clear();
             ((ScrollViewer)Content).Content = null;
+            GC.SuppressFinalize(this);
         }
     }
 }

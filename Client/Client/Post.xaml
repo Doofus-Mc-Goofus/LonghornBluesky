@@ -119,14 +119,14 @@
                 <Image x:Name="More" VerticalAlignment="Bottom" Source="/res/MoreIcon.png" Width="16" Height="16" HorizontalAlignment="Right" Margin="0,0,0,10" Cursor="Hand" MouseUp="Repost_Click">
                     <Image.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Header="Copy post text"/>
-                            <MenuItem Header="Copy post link"/>
+                            <MenuItem x:Name="CopyPostTextItem" Header="Copy post text" Click="CopyPostText"/>
+                            <MenuItem x:Name="CopyPostLinkItem" Header="Copy post link" Click="CopyPostLink"/>
                             <Separator/>
                             <MenuItem Header="Mute thread"/>
                             <MenuItem Header="Mute words and tags"/>
                             <Separator/>
                             <MenuItem x:Name="MuteAccount" Header="Mute account"/>
-                            <MenuItem x:Name="BlockAccount" Header="Block account"/>
+                            <MenuItem x:Name="BlockAccount" Header="Block account" Click="BlockAccount_Click"/>
                             <MenuItem x:Name="ReportPost" Header="Report post" Click="ReportContext_Click"/>
                             <MenuItem x:Name="EditInteraction" Header="Edit interaction settings" Visibility="Collapsed"/>
                             <MenuItem x:Name="DeletePost" Header="Delete post" Click="DeletePost_Click" Visibility="Collapsed"/>

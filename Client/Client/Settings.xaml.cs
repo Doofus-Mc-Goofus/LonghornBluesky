@@ -20,9 +20,7 @@ namespace Client
         private readonly Session session;
         private readonly Dashboard dashboard;
         private byte selectobjectsidebar;
-#pragma warning disable IDE0044 // Add readonly modifier
         private bool isRoot = true;
-#pragma warning restore IDE0044 // Add readonly modifier
         public Settings(ATProtocol aTProtocol, Session session, Dashboard dashboard)
         {
             InitializeComponent();
@@ -58,9 +56,18 @@ namespace Client
 
         private void Back_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Back.Source = isRoot
-                ? new BitmapImage(new Uri("pack://application:,,,/res/BackDisabled.png"))
-                : new BitmapImage(new Uri("pack://application:,,,/res/BackHover.png"));
+            GoBack();
+        }
+        public void GoBack()
+        {
+            Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackDisabled.png"));
+            if (!isRoot)
+            {
+                isRoot = true;
+                Title.Text = "Settings";
+                PageFrame.Visibility = Visibility.Collapsed;
+                homie.Visibility = Visibility.Visible;
+            }
         }
         private void Account_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -249,7 +256,12 @@ namespace Client
             Personalization_BG.Opacity = 1;
             selectobjectsidebar = 0;
             HideOthersSidebar();
-            HandleableError usororer = new HandleableError(new ATError(418, new ErrorDetail("", "I'm a teapot")));
+            isRoot = false;
+            Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackNormal.png"));
+            Title.Text = "Personalization";
+            PageFrame.Visibility = Visibility.Visible;
+            homie.Visibility = Visibility.Collapsed;
+            Personalization usororer = new Personalization(this);
             PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
             _ = PageFrame.NavigationService.Navigate(usororer);
         }
@@ -377,7 +389,7 @@ namespace Client
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             homie.Margin = new Thickness(20, test.ActualHeight + 20, 20, 20);
-            PageFrame.Margin = new Thickness(20, test.ActualHeight + 20, 20, 20);
+            PageFrame.Margin = new Thickness(0, test.ActualHeight, 0, 0);
         }
 
         private void Rectangle_MouseUp(object sender, MouseButtonEventArgs e)
@@ -437,6 +449,7 @@ namespace Client
             test.Children.Clear();
             ((Grid)aegaegaegag.Content).Children.Clear();
             aegaegaegag.Content = null;
+            GC.SuppressFinalize(this);
         }
     }
 }

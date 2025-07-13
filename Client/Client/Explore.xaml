@@ -10,7 +10,7 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto" ScrollChanged="ScrollViewer_ScrollChanged">
         <StackPanel Margin="20">
             <Grid x:Name="SearchGrid" Margin="0,0,0,20">
-                <Rectangle RadiusX="3" RadiusY="3" Stroke="#54E0F6FF" >
+                <Rectangle x:Name="rect" RadiusX="3" RadiusY="3" Stroke="#54E0F6FF" Focusable="True" >
                     <Rectangle.Effect>
                         <DropShadowEffect ShadowDepth="5" Opacity="0.33" BlurRadius="10" Direction="270"/>
                     </Rectangle.Effect>
@@ -22,9 +22,24 @@
                     </Rectangle.Fill>
                 </Rectangle>
                 <Label Content="To begin, type in the search box" FontSize="16" VerticalAlignment="Top" Foreground="#FF0D467A" HorizontalAlignment="Center" Padding="10,14,10,14"/>
-                <TextBox x:Name="Search" Margin="15,48,46,10" Text="Search for posts, users, or feeds" Foreground="Gray" VerticalAlignment="Top" LostKeyboardFocus="Search_LostKeyboardFocus" GotKeyboardFocus="Search_GotKeyboardFocus"/>
+                <TextBox x:Name="Search" Margin="15,48,46,10" Text="Search for posts, users, or feeds" Foreground="Gray" VerticalAlignment="Top" LostKeyboardFocus="Search_LostKeyboardFocus" GotKeyboardFocus="Search_GotKeyboardFocus" Padding="1,1,18,1"/>
+                <Image x:Name="ClearButton" Source="/res/CloseNormal.png" Stretch="None" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,48,13" ToolTip="Clear" MouseDown="ClearButton_MouseDown" MouseEnter="ClearButton_MouseEnter" MouseLeave="ClearButton_MouseLeave" MouseUp="ClearButton_MouseUp" Visibility="Collapsed"/>
                 <Image x:Name="PassBoxButton" Source="/res/signinbutton-1.png" Stretch="None" HorizontalAlignment="Right" VerticalAlignment="Bottom" MouseDown="PassBoxButton_MouseDown" MouseEnter="PassBoxButton_MouseEnter" MouseLeave="PassBoxButton_MouseLeave" MouseUp="PassBoxButton_MouseUp" Margin="0,0,15,5" ToolTip="Go"/>
             </Grid>
+            <Grid x:Name="TrendingGrid" Margin="0,0,0,20">
+                <Rectangle RadiusX="3" RadiusY="3" Stroke="#54E0F6FF" Focusable="True" >
+                    <Rectangle.Effect>
+                        <DropShadowEffect ShadowDepth="5" Opacity="0.33" BlurRadius="10" Direction="270"/>
+                    </Rectangle.Effect>
+                    <Rectangle.Fill>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#CCCEEAFF"/>
+                            <GradientStop Color="#7FCDE9FF" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+            </Grid>
+
             <Grid x:Name="FeedGrid" Focusable="True" Margin="0,0,0,0" Visibility="Collapsed">
                 <TabControl x:Name="FeedTabControl" Padding="0" ScrollViewer.CanContentScroll="True" BorderThickness="0" Background="{x:Null}" Panel.ZIndex="1" SelectedIndex="1">
                     <TabItem Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="#FF9FBDD2" Visibility="Collapsed"/>

@@ -108,6 +108,7 @@ namespace Client
             FeedGrid.Children.Clear();
             PostGrid.Children.Clear();
             ((ScrollViewer)Content).Content = null;
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -363,6 +363,12 @@
       <DependentUpon>Home.xaml</DependentUpon>
     </Compile>
     <Compile Include="IniFile.cs" />
+    <Compile Include="NotificationOverlay.xaml.cs">
+      <DependentUpon>NotificationOverlay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Personalization.xaml.cs">
+      <DependentUpon>Personalization.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Post.xaml.cs">
       <DependentUpon>Post.xaml</DependentUpon>
     </Compile>
@@ -381,6 +387,9 @@
     <Compile Include="ShellHelper.cs" />
     <Compile Include="Support.xaml.cs">
       <DependentUpon>Support.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Toast.xaml.cs">
+      <DependentUpon>Toast.xaml</DependentUpon>
     </Compile>
     <Compile Include="User.xaml.cs">
       <DependentUpon>User.xaml</DependentUpon>
@@ -434,6 +443,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="NotificationOverlay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Personalization.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Post.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -455,6 +472,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Support.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Toast.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -660,6 +681,16 @@
     <Resource Include="res\Bitmap602.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="res\ForwardDisabled.png" />
+    <Resource Include="res\ForwardHover.png" />
+    <Resource Include="res\ForwardNormal.png" />
+    <Resource Include="res\ForwardPressed.png" />
+    <Resource Include="res\JadeIcon.png" />
+    <Resource Include="res\ThemeFrameMask.png" />
+    <Resource Include="res\ThemeFrame.png" />
+    <Resource Include="res\CloseHover.png" />
+    <Resource Include="res\CloseNormal.png" />
+    <Resource Include="res\ClosePressed.png" />
     <Resource Include="res\guest.png" />
     <Resource Include="res\Orb.png" />
     <Resource Include="res\themes\slate.png" />

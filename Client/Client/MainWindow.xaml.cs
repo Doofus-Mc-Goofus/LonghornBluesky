@@ -25,9 +25,10 @@ namespace Client
         private bool issignedIn = false;
         private bool isclientNotif = false;
         private Dashboard dashboard;
-        void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        private readonly NotificationOverlay notificationOverlay = new NotificationOverlay();
+        private void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            var list = new List<string>();
+            List<string> list = new List<string>();
             try
             {
                 list.Add("Error Code: " + e.Exception.HResult.ToString());
@@ -80,9 +81,9 @@ namespace Client
             InitializeComponent();
             GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
             Login loginpage = new Login(this);
-            this.Content = loginpage;
+            Content = loginpage;
             HKCU_AddKey(@"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", "Client.exe", 11000);
-            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.1.2");
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.1.3");
             if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "Ver") == "")
             {
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Remember", "false");
@@ -95,6 +96,11 @@ namespace Client
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "NOTIF", "LH_NOTIF.wav");
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "POST", "LH_POST.wav");
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "UPDATEALERT", "LH_UPDATEALERT.wav");
+            }
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "LOGON") == null)
+            {
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "LOGON", "LH_WELCOME.wav");
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "LOGOFF", "LH_ACCOUNTDELETE.wav");
             }
             if (File.Exists("config.ini"))
             {
@@ -113,6 +119,7 @@ namespace Client
             _ = notifyIcon1.ContextMenuStrip.Items.Add("Check Notifications", null, (s, ee) => _ = FocusWindow());
             _ = notifyIcon1.ContextMenuStrip.Items.Add("Close Bluesky", null, (s, ee) => Application.Current.Shutdown());
             _ = CheckForUpdates();
+            notificationOverlay.Show();
         }
 
         public async Task CheckForUpdates()
@@ -124,10 +131,11 @@ namespace Client
             if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "Ver") != latestVer)
             {
                 isclientNotif = true;
-                notifyIcon1.BalloonTipTitle = "A new Bluesky update is available";
-                notifyIcon1.BalloonTipText = "Click here to install the updates now";
-                notifyIcon1.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-                notifyIcon1.ShowBalloonTip(10000);
+                // notifyIcon1.BalloonTipTitle = "A new Bluesky update is available";
+                // notifyIcon1.BalloonTipText = "Click here to install the updates now";
+                // notifyIcon1.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+                // notifyIcon1.ShowBalloonTip(10000);
+                notificationOverlay.CreateNotification("A new Bluesky update is available", "Click here to install the updates", 0);
                 SoundPlayer soundPlayer = new SoundPlayer(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "UPDATEALERT"));
                 soundPlayer.Play();
             }
@@ -153,8 +161,8 @@ namespace Client
 
         private async Task FocusWindow()
         {
-            Activate();
-            Focus();
+            _ = Activate();
+            _ = Focus();
             if (issignedIn)
             {
                 if (isclientNotif)
@@ -196,7 +204,7 @@ namespace Client
         {
             Dashboard dashboard = new Dashboard(session, aTProtocol);
             await dashboard.Load();
-            this.Content = dashboard;
+            Content = dashboard;
             this.dashboard = dashboard;
             notifyIcon1.Icon = Properties.Resources.logoicon;
             issignedIn = true;
@@ -214,6 +222,7 @@ namespace Client
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             notifyIcon1.Dispose();
+            notificationOverlay.Close();
         }
     }
 }

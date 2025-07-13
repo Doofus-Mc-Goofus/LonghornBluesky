@@ -31,6 +31,7 @@ namespace Client
         {
             ((Grid)Content).Children.Clear();
             Unloaded -= Page_Unloaded;
+            GC.SuppressFinalize(this);
         }
     }
 }

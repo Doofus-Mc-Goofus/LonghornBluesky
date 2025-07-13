@@ -145,6 +145,7 @@ namespace Client
             Bio.MouseLeave -= SelectPost_MouseLeave;
             Bio.MouseUp -= SelectPost_MouseUp;
             ((Grid)Content).Children.Clear();
+            GC.SuppressFinalize(this);
         }
     }
 }

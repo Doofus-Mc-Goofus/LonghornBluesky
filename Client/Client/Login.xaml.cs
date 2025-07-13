@@ -232,6 +232,7 @@ namespace Client
             PassBoxButton.MouseDown -= PassBoxButton_MouseDown;
             PassBoxButton.MouseUp -= PassBoxButton_MouseLeave;
             PassBoxButton.MouseUp -= (s, ee) => _ = SignIntoBlueSky(UserBox.Text, PassBox.Password, HostProv.Text);
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -445,6 +445,8 @@ namespace Client
         {
             _ = PageFrame.NavigationService.RemoveBackEntry();
             GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
             PageFrame.NavigationService.Navigated -= NavServiceOnNavigated;
         }
 

@@ -23,6 +23,9 @@
                 <GradientStop Color="#FFE0EAF6" Offset="1"/>
             </LinearGradientBrush>
         </Grid.Background>
-        <WebBrowser x:Name="browse" Source="https://system24.neocities.org/projects/api/LHbluesky/index.html" Margin="0,64,0,36"/>
+        <Image x:Name="Back" Source="/res/BackDisabled.png" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,0,0" MouseUp="Back_MouseUp" MouseDown="Back_MouseDown" MouseEnter="Back_MouseEnter" MouseLeave="Back_MouseLeave" ToolTip="Back"/>
+        <Image x:Name="Forward" Source="/res/ForwardDisabled.png" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="45,5,0,0" MouseDown="Forward_MouseDown" MouseEnter="Forward_MouseEnter" MouseLeave="Forward_MouseLeave" MouseUp="Forward_MouseUp" ToolTip="Forward"/>
+        <TextBox x:Name="HostProv" Text="Search Help" Foreground="Gray" LostKeyboardFocus="HostProv_LostKeyboardFocus" GotKeyboardFocus="HostProv_GotKeyboardFocus" VerticalAlignment="Top" Margin="80,15,16,0"/>
+        <WebBrowser x:Name="browse" Source="https://system24.neocities.org/projects/api/LHbluesky/index.html" Margin="0,52,0,36" Navigated="Browse_Navigated"/>
     </Grid>
 </Window>

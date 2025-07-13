@@ -320,6 +320,46 @@ namespace Client
             Download.Children.Clear();
             Print.Children.Clear();
             ((Grid)Content).Children.Clear();
+            GC.SuppressFinalize(this);
+        }
+
+        private void Window_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Controls.Visibility = Visibility.Visible;
+        }
+
+        private void Window_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Controls.Visibility = Visibility.Collapsed;
+        }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (!isSingle)
+            {
+                switch (e.Key)
+                {
+                    case Key.Right:
+                        selected++;
+                        if (selected >= images.Count)
+                        {
+                            selected = 0;
+                        }
+                        break;
+                    case Key.Left:
+                        selected--;
+                        if (selected >= images.Count)
+                        {
+                            selected = (byte)(images.Count - 1);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                TheImage.Source = images[selected];
+                TheActualImage.Source = images[selected];
+            }
+
         }
     }
 }

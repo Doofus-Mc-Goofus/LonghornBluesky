@@ -136,10 +136,11 @@ namespace Client
                 stillLoading = true;
                 ATUri AtUri;
                 JArray feedlist;
+                int numb = FeedTabControl.SelectedIndex;
                 try
                 {
-                    AtUri = ATUri.Create(feedUriString[FeedTabControl.SelectedIndex]);
-                    Result<GetFeedOutput> test = await aTProtocol.GetFeedAsync(AtUri, 10, feedCursor[FeedTabControl.SelectedIndex]);
+                    AtUri = ATUri.Create(feedUriString[numb]);
+                    Result<GetFeedOutput> test = await aTProtocol.GetFeedAsync(AtUri, 10, feedCursor[numb]);
                     feedlist = JArray.Parse(JObject.Parse(test.Value.ToString())["feed"].ToString());
                     for (int i = 0; i < feedlist.Count; i++)
                     {
@@ -153,14 +154,14 @@ namespace Client
                     // It's not that I hate this project, it's just that I've spent 98% of the day working on it alone.
                     // My fault for teasing this project when all there was was the ability to log in and a half finished dashboard.
                     // MessageBox.Show(JObject.Parse(test.Value.ToString())["cursor"].ToString());
-                    feedCursor[FeedTabControl.SelectedIndex] = JObject.Parse(test.Value.ToString())["cursor"].ToString();
+                    feedCursor[numb] = JObject.Parse(test.Value.ToString())["cursor"].ToString();
                     stillLoading = false;
                 }
                 catch
                 {
                     try
                     {
-                        Result<GetTimelineOutput> test = await aTProtocol.GetTimelineAsync(feedUriString[FeedTabControl.SelectedIndex], 10, feedCursor[FeedTabControl.SelectedIndex]);
+                        Result<GetTimelineOutput> test = await aTProtocol.GetTimelineAsync(feedUriString[numb], 10, feedCursor[numb]);
                         feedlist = JArray.Parse(JObject.Parse(test.Value.ToString())["feed"].ToString());
                         // System.Windows.Forms.Clipboard.SetText(feedlist.ToString());
                         for (int i = 0; i < feedlist.Count; i++)
@@ -175,7 +176,7 @@ namespace Client
                             DateTime dateTime = feedlist[feedlist.Count - 1]["reason"] != null
                                 ? (DateTime)feedlist[feedlist.Count - 1]["reason"]["indexedAt"]
                                 : (DateTime)feedlist[feedlist.Count - 1]["post"]["record"]["createdAt"];
-                            feedCursor[FeedTabControl.SelectedIndex] = dateTime.ToString("yyyy-MM-dd") + "T" + dateTime.ToString("HH:mm:ss") + "Z";
+                            feedCursor[numb] = dateTime.ToString("yyyy-MM-dd") + "T" + dateTime.ToString("HH:mm:ss") + "Z";
                         }
                         stillLoading = false;
                     }
@@ -278,6 +279,7 @@ namespace Client
             FeedGrid.Children.Clear();
             wrapper.Children.Clear();
             grid.Children.Clear();
+            GC.SuppressFinalize(this);
         }
     }
 }

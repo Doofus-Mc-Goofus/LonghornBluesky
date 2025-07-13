@@ -139,6 +139,7 @@ namespace Client
             test.Children.Clear();
             wrapper.Children.Clear();
             ((ScrollViewer)Content).Content = null;
+            GC.SuppressFinalize(this);
         }
     }
 }

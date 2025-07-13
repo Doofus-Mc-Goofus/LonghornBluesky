@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Media;
 using System.Net;
 using System.Net.Http;
@@ -14,7 +15,7 @@ using System.Windows.Threading;
 using FishyFlip;
 using FishyFlip.Lexicon;
 using FishyFlip.Lexicon.App.Bsky.Feed;
-using FishyFlip.Lexicon.App.Bsky.Unspecced;
+using FishyFlip.Lexicon.App.Bsky.Graph;
 using FishyFlip.Lexicon.Com.Atproto.Repo;
 using FishyFlip.Lexicon.Community.Lexicon.Interaction;
 using FishyFlip.Models;
@@ -34,13 +35,13 @@ namespace Client
         private readonly ATProtocol aTProtocol;
         private readonly bool isFocused;
         private readonly bool isPinned;
-        private readonly Random random = new Random();
         private bool isLiked;
         private bool isReposted;
         private readonly bool isReply;
         private readonly DispatcherTimer timer = new DispatcherTimer();
         private readonly List<BitmapImage> bitmapImages = new List<BitmapImage>();
         private readonly List<BitmapImage> bigmacImages = new List<BitmapImage>();
+        private readonly List<Grid> bigmacGrid = new List<Grid>();
         private readonly List<Post> posts = new List<Post>();
         public Post(JObject post, Dashboard dashboard, ATProtocol aTProtocol, bool isFocused, bool isPinned, bool isReply)
         {
@@ -288,7 +289,7 @@ namespace Client
                             Cursor = Cursors.Hand
                         };
                         grid.MouseUp += SelectImage;
-                        grid.Unloaded += Grid_Unloaded;
+                        bigmacGrid.Add(grid);
                         grid.Tag = (byte)i;
                         System.Windows.Shapes.Rectangle rect = new System.Windows.Shapes.Rectangle
                         {
@@ -480,7 +481,7 @@ namespace Client
                                 Cursor = Cursors.Hand
                             };
                             grid.MouseUp += SelectImage;
-                            grid.Unloaded += Grid_Unloaded;
+                            bigmacGrid.Add(grid);
                             grid.Tag = (byte)i;
                             System.Windows.Shapes.Rectangle rect = new System.Windows.Shapes.Rectangle
                             {
@@ -624,12 +625,6 @@ namespace Client
                 strings += JArray.Parse(post["post"]["labels"].ToString())[0]["val"].ToString();
                 ContentHidden.Header = "Content Hidden (" + strings + ")";
             }
-        }
-
-        private void Grid_Unloaded(object sender, RoutedEventArgs e)
-        {
-            ((Grid)sender).MouseUp -= SelectImage;
-            ((Grid)sender).Unloaded += Grid_Unloaded;
         }
 
         private void SelectImage(object sender, MouseButtonEventArgs e)
@@ -813,6 +808,11 @@ namespace Client
             {
                 posts[i].UnloadPost();
             }
+            for (int i = 0; i < bigmacGrid.Count; i++)
+            {
+                bigmacGrid[i].MouseUp -= SelectImage;
+                bigmacGrid[i].Children.Clear();
+            }
             RepostIcon.MouseEnter -= SelectPost_MouseEnter;
             RepostIcon.MouseLeave -= SelectPost_MouseLeave;
             RepostIcon.MouseUp -= SelectPost_MouseUp;
@@ -868,6 +868,10 @@ namespace Client
             LikeNumb.MouseUp -= SelectPost_MouseUp;
             More.MouseUp -= Repost_Click;
             timer.Tick -= (s, ee) => UpdateTime();
+            BlockAccount.Click -= BlockAccount_Click;
+            CopyPostTextItem.Click -= CopyPostText;
+            CopyPostLinkItem.Click -= CopyPostLink;
+            UnregisterName("More");
             statsWrapPanel.Children.Clear();
             DeletedQuote.Children.Clear();
             QuotewrapPanel.Children.Clear();
@@ -883,18 +887,36 @@ namespace Client
             ((Grid)Content).Children.Clear();
             for (int i = 0; i < bitmapImages.Count; i++)
             {
+                DisposeImage(bitmapImages[i]);
                 bitmapImages[i] = null;
             }
             for (int i = 0; i < bigmacImages.Count; i++)
             {
+                DisposeImage(bigmacImages[i]);
                 bigmacImages[i] = null;
             }
+            GC.SuppressFinalize(this);
         }
-
+        private void DisposeImage(BitmapImage image)
+        {
+            if (image != null)
+            {
+                try
+                {
+                    using (MemoryStream ms = new MemoryStream(new byte[] { 0x0 }))
+                    {
+                        image.StreamSource = ms;
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
         private async void ReportContext_Click(object sender, RoutedEventArgs e)
         {
             // fix
-            var result = await aTProtocol.GetPostThreadAsync(ATUri.Create(post["post"]["uri"].ToString()));
+            Result<GetPostThreadOutput> result = await aTProtocol.GetPostThreadAsync(ATUri.Create(post["post"]["uri"].ToString()));
             result.Switch(
                 success =>
                 {
@@ -958,6 +980,38 @@ namespace Client
                 return rk == null ? "" : (string)rk.GetValue(key);
             }
             catch { return ""; }
+        }
+
+        private void CopyPostText(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.Clipboard.SetText(Text.Text);
+            _ = MessageBox.Show("Copied post text", "", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void CopyPostLink(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.Clipboard.SetText(post["post"]["uri"].ToString());
+            _ = MessageBox.Show("Copied post link", "", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private async void BlockAccount_Click(object sender, RoutedEventArgs e)
+        {
+            Block block = new Block
+            {
+                CreatedAt = DateTime.Now,
+                Subject = ATDid.Create(post["post"]["author"]["did"].ToString())
+            };
+            Result<CreateRecordOutput> result = await aTProtocol.CreateBlockAsync(block);
+            result.Switch(
+                success =>
+                {
+                    _ = MessageBox.Show("Account blocked", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                    BlockAccount.Visibility = Visibility.Collapsed;
+                },
+                error =>
+                {
+                    _ = MessageBox.Show($"Error: {error.StatusCode} {error.Detail}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                });
         }
     }
 }
