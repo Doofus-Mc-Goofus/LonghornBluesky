@@ -6,7 +6,7 @@ A third-party Bluesky client with a Windows Longhorn theme.
     ![The home page of the client. There is a section with four tabs. The first tab, titled "Discover," is selected. Above it is a box for posting, with the default text "Whats Up?".](tease4.png)
 
 ## About "Trojan:Win32/Bearfoos.A!ml"
-Some people have experienced troubles running the client, as their antivirus (often Windows Defender) sometimes falsely flags the client as "Trojan:Win32/Bearfoos.A!ml". This is a common problem with C# applications and forensic antiviruses. Feel free to check the source code and compile from it to confirm it's authenticity.
+Some people have experienced troubles running the client, as their antivirus (often Windows Defender) sometimes falsely flags the client as "Trojan:Win32/Bearfoos.A!ml". This is a common problem with C# applications and forensic antiviruses. Feel free to check the source code and compile from it to confirm it's legitimacy.
 
 ## Upcoming Features (in no specific order)
 - Video playback
