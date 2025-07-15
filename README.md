@@ -5,6 +5,10 @@ A third-party Bluesky client with a Windows Longhorn theme.
     ![My profile is open.](tease3.png)
     ![The home page of the client. There is a section with four tabs. The first tab, titled "Discover," is selected. Above it is a box for posting, with the default text "Whats Up?".](tease4.png)
 
+## How to install
+1. Extract the zip file
+2. Run Client.exe from the extracted folder
+
 ## Upcoming Features (in no specific order)
 - Video playback
 - Alt text support
