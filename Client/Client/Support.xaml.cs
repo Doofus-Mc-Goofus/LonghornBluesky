@@ -15,7 +15,7 @@ namespace Client
             InitializeComponent();
         }
 
-        private void Window_Closed(object sender, System.EventArgs e)
+        private void Window_Closed(object sender, EventArgs e)
         {
             browse.Dispose();
         }

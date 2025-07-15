@@ -8,8 +8,10 @@ using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using FishyFlip;
 using FishyFlip.Models;
 using INI;
@@ -24,6 +26,7 @@ namespace Client
         private readonly System.Windows.Forms.NotifyIcon notifyIcon1 = new System.Windows.Forms.NotifyIcon();
         private bool issignedIn = false;
         private bool isclientNotif = false;
+        private readonly DispatcherTimer dispatcherTimer = new DispatcherTimer();
         private Dashboard dashboard;
         private readonly NotificationOverlay notificationOverlay = new NotificationOverlay();
         private void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
@@ -83,7 +86,7 @@ namespace Client
             Login loginpage = new Login(this);
             Content = loginpage;
             HKCU_AddKey(@"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", "Client.exe", 11000);
-            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.1.3");
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.1.4");
             if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "Ver") == "")
             {
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Remember", "false");
@@ -102,6 +105,28 @@ namespace Client
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "LOGON", "LH_WELCOME.wav");
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "LOGOFF", "LH_ACCOUNTDELETE.wav");
             }
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "isLOG") == null)
+            {
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "isLOG", "false");
+            }
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "showMenu") == null)
+            {
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "showMenu", "false");
+            }
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_left") != null)
+            {
+                Left = double.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_left"));
+                Top = double.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_top"));
+                if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_state") == "Maximized")
+                {
+                    WindowState = WindowState.Maximized;
+                }
+                else
+                {
+                    Width = double.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_width"));
+                    Height = double.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_height"));
+                }
+            }
             if (File.Exists("config.ini"))
             {
                 IniFile myIni = new IniFile("config.ini");
@@ -118,7 +143,9 @@ namespace Client
             notifyIcon1.ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
             _ = notifyIcon1.ContextMenuStrip.Items.Add("Check Notifications", null, (s, ee) => _ = FocusWindow());
             _ = notifyIcon1.ContextMenuStrip.Items.Add("Close Bluesky", null, (s, ee) => Application.Current.Shutdown());
-            _ = CheckForUpdates();
+            dispatcherTimer.Interval = TimeSpan.FromSeconds(10);
+            dispatcherTimer.Tick += (s, ee) => _ = CheckForUpdates();
+            dispatcherTimer.Start();
             notificationOverlay.Show();
         }
 
@@ -138,6 +165,12 @@ namespace Client
                 notificationOverlay.CreateNotification("A new Bluesky update is available", "Click here to install the updates", 0);
                 SoundPlayer soundPlayer = new SoundPlayer(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "UPDATEALERT"));
                 soundPlayer.Play();
+                dispatcherTimer.Stop();
+            }
+            else
+            {
+                dispatcherTimer.Interval = TimeSpan.FromMinutes(1);
+                dispatcherTimer.Start();
             }
         }
 
@@ -191,6 +224,10 @@ namespace Client
             RegistryKey rk = Registry.CurrentUser.CreateSubKey(path);
             rk.SetValue(key, value);
         }
+        public void HKCU_DeleteKey(string path)
+        {
+            Registry.CurrentUser.DeleteSubKey(path);
+        }
         public string HKCU_GetString(string path, string key)
         {
             try
@@ -202,7 +239,7 @@ namespace Client
         }
         public async Task OpenFeed(Session session, ATProtocol aTProtocol)
         {
-            Dashboard dashboard = new Dashboard(session, aTProtocol);
+            Dashboard dashboard = new Dashboard(session, aTProtocol, this);
             await dashboard.Load();
             Content = dashboard;
             this.dashboard = dashboard;
@@ -219,10 +256,34 @@ namespace Client
             }
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "wnd_left", Left.ToString());
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "wnd_top", Top.ToString());
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "wnd_width", Width.ToString());
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "wnd_height", Height.ToString());
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "wnd_state", WindowState.ToString());
             notifyIcon1.Dispose();
             notificationOverlay.Close();
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "isLOG") == "True")
+            {
+                e.Cancel = true;
+                Visibility = Visibility.Hidden;
+                // IDK
+                await Task.Delay(100);
+                SoundPlayer soundPlayer = new SoundPlayer(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "LOGOFF"));
+                soundPlayer.PlaySync();
+                e.Cancel = false;
+                Application.Current.Shutdown();
+            }
+        }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (issignedIn && (e.Key == Key.LeftAlt || e.Key == Key.RightAlt || e.Key == Key.System))
+            {
+                dashboard.ToggleMenu();
+            }
         }
     }
 }

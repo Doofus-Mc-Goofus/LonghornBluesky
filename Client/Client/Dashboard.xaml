@@ -14,6 +14,19 @@
             </LinearGradientBrush>
         </Grid.Background>
         <Image x:Name="BG" Source="/res/Windows Vista Beta 1 Speech Tutorial.png" Opacity="0.25" Focusable="True" MouseUp="BG_MouseUp" Stretch="Fill"/>
+        <Menu x:Name="Menu" VerticalAlignment="Top" Height="20" LayoutUpdated="Menu_LayoutUpdated" Visibility="Collapsed">
+            <MenuItem Header="File" Padding="7,0,8,3">
+                <MenuItem Header="Sign out" Click="Logoff"/>
+                <MenuItem Header="Close" Click="CloseClientContextMenu"/>
+            </MenuItem>
+            <MenuItem Header="Actions" Padding="7,0,8,3">
+                <MenuItem Header="Create post" Click="CreatePost"/>
+            </MenuItem>
+            <MenuItem Header="Help" Padding="7,0,8,3">
+                <MenuItem Header="Help topics" Click="HelpTopics"/>
+                <MenuItem Header="About" Click="About"/>
+            </MenuItem>
+        </Menu>
         <Grid x:Name="LayoutLayout" MaxWidth="800">
             <StackPanel Margin="20,20,0,20" HorizontalAlignment="Left" Width="240">
                 <Grid Width="240" Height="80" Margin="0,0,0,20">
@@ -45,7 +58,7 @@
                     <Image x:Name="PFPFrame" Source="/res/PFPFrameSmal.png" VerticalAlignment="Center" HorizontalAlignment="Left" Width="52" Margin="16,0,0,0" RenderTransformOrigin="0.5,0.5" Cursor="Hand" MouseUp="PFPFrame_MouseUp">
                         <Image.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="Log off" Click="Logoff"/>
+                                <MenuItem Header="Sign out" Click="Logoff"/>
                             </ContextMenu>
                         </Image.ContextMenu>
                         <Image.RenderTransform>

@@ -40,6 +40,7 @@ namespace Client
         private readonly bool isReply;
         private readonly DispatcherTimer timer = new DispatcherTimer();
         private readonly List<BitmapImage> bitmapImages = new List<BitmapImage>();
+        private readonly List<string> altTexts = new List<string>();
         private readonly List<BitmapImage> bigmacImages = new List<BitmapImage>();
         private readonly List<Grid> bigmacGrid = new List<Grid>();
         private readonly List<Post> posts = new List<Post>();
@@ -327,6 +328,7 @@ namespace Client
                         bitmapImage2.UriSource = new Uri(jArray[i]["fullsize"].ToString());
                         bitmapImage2.EndInit();
                         bitmapImages.Add(bitmapImage2);
+                        altTexts.Add(jArray[i]["alt"].ToString());
                         Image image1 = new Image
                         {
                             Source = bitmapImage,
@@ -519,6 +521,7 @@ namespace Client
                             bitmapImage2.UriSource = new Uri(jArray[i]["fullsize"].ToString());
                             bitmapImage2.EndInit();
                             bitmapImages.Add(bitmapImage2);
+                            altTexts.Add(jArray[i]["alt"].ToString());
                             System.Windows.Controls.Image image1 = new System.Windows.Controls.Image
                             {
                                 Source = bitmapImage,
@@ -631,7 +634,7 @@ namespace Client
         {
             if (e.ChangedButton == MouseButton.Left)
             {
-                Viewer viewer = new Viewer(bitmapImages, (byte)((Grid)sender).Tag);
+                Viewer viewer = new Viewer(bitmapImages, (byte)((Grid)sender).Tag, altTexts);
                 viewer.Show();
             }
         }

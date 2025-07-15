@@ -40,8 +40,10 @@ namespace Client
         }
         private async Task Load()
         {
+#pragma warning disable IDE0059 // Unnecessary assignment of a value
             FishyFlip.Models.Result<GetTrendingTopicsOutput> result = await aTProtocol.GetTrendingTopicsAsync();
-            // System.Windows.Forms.Clipboard.SetText(result.Value.ToString());
+#pragma warning restore IDE0059 // Unnecessary assignment of a value
+                               // System.Windows.Forms.Clipboard.SetText(result.Value.ToString());
         }
         private void Search_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {

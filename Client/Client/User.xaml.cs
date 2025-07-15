@@ -21,7 +21,7 @@ namespace Client
         private readonly JObject profile;
         private readonly ATProtocol aTProtocol;
         private readonly ATDid ATDid;
-        private ATUri raellycoolwig;
+        private ATUri followUri;
         private bool isFollowing = false;
 #pragma warning disable IDE0044 // Add readonly modifier
         private bool isbeingFollowed = false;
@@ -93,8 +93,7 @@ namespace Client
         {
             if (isFollowing)
             {
-                // I know this may come across as harsh to some, but I believe everyone in this story should die.
-                Result<DeleteRecordOutput> result = await aTProtocol.DeleteFollowAsync(raellycoolwig.Did, raellycoolwig.Rkey);
+                Result<DeleteRecordOutput> result = await aTProtocol.DeleteFollowAsync(followUri.Did, followUri.Rkey);
                 result.Switch(
                     success =>
                     {
@@ -119,7 +118,7 @@ namespace Client
                     {
                         Follow.Content = "Following";
                         isFollowing = true;
-                        raellycoolwig = success.Uri;
+                        followUri = success.Uri;
                     },
                     error =>
                     {

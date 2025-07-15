@@ -514,6 +514,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.manifest" />
+    <None Include="Longhorn Bluesky.lnk">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -681,6 +684,7 @@
     <Resource Include="res\Bitmap602.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="res\ViewerBorderThing.png" />
     <Resource Include="res\ForwardDisabled.png" />
     <Resource Include="res\ForwardHover.png" />
     <Resource Include="res\ForwardNormal.png" />

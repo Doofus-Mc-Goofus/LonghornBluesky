@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Bluesky" Height="600" Width="800" MinWidth="800" MinHeight="600" UseLayoutRounding="True" Closing="Window_Closing">
+        Title="Bluesky" Height="600" Width="800" MinWidth="800" MinHeight="600" UseLayoutRounding="True" Closing="Window_Closing" KeyUp="Window_KeyUp">
     <Grid>
         <Label Content="If you see this message, a critical error has occurred."/>
     </Grid>

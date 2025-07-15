@@ -258,7 +258,7 @@ namespace Client
             HideOthersSidebar();
             isRoot = false;
             Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackNormal.png"));
-            Title.Text = "Personalization";
+            Title.Text = "Appearance and Personalization";
             PageFrame.Visibility = Visibility.Visible;
             homie.Visibility = Visibility.Collapsed;
             Personalization usororer = new Personalization(this);

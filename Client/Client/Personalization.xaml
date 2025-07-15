@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:Client"
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="500"
-      Title="Personalization" UseLayoutRounding="True" Unloaded="Page_Unloaded">
+      Title="Personalization" UseLayoutRounding="True" Unloaded="Page_Unloaded" Loaded="Page_Loaded">
     <Grid x:Name="homie" Margin="20">
         <Rectangle x:Name="rect" RadiusX="3" RadiusY="3" Stroke="#54E0F6FF" MouseUp="Rectangle_MouseUp" Focusable="True">
             <Rectangle.Effect>
@@ -57,9 +57,12 @@
                 </Expander.Header>
                 <StackPanel Margin="0,10,0,0">
                     <Label Content="Notification Sound:" Padding="0,0,0,5" />
-                    <ComboBox x:Name="NOTIFBOX" Margin="0,0,0,10" SelectedIndex="0">
-                        <ComboBoxItem Content="Longhorn Notification" ToolTip="LH_NOTIF.wav"/>
-                    </ComboBox>
+                    <Grid Margin="0,0,0,10">
+                        <ComboBox x:Name="NOTIFBOX" SelectedIndex="0" Margin="0,0,77,0">
+                            <ComboBoxItem Content="Longhorn Notification" ToolTip="LH_NOTIF.wav"/>
+                        </ComboBox>
+                        <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Width="70" Click="NotifBrowse_Click"/>
+                    </Grid>
                     <Label Content="Alert Sound:" Padding="0,0,0,5" />
                     <ComboBox x:Name="ALERTBOX" Margin="0,0,0,10" SelectedIndex="0">
                         <ComboBoxItem Content="Longhorn Alert" ToolTip="LH_ALERT.wav"/>
@@ -76,7 +79,7 @@
                     <ComboBox x:Name="DELETEBOX" Margin="0,0,0,10" SelectedIndex="0">
                         <ComboBoxItem Content="Longhorn Deleting" ToolTip="LH_DELETE.wav"/>
                     </ComboBox>
-                    <CheckBox Margin="0,0,0,7" Content="Playing logon and logoff sounds" Checked="LogCheck" Unchecked="LogUncheck"/>
+                    <CheckBox x:Name="logcheck" Margin="0,0,0,7" Content="Playing logon and logoff sounds" Checked="LogCheck" Unchecked="LogUncheck"/>
                     <StackPanel x:Name="LogSounds" Visibility="Collapsed">
                         <Label Content="Logon Sound:" Padding="0,0,0,5" />
                         <ComboBox x:Name="LOGONBOX" Margin="0,0,0,10" SelectedIndex="0">

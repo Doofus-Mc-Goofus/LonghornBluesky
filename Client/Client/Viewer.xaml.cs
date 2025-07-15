@@ -20,13 +20,15 @@ namespace Client
         private byte selected;
         private double scale = 1;
         private readonly bool isSingle = false;
-        public Viewer(List<BitmapImage> images, byte selected)
+        private readonly List<string> altTexts;
+        public Viewer(List<BitmapImage> images, byte selected, List<string> altTexts)
         {
             InitializeComponent();
             try
             {
                 this.images = images;
                 this.selected = selected;
+                this.altTexts = altTexts;
                 if (images.Count == 1)
                 {
                     Slideshow.Source = new BitmapImage(new Uri("pack://application:,,,/res/ViewerSlideshowDisabled.png"));
@@ -34,9 +36,7 @@ namespace Client
                     Next.Source = new BitmapImage(new Uri("pack://application:,,,/res/ViewerForwardDisabled.png"));
                     isSingle = true;
                 }
-                TheImage.Source = images[selected];
-                SizeChanged += (s, ee) => Update();
-                TheActualImage.Source = images[selected];
+                Update();
                 Error.Visibility = Visibility.Collapsed;
             }
             catch (Exception ex)
@@ -46,7 +46,9 @@ namespace Client
         }
         private void Update()
         {
-
+            TheImage.Source = images[selected];
+            TheActualImage.Source = images[selected];
+            TheActualImage.ToolTip = altTexts[selected] == string.Empty ? null : (object)altTexts[selected];
         }
 
         private void TheImage_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -213,8 +215,7 @@ namespace Client
                 {
                     selected = 0;
                 }
-                TheImage.Source = images[selected];
-                TheActualImage.Source = images[selected];
+                Update();
             }
         }
         private void Back_MouseDown(object sender, MouseButtonEventArgs e)
@@ -251,8 +252,7 @@ namespace Client
                 {
                     selected = (byte)(images.Count - 1);
                 }
-                TheImage.Source = images[selected];
-                TheActualImage.Source = images[selected];
+                Update();
             }
         }
 
@@ -356,8 +356,7 @@ namespace Client
                     default:
                         break;
                 }
-                TheImage.Source = images[selected];
-                TheActualImage.Source = images[selected];
+                Update();
             }
 
         }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Media;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -14,7 +13,6 @@ using FishyFlip;
 using FishyFlip.Lexicon.App.Bsky.Actor;
 using FishyFlip.Lexicon.App.Bsky.Embed;
 using FishyFlip.Models;
-using INI;
 using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
 
@@ -29,6 +27,7 @@ namespace Client
         private readonly Session session;
         private JArray feeds;
         private byte selectobjectsidebar;
+        private readonly MainWindow mw;
 
         [DllImport("urlmon.dll")]
         [PreserveSig]
@@ -37,29 +36,21 @@ namespace Client
         int FeatureEntry,
         [MarshalAs(UnmanagedType.U4)] int dwFlags,
         bool fEnable);
-        public Dashboard(Session session, ATProtocol aTProtocol)
+        public Dashboard(Session session, ATProtocol aTProtocol, MainWindow mw)
         {
             InitializeComponent();
             this.session = session;
+            this.mw = mw;
             this.aTProtocol = aTProtocol;
             selectobjectsidebar = 1;
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "showMenu") == "true")
+            {
+                Menu.Visibility = Visibility.Visible;
+            }
         }
         public async Task Load()
         {
             PlayWelcomeSound();
-            if (File.Exists("config.ini"))
-            {
-                IniFile myIni = new IniFile("config.ini");
-                if (myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "0")
-                {
-                    // Hide unfinished things
-                    // Explore.Visibility = Visibility.Collapsed;
-                    Notifs.Visibility = Visibility.Collapsed;
-                    Chat.Visibility = Visibility.Collapsed;
-                    Feeds.Visibility = Visibility.Collapsed;
-                    Lists.Visibility = Visibility.Collapsed;
-                }
-            }
             Result<GetPreferencesOutput> prefresult = await aTProtocol.GetPreferencesAsync();
             JObject obj = JObject.Parse(prefresult.Value.ToString());
             JArray arr = JArray.Parse(obj["preferences"].ToString());
@@ -93,9 +84,9 @@ namespace Client
         }
         public void PlayWelcomeSound()
         {
-            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "first") == "" || HKCU_GetString(@"SOFTWARE\LonghornBluesky", "first") == null)
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "first") == "" || HKCU_GetString(@"SOFTWARE\LonghornBluesky", "first") == null || HKCU_GetString(@"SOFTWARE\LonghornBluesky", "isLOG") == "True")
             {
-                SoundPlayer soundPlayer = new SoundPlayer("LH_WELCOME.wav");
+                SoundPlayer soundPlayer = new SoundPlayer(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "LOGON"));
                 soundPlayer.Play();
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "first", "fish");
             }
@@ -490,7 +481,7 @@ namespace Client
             HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "RememberUsername", "");
             HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "RememberPassword", "");
             HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "RememberHost", "");
-            Application.Current.Shutdown();
+            mw.Close();
         }
         public void HKCU_AddKey(string path, string key, object value)
         {
@@ -544,6 +535,57 @@ namespace Client
             await Task.Run(process.WaitForExit);
             await Task.Run(process.Close);
             await Task.Run(process.Dispose);
+        }
+
+        private void CloseClientContextMenu(object sender, RoutedEventArgs e)
+        {
+            mw.Close();
+        }
+
+        private void Menu_LayoutUpdated(object sender, EventArgs e)
+        {
+            LayoutLayout.Margin = new Thickness(0, Menu.ActualHeight, 0, 0);
+        }
+
+        private void CreatePost(object sender, RoutedEventArgs e)
+        {
+            if (selectobjectsidebar != 1)
+            {
+                Home_Text.FontFamily = new System.Windows.Media.FontFamily("Segoe UI Semibold");
+                Home_BG.Visibility = Visibility.Visible;
+                Home_BG.Opacity = 1;
+                selectobjectsidebar = 1;
+                HideOthersSidebar();
+                Home homePage = new Home(feeds, aTProtocol, this);
+                PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+                _ = PageFrame.NavigationService.Navigate(homePage);
+            }
+        }
+
+        private void HelpTopics(object sender, RoutedEventArgs e)
+        {
+            Support sup = new Support();
+            sup.Show();
+        }
+
+        private void About(object sender, RoutedEventArgs e)
+        {
+            AboutBox aboutBox = new AboutBox();
+            _ = aboutBox.ShowDialog();
+        }
+
+        public void ToggleMenu()
+        {
+            if (Menu.Visibility == Visibility.Visible)
+            {
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "showMenu", "false");
+                Menu.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "showMenu", "true");
+                Menu.Visibility = Visibility.Visible;
+            }
         }
     }
 }

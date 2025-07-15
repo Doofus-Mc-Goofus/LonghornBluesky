@@ -55,17 +55,6 @@ namespace Client
         }
         private async Task Load()
         {
-            if (File.Exists("config.ini"))
-            {
-                IniFile myIni = new IniFile("config.ini");
-                if (myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "0")
-                {
-                    // Hide unfinished things
-                    Feeds.Visibility = Visibility.Collapsed;
-                    StarterPacks.Visibility = Visibility.Collapsed;
-                    Lists.Visibility = Visibility.Collapsed;
-                }
-            }
             Result<ProfileViewDetailed> result = await aTProtocol.GetProfileAsync(ATDid);
             result.Switch(
             async success =>
