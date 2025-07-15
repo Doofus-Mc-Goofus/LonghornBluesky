@@ -12,12 +12,12 @@ A third-party Bluesky client with a Windows Longhorn theme.
 
 ## Upcoming Features (in no specific order)
 - Video playback
-- Alt text support
 - Proper high-DPI support (no bugs, just low quality icons)
 - 2FA support
 - Profile editing
 - Changable settings
-- Explore, Notifications, Chat, Feeds, and Lists
+- Notifications, Chat, Feeds, and Lists
+- Finish Explore
 - Viewable post engagments
 - Account creation and deletion
 - Tenor GIF support
