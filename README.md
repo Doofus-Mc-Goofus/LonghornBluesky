@@ -7,6 +7,7 @@ A third-party Bluesky client with a Windows Longhorn theme.
 
 ## Upcoming Features (in no specific order)
 - Video playback
+- Alt text support
 - Tenor GIF support
 - Profile editing
 - Changable settings
