@@ -8,7 +8,7 @@ A third-party Bluesky client with a Windows Longhorn theme.
 ## How to install
 1. Download the zip file in the releases
 2. Extract the zip file
-3. Run Client.exe (or "Longhorn Bluesky" if you can't find it) from the extracted folder
+3. Run Client.exe (or "Longhorn Bluesky" if you can't find Client.exe) from the extracted folder
 
 ## Upcoming Features (in no specific order)
 - Video playback
