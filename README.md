@@ -14,6 +14,7 @@ A third-party Bluesky client with a Windows Longhorn theme.
 - Video playback
 - Proper high-DPI support (no bugs, just low quality icons)
 - 2FA support
+- Attaching alt text
 - Profile editing
 - Changable settings
 - Notifications, Chat, Feeds, and Lists
