@@ -91,7 +91,6 @@ namespace Client
                 {
                     Result<GetRepostedByOutput> test = await aTProtocol.GetRepostedByAsync(Uri, null, 10, cursor);
                     JObject bingus = JObject.Parse(test.Value.ToString());
-                    System.Windows.Forms.Clipboard.SetText(bingus.ToString());
                     Username.Text = "Reposts";
                     for (int i = 0; i < JArray.Parse(bingus["repostedBy"].ToString()).Count; i++)
                     {
