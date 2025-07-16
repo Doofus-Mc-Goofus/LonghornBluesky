@@ -129,7 +129,6 @@ namespace Client
                 if (success.Viewer.BlockedBy != true && success.Viewer.Blocking == null)
                 {
                     FeedGrid.Visibility = Visibility.Visible;
-                    await GetPinnedPost(success);
                     await LoadPosts(PostsStack);
                 }
             },
@@ -138,25 +137,6 @@ namespace Client
                 _ = MessageBox.Show($"Error: {error.StatusCode} {error.Detail}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             );
-        }
-        private async Task GetPinnedPost(ProfileViewDetailed success)
-        {
-            try
-            {
-                Result<GetPostThreadOutput> pinnedpost = await aTProtocol.GetPostThreadAsync(success.PinnedPost.Uri, 0, 0);
-                Post post = new Post(JObject.Parse(JObject.Parse(pinnedpost.Value.ToString())["thread"].ToString()), dashboard, aTProtocol, false, true, false);
-                _ = PostsStack.Children.Add(post);
-                posts.Add(post);
-            }
-            catch
-            {
-
-            }
-            if (Bio.ActualHeight > 32)
-            {
-                ShowMore.Visibility = Visibility.Visible;
-                Bio.MaxHeight = 32;
-            }
         }
         private async Task LoadPosts(StackPanel stackPanel)
         {
@@ -170,7 +150,7 @@ namespace Client
                     JObject postresultparse = new JObject();
                     if (numb <= 3)
                     {
-                        Result<GetAuthorFeedOutput> postsresult = await aTProtocol.GetAuthorFeedAsync(ATDid, 10, cursors[numb], GetFilterType(numb), false);
+                        Result<GetAuthorFeedOutput> postsresult = await aTProtocol.GetAuthorFeedAsync(ATDid, 10, cursors[numb], GetFilterType(numb), true);
                         feedlist = JArray.Parse(JObject.Parse(postsresult.Value.ToString())["feed"].ToString());
                         postresultparse = JObject.Parse(postsresult.Value.ToString());
                     }
@@ -382,12 +362,12 @@ namespace Client
 
         private void FollowersNum_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            dashboard.NavigateToFollow(ATDid.ToString(), false, int.Parse(FollowersNum.Text));
+            dashboard.NavigateToFollow(ATDid.ToString(), 0, int.Parse(FollowersNum.Text));
         }
 
         private void FolliwingNum_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            dashboard.NavigateToFollow(ATDid.ToString(), true, int.Parse(FolliwingNum.Text));
+            dashboard.NavigateToFollow(ATDid.ToString(), 1, int.Parse(FolliwingNum.Text));
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)

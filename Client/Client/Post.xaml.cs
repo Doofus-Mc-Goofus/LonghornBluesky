@@ -51,7 +51,7 @@ namespace Client
             this.post = post;
             this.aTProtocol = aTProtocol;
             this.isFocused = isFocused;
-            this.isPinned = isPinned;
+            this.isPinned = post["reason"] != null && post["reason"]["$type"].ToString() == "app.bsky.feed.defs#reasonPin";
             this.isReply = isReply;
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += (s, ee) => UpdateTime();
@@ -133,44 +133,52 @@ namespace Client
             }
             else
             {
-                if (post["reply"] != null)
+                if (post["reason"] == null)
                 {
-                    // ms pain
-                    try
+                    if (post["reply"] != null)
                     {
-                        JObject postdata = JObject.Parse(JObject.Parse("{\"post\":" + post["reply"]["parent"] + "}").ToString());
-                        Post postControl = new Post(postdata, dashboard, aTProtocol, false, false, true);
-                        ParentPost.Children.Insert(0, postControl);
-                        ParentPost.Visibility = Visibility.Visible;
-                        posts.Add(postControl);
-                    }
-                    catch
-                    {
-
-                    }
-                    try
-                    {
-                        if (post["reply"]["parent"]["cid"].ToString() != post["reply"]["root"]["cid"].ToString())
+                        // ms pain
+                        try
                         {
-                            JObject rootpostdata = JObject.Parse(JObject.Parse("{\"post\":" + post["reply"]["root"] + "}").ToString());
-                            Post rootpostControl = new Post(rootpostdata, dashboard, aTProtocol, false, false, true);
-                            RootPost.Children.Insert(0, rootpostControl);
-                            RootPost.Visibility = Visibility.Visible;
-                            posts.Add(rootpostControl);
+                            JObject postdata = JObject.Parse(JObject.Parse("{\"post\":" + post["reply"]["parent"] + "}").ToString());
+                            Post postControl = new Post(postdata, dashboard, aTProtocol, false, false, true);
+                            ParentPost.Children.Insert(0, postControl);
+                            ParentPost.Visibility = Visibility.Visible;
+                            posts.Add(postControl);
+                        }
+                        catch
+                        {
+
+                        }
+                        try
+                        {
+                            if (post["reply"]["parent"]["cid"].ToString() != post["reply"]["root"]["cid"].ToString())
+                            {
+                                JObject rootpostdata = JObject.Parse(JObject.Parse("{\"post\":" + post["reply"]["root"] + "}").ToString());
+                                Post rootpostControl = new Post(rootpostdata, dashboard, aTProtocol, false, false, true);
+                                RootPost.Children.Insert(0, rootpostControl);
+                                RootPost.Visibility = Visibility.Visible;
+                                posts.Add(rootpostControl);
+                            }
+                        }
+                        catch
+                        {
+
                         }
                     }
-                    catch
+                    else
                     {
-
+                        if (post["parent"] == null)
+                        {
+                            RootPost.Children.Clear();
+                            ParentPost.Children.Clear();
+                        }
                     }
                 }
                 else
                 {
-                    if (post["parent"] == null)
-                    {
-                        RootPost.Children.Clear();
-                        ParentPost.Children.Clear();
-                    }
+                    RootPost.Children.Clear();
+                    ParentPost.Children.Clear();
                 }
             }
             if (post["parent"] != null)
@@ -208,7 +216,7 @@ namespace Client
             Username.Tag = post["post"]["author"]["did"].ToString();
             Fullname.Text = post["post"]["author"]["handle"].ToString();
             RepliesNumb.Text = post["post"]["replyCount"].ToString();
-            RepostNumb.Text = post["post"]["repostCount"].ToString();
+            RepostNumb.Text = (int.Parse(post["post"]["quoteCount"].ToString()) + int.Parse(post["post"]["repostCount"].ToString())).ToString();
             LikeNumb.Text = post["post"]["likeCount"].ToString();
             try
             {
@@ -242,11 +250,11 @@ namespace Client
             }
             if (post["reason"] != null)
             {
-                RepostedGrid.Visibility = Visibility.Visible;
-                Reposted.Text = post["reason"]["by"]["displayName"].ToString();
-                Reposted.Tag = post["reason"]["by"]["did"].ToString();
-                if (post["reply"] == null)
+                if (post["reason"]["$type"].ToString() == "app.bsky.feed.defs#reasonRepost")
                 {
+                    RepostedGrid.Visibility = Visibility.Visible;
+                    Reposted.Text = post["reason"]["by"]["displayName"].ToString();
+                    Reposted.Tag = post["reason"]["by"]["did"].ToString();
                     SelectPost.Margin = new Thickness(-15, -15, -15, 1);
                 }
             }
@@ -317,7 +325,7 @@ namespace Client
                         bitmapImage.UriSource = new Uri(jArray[i]["thumb"].ToString());
                         bitmapImage.EndInit();
                         bigmacImages.Add(bitmapImage);
-                        // BitmapImage bitmapImage = new BitmapImage(new Uri(jArray[i]["thumb"].ToString()))
+                        // BitmapImage bitmapImage = new BitmapImage(new Did(jArray[i]["thumb"].ToString()))
                         // {
                         // CacheOption = BitmapCacheOption.OnDemand
                         // });
@@ -374,7 +382,7 @@ namespace Client
                     };
                     _ = grid.Children.Add(rect2);
                     // MediaElement media = new MediaElement();
-                    // media.Source = new Uri(post["post"]["embed"]["playlist"].ToString() + @"/../720p/video0.ts" + "?dur=6.000000
+                    // media.Source = new Did(post["post"]["embed"]["playlist"].ToString() + @"/../720p/video0.ts" + "?dur=6.000000
                     // media.Margin = new Thickness(30, 5, 30, 5);
                     // media.Volume = 0;
                     // media.UnloadedBehavior = MediaState.Manual;
@@ -510,7 +518,7 @@ namespace Client
                             bitmapImage.UriSource = new Uri(jArray[i]["thumb"].ToString());
                             bitmapImage.EndInit();
                             bigmacImages.Add(bitmapImage);
-                            // BitmapImage bitmapImage = new BitmapImage(new Uri(jArray[i]["thumb"].ToString()))
+                            // BitmapImage bitmapImage = new BitmapImage(new Did(jArray[i]["thumb"].ToString()))
                             // {
                             // CacheOption = BitmapCacheOption.OnDemand
                             // });
@@ -567,7 +575,7 @@ namespace Client
                         };
                         _ = grid.Children.Add(rect2);
                         // MediaElement media = new MediaElement();
-                        // media.Source = new Uri(post["post"]["embed"]["playlist"].ToString() + @"/../720p/video0.ts" + "?dur=6.000000
+                        // media.Source = new Did(post["post"]["embed"]["playlist"].ToString() + @"/../720p/video0.ts" + "?dur=6.000000
                         // media.Margin = new Thickness(30, 5, 30, 5);
                         // media.Volume = 0;
                         // media.UnloadedBehavior = MediaState.Manual;
@@ -1015,6 +1023,21 @@ namespace Client
                 {
                     _ = MessageBox.Show($"Error: {error.StatusCode} {error.Detail}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 });
+        }
+
+        private void ViewQuote_Click(object sender, RoutedEventArgs e)
+        {
+            dashboard.NavigateToQuotes(post["post"]["uri"].ToString(), int.Parse(post["post"]["quoteCount"].ToString()));
+        }
+
+        private void ViewRepost_Click(object sender, RoutedEventArgs e)
+        {
+            dashboard.NavigateToEngage(post["post"]["uri"].ToString(), 2, int.Parse(post["post"]["quoteCount"].ToString()));
+        }
+
+        private void Like_Click(object sender, MouseButtonEventArgs e)
+        {
+            dashboard.NavigateToEngage(post["post"]["uri"].ToString(), 3, int.Parse(post["post"]["likeCount"].ToString()));
         }
     }
 }

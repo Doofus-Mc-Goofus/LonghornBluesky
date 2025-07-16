@@ -103,8 +103,8 @@
                     <TextBlock x:Name="RepostNumb" Text="0" Foreground="#FF5389BB" MouseLeave="Label_MouseLeave" MouseEnter="Label_MouseEnter" Cursor="Hand" MouseUp="RepostContext_Click">
                         <TextBlock.ContextMenu>
                             <ContextMenu>
-                                <MenuItem x:Name="ViewRepost" Header="View reposts"/>
-                                <MenuItem x:Name="ViewQuote" Header="View quotes"/>
+                                <MenuItem x:Name="ViewRepost" Header="View reposts" Click="ViewRepost_Click"/>
+                                <MenuItem x:Name="ViewQuote" Header="View quotes" Click="ViewQuote_Click"/>
                             </ContextMenu>
                         </TextBlock.ContextMenu>
                     </TextBlock>
@@ -114,7 +114,7 @@
                             <DropShadowEffect x:Name="LikeGlow" ShadowDepth="0" Color="#FFEB5555" BlurRadius="6" Opacity="0"/>
                         </Image.Effect>
                     </Image>
-                    <TextBlock x:Name="LikeNumb" Text="0" Padding="0" Foreground="#FF5389BB" MouseLeave="Label_MouseLeave" MouseEnter="Label_MouseEnter" Cursor="Hand"/>
+                    <TextBlock x:Name="LikeNumb" Text="0" Padding="0" Foreground="#FF5389BB" MouseLeave="Label_MouseLeave" MouseEnter="Label_MouseEnter" Cursor="Hand" MouseUp="Like_Click"/>
                 </StackPanel>
                 <Image x:Name="More" VerticalAlignment="Bottom" Source="/res/MoreIcon.png" Width="16" Height="16" HorizontalAlignment="Right" Margin="0,0,0,10" Cursor="Hand" MouseUp="Repost_Click">
                     <Image.ContextMenu>

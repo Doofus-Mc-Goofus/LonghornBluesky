@@ -33,14 +33,14 @@
             <CheckBox x:Name="HostCheckBox" Content="Use custom hosting provider" Margin="0,0,0,5" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
             <StackPanel x:Name="ServWrapPanel" Margin="0,0,0,5" Visibility="Collapsed">
                 <Label Content="Server address:" Padding="0,0,0,5"/>
-                <TextBox x:Name="HostProv" Width="500" Text="https://bsky.social" Foreground="Gray" LostKeyboardFocus="HostProv_LostKeyboardFocus" GotKeyboardFocus="HostProv_GotKeyboardFocus"/>
+                <TextBox x:Name="HostProv" Width="500" Text="https://bsky.social" Foreground="Gray" LostKeyboardFocus="HostProv_LostKeyboardFocus" GotKeyboardFocus="HostProv_GotKeyboardFocus" Margin="0,0,0,5"/>
             </StackPanel>
             <CheckBox x:Name="RememberCheckBox" Content="Remember me" Margin="0,0,0,5"/>
             <Label x:Name="Error" Content="Error message." Padding="0" Margin="0,0,0,5" Foreground="#FFB33C3C" FontFamily="Segoe UI Semibold" Visibility="Collapsed"/>
             <StackPanel Orientation="Horizontal">
-                <TextBlock x:Name="CreateAccount" Text="Create account..." Foreground="{DynamicResource ö}" Margin="0,0,20,0" Cursor="Hand" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave"/>
-                <TextBlock x:Name="LoginGuest" Text="Login as guest..." Foreground="{DynamicResource ö}" Margin="0,0,20,0" Cursor="Hand" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave"/>
-                <TextBlock x:Name="ForgotPassword" Text="I forgot my password." Foreground="{DynamicResource ö}" Cursor="Hand" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave"/>
+                <TextBlock x:Name="CreateAccount" Text="Create account..." Foreground="{DynamicResource ö}" Margin="0,0,20,0" Cursor="Hand" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Visibility="Collapsed"/>
+                <TextBlock x:Name="LoginGuest" Text="Login as guest..." Foreground="{DynamicResource ö}" Margin="0,0,20,0" Cursor="Hand" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Visibility="Collapsed"/>
+                <TextBlock x:Name="ForgotPassword" Text="I forgot my password." Foreground="{DynamicResource ö}" Cursor="Hand" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Visibility="Collapsed"/>
             </StackPanel>
         </StackPanel>
         <TextBlock x:Name="SupportText" Text="Support" Foreground="{DynamicResource ö}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,15" Cursor="Hand" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" MouseUp="Support_Click" Visibility="Collapsed"/>

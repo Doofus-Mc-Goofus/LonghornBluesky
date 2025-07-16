@@ -28,6 +28,7 @@ namespace Client
         private bool isclientNotif = false;
         private readonly DispatcherTimer dispatcherTimer = new DispatcherTimer();
         private Dashboard dashboard;
+        private readonly App app = (App)Application.Current;
         private readonly NotificationOverlay notificationOverlay = new NotificationOverlay();
         private void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
@@ -82,11 +83,18 @@ namespace Client
                 Dispatcher.UnhandledException += OnDispatcherUnhandledException;
             }
             InitializeComponent();
+            if (SystemParameters.PrimaryScreenHeight < 768 || SystemParameters.PrimaryScreenWidth < 1024 || System.Windows.Forms.Screen.PrimaryScreen.BitsPerPixel < 32)
+            {
+                _ = MessageBox.Show("Longhorn Bluesky requires a monitor with a resolution of at least 1024x768 and 32-bit color.", "Installation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Application.Current.Shutdown();
+            }
+            app = (App)Application.Current;
+            app.ChangeTheme(new Uri("pack://application:,,,/PresentationFramework.Aero;V4.0.0.0;31bf3856ad364e35;component/themes/aero.normalcolor.xaml"));
             GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
             Login loginpage = new Login(this);
             Content = loginpage;
             HKCU_AddKey(@"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", "Client.exe", 11000);
-            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.1.4");
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.2.0");
             if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "Ver") == "")
             {
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Remember", "false");
@@ -153,7 +161,7 @@ namespace Client
         {
             HttpClient httpClient = new HttpClient();
             // If you are making a fork of this client, PLEASE change the URLs below to your own. If you don't, the client will try to install the original client's updates, which may cause problems.
-            HttpResponseMessage response = await httpClient.GetAsync("https://system24.neocities.org/projects/api/LHbluesky/currentver");
+            HttpResponseMessage response = await httpClient.GetAsync("https://raw.githubusercontent.com/Doofus-Mc-Goofus/LonghornBluesky/refs/heads/main/Client/API/currentVer");
             string latestVer = await response.Content.ReadAsStringAsync();
             if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "Ver") != latestVer)
             {
@@ -265,7 +273,7 @@ namespace Client
             HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "wnd_state", WindowState.ToString());
             notifyIcon1.Dispose();
             notificationOverlay.Close();
-            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "isLOG") == "True")
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "isLOG") == "True" && issignedIn)
             {
                 e.Cancel = true;
                 Visibility = Visibility.Hidden;

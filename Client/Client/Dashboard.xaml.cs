@@ -128,11 +128,27 @@ namespace Client
                 HideOthersSidebar();
             }
         }
-        public void NavigateToFollow(string Did, bool isBy, int number)
+        public void NavigateToFollow(string Did, byte isBy, int number)
         {
-            FollowPage ProfilePage = new FollowPage(ATDid.Create(Did), aTProtocol, isBy, this, number);
+            FollowPage ProfilePage = new FollowPage(aTProtocol, isBy, this, number, ATDid.Create(Did));
             PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
             _ = PageFrame.NavigationService.Navigate(ProfilePage);
+            selectobjectsidebar = 0;
+            HideOthersSidebar();
+        }
+        public void NavigateToEngage(string Uri, byte isBy, int number)
+        {
+            FollowPage ProfilePage = new FollowPage(aTProtocol, isBy, this, number, null, ATUri.Create(Uri));
+            PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+            _ = PageFrame.NavigationService.Navigate(ProfilePage);
+            selectobjectsidebar = 0;
+            HideOthersSidebar();
+        }
+        public void NavigateToQuotes(string Uri, int number)
+        {
+            QuotePage QuotePage = new QuotePage(ATUri.Create(Uri), aTProtocol, this, number);
+            PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+            _ = PageFrame.NavigationService.Navigate(QuotePage);
             selectobjectsidebar = 0;
             HideOthersSidebar();
         }

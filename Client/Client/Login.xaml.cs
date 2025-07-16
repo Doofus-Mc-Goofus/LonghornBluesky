@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -37,6 +39,12 @@ namespace Client
                     Wordmark.Margin = new Thickness(0, 0, 0, 140);
                     Welcome.FontSize = 24;
                 }
+                if (myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "2")
+                {
+                    CreateAccount.Visibility = Visibility.Visible;
+                    LoginGuest.Visibility = Visibility.Visible;
+                    ForgotPassword.Visibility = Visibility.Visible;
+                }
             }
             if (mainWindow.HKCU_GetString(@"SOFTWARE\LonghornBluesky", "Remember") == "true")
             {
@@ -73,7 +81,18 @@ namespace Client
             {
                 ShowPageAgain();
                 Error.Visibility = Visibility.Visible;
-                Error.Content = error.Detail.Message;
+                if (identifier[0].ToString() == "@")
+                {
+                    Error.Content = "Your username cannot start with @";
+                }
+                else if (identifier == string.Empty || password == string.Empty)
+                {
+                    Error.Content = "An identifier and password is required to sign in";
+                }
+                else
+                {
+                    Error.Content = error.Detail.Message;
+                }
                 return;
             }
             // _ = MessageBox.Show("Authenticated.");
