@@ -1,2 +1,2 @@
-note to self: check your code before you upload it
+﻿Feel free to laugh at my awful code.
 - DoofusMcGoofus
