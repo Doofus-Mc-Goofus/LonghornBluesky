@@ -161,7 +161,7 @@ namespace Client
         {
             HttpClient httpClient = new HttpClient();
             // If you are making a fork of this client, PLEASE change the URLs below to your own. If you don't, the client will try to install the original client's updates, which may cause problems.
-            HttpResponseMessage response = await httpClient.GetAsync("https://raw.githubusercontent.com/Doofus-Mc-Goofus/LonghornBluesky/refs/heads/main/Client/API/currentVer");
+            HttpResponseMessage response = await httpClient.GetAsync("https://system24.neocities.org/projects/api/LHbluesky/currentver");
             string latestVer = await response.Content.ReadAsStringAsync();
             if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "Ver") != latestVer)
             {
