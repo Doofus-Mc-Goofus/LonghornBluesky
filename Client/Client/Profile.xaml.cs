@@ -13,7 +13,6 @@ using FishyFlip.Lexicon.App.Bsky.Feed;
 using FishyFlip.Lexicon.App.Bsky.Graph;
 using FishyFlip.Lexicon.Com.Atproto.Repo;
 using FishyFlip.Models;
-using INI;
 using Newtonsoft.Json.Linq;
 
 namespace Client
@@ -238,9 +237,9 @@ namespace Client
 
         private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            if (((ScrollViewer)sender).ScrollableHeight - ((ScrollViewer)sender).VerticalOffset <= 320)
+            if (((ScrollViewer)sender).ScrollableHeight - ((ScrollViewer)sender).VerticalOffset <= 320 && FeedTabControl.SelectedIndex <= 4)
             {
-                _ = LoadPosts((StackPanel)((ScrollViewer)sender).Content);
+                _ = LoadPosts((StackPanel)((TabItem)FeedTabControl.SelectedItem).Content);
             }
         }
 
@@ -269,7 +268,6 @@ namespace Client
         {
             if (isFollowing)
             {
-                // I know this may come across as harsh to some, but I believe everyone in this story should die.
                 Result<DeleteRecordOutput> result = await aTProtocol.DeleteFollowAsync(raellycoolwig.Did, raellycoolwig.Rkey);
                 result.Switch(
                     success =>
@@ -314,7 +312,6 @@ namespace Client
         {
             if (isBlocking)
             {
-                // I know this may come across as harsh to some, but I believe everyone in this story should die.
                 Result<DeleteRecordOutput> result = await aTProtocol.DeleteBlockAsync(Blocking.Did, Blocking.Rkey);
                 result.Switch(
                     success =>
@@ -392,13 +389,6 @@ namespace Client
             Unblock.Click -= Follow_Click;
             Overflow.Click -= Overflow_Click;
             BlockContext.Click -= BlockContext_Click;
-            PostsScroll.ScrollChanged -= ScrollViewer_ScrollChanged;
-            RepliesScroll.ScrollChanged -= ScrollViewer_ScrollChanged;
-            MediaScroll.ScrollChanged -= ScrollViewer_ScrollChanged;
-            LikesScroll.ScrollChanged -= ScrollViewer_ScrollChanged;
-            FeedsScroll.ScrollChanged -= ScrollViewer_ScrollChanged;
-            StarterPacksScroll.ScrollChanged -= ScrollViewer_ScrollChanged;
-            ListsScroll.ScrollChanged -= ScrollViewer_ScrollChanged;
             rect.MouseUp -= Rectangle_MouseUp;
             PostsStack.Children.Clear();
             RepliesStack.Children.Clear();
@@ -411,7 +401,7 @@ namespace Client
             detailsStack.Children.Clear();
             test.Children.Clear();
             wrapper.Children.Clear();
-            ((Grid)Content).Children.Clear();
+            ((Grid)((ScrollViewer)Content).Content).Children.Clear();
             GC.SuppressFinalize(this);
         }
 

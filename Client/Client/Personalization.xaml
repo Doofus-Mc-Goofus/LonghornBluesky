@@ -3,11 +3,10 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Client"
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="500"
       Title="Personalization" UseLayoutRounding="True" Unloaded="Page_Unloaded" Loaded="Page_Loaded">
-    <Grid x:Name="homie" Margin="20">
+    <Grid Margin="20">
         <Rectangle x:Name="rect" RadiusX="3" RadiusY="3" Stroke="#54E0F6FF" MouseUp="Rectangle_MouseUp" Focusable="True">
             <Rectangle.Effect>
                 <DropShadowEffect ShadowDepth="5" Opacity="0.33" BlurRadius="10" Direction="270"/>
@@ -20,7 +19,7 @@
             </Rectangle.Fill>
         </Rectangle>
         <StackPanel Margin="10,10,10,42">
-            <StackPanel x:Name="Secret">
+            <StackPanel x:Name="Secret" Visibility="Collapsed">
                 <Expander>
                     <Expander.Header>
                         <TextBlock Text="Themes" Foreground="#FF0D467A" FontFamily="Segoe UI Semibold"/>
@@ -61,34 +60,52 @@
                         <ComboBox x:Name="NOTIFBOX" SelectedIndex="0" Margin="0,0,77,0">
                             <ComboBoxItem Content="Longhorn Notification" ToolTip="LH_NOTIF.wav"/>
                         </ComboBox>
-                        <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Width="70" Click="NotifBrowse_Click"/>
+                        <Button x:Name="NOTIFBUTTON" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Width="70" Click="NotifBrowse_Click"/>
                     </Grid>
                     <Label Content="Alert Sound:" Padding="0,0,0,5" />
-                    <ComboBox x:Name="ALERTBOX" Margin="0,0,0,10" SelectedIndex="0">
-                        <ComboBoxItem Content="Longhorn Alert" ToolTip="LH_ALERT.wav"/>
-                    </ComboBox>
+                    <Grid Margin="0,0,0,10">
+                        <ComboBox x:Name="ALERTBOX" Margin="0,0,77,0" SelectedIndex="0">
+                            <ComboBoxItem Content="Longhorn Alert" ToolTip="LH_ALERT.wav"/>
+                        </ComboBox>
+                        <Button x:Name="ALERTBUTTON" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Width="70" Click="AlertBrowse_Click"/>
+                    </Grid>
                     <Label Content="Important Alert Sound:" Padding="0,0,0,5" />
-                    <ComboBox x:Name="IMPORTANTALERTBOX" Margin="0,0,0,10" SelectedIndex="0">
-                        <ComboBoxItem Content="Longhorn Important Alert" ToolTip="LH_UPDATEALERT.wav"/>
-                    </ComboBox>
+                    <Grid Margin="0,0,0,10" >
+                        <ComboBox x:Name="IMPORTANTALERTBOX" SelectedIndex="0" Margin="0,0,77,0">
+                            <ComboBoxItem Content="Longhorn Important Alert" ToolTip="LH_UPDATEALERT.wav"/>
+                        </ComboBox>
+                        <Button x:Name="IMPORTANTALERTBUTTON" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Width="70" Click="ImportantAlertBrowse_Click"/>
+                    </Grid>
                     <Label Content="Posting Sound:" Padding="0,0,0,5" />
-                    <ComboBox x:Name="POSTBOX" Margin="0,0,0,10" SelectedIndex="0">
-                        <ComboBoxItem Content="Longhorn Posting" ToolTip="LH_POST.wav"/>
-                    </ComboBox>
+                    <Grid Margin="0,0,0,10" >
+                        <ComboBox x:Name="POSTBOX" SelectedIndex="0" Margin="0,0,77,0">
+                            <ComboBoxItem Content="Longhorn Posting" ToolTip="LH_POST.wav"/>
+                        </ComboBox>
+                        <Button x:Name="POSTBUTTON" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Width="70" Click="PostBrowse_Click"/>
+                    </Grid>
                     <Label Content="Deleting Sound:" Padding="0,0,0,5" />
-                    <ComboBox x:Name="DELETEBOX" Margin="0,0,0,10" SelectedIndex="0">
-                        <ComboBoxItem Content="Longhorn Deleting" ToolTip="LH_DELETE.wav"/>
-                    </ComboBox>
+                    <Grid Margin="0,0,0,10">
+                        <ComboBox x:Name="DELETEBOX" SelectedIndex="0" Margin="0,0,77,0">
+                            <ComboBoxItem Content="Longhorn Deleting" ToolTip="LH_DELETE.wav"/>
+                        </ComboBox>
+                        <Button x:Name="DELETEBUTTON" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Width="70" Click="DeleteBrowse_Click"/>
+                    </Grid>
                     <CheckBox x:Name="logcheck" Margin="0,0,0,7" Content="Playing logon and logoff sounds" Checked="LogCheck" Unchecked="LogUncheck"/>
                     <StackPanel x:Name="LogSounds" Visibility="Collapsed">
                         <Label Content="Logon Sound:" Padding="0,0,0,5" />
-                        <ComboBox x:Name="LOGONBOX" Margin="0,0,0,10" SelectedIndex="0">
-                            <ComboBoxItem Content="Longhorn Logon" ToolTip="LH_WELCOME.wav"/>
-                        </ComboBox>
+                        <Grid Margin="0,0,0,10">
+                            <ComboBox x:Name="LOGONBOX" Margin="0,0,77,0" SelectedIndex="0">
+                                <ComboBoxItem Content="Longhorn Logon" ToolTip="LH_WELCOME.wav"/>
+                            </ComboBox>
+                            <Button x:Name="LOGONBUTTON" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Width="70" Click="LogonBrowse_Click"/>
+                        </Grid>
                         <Label Content="Logoff Sound:" Padding="0,0,0,5" />
-                        <ComboBox x:Name="LOGOFFBOX" Margin="0,0,0,10" SelectedIndex="0">
-                            <ComboBoxItem Content="Longhorn Logoff" ToolTip="LH_ACCOUNTDELETE.wav"/>
-                        </ComboBox>
+                        <Grid Margin="0,0,0,10">
+                            <ComboBox x:Name="LOGOFFBOX" Margin="0,0,77,0" SelectedIndex="0">
+                                <ComboBoxItem Content="Longhorn Logoff" ToolTip="LH_EXIT.wav"/>
+                            </ComboBox>
+                            <Button x:Name="LOGOFFBUTTON" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Width="70" Click="LogoffBrowse_Click"/>
+                        </Grid>
                     </StackPanel>
                 </StackPanel>
             </Expander>

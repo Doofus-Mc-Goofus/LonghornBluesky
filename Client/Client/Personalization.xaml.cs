@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using INI;
 using Microsoft.Win32;
 
 namespace Client
@@ -13,12 +14,17 @@ namespace Client
     public partial class Personalization : Page
     {
         private readonly Settings settings;
-        private readonly Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
+        private readonly OpenFileDialog dialog = new OpenFileDialog();
         public Personalization(Settings settings)
         {
             InitializeComponent();
             this.settings = settings;
             dialog.Filter = "WAV Files|*.wav"; // Filter files by extension
+            IniFile myIni = new IniFile("config.ini");
+            if (File.Exists("config.ini") && myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "2")
+            {
+                Secret.Visibility = Visibility.Visible;
+            }
         }
         private void Rectangle_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -29,7 +35,23 @@ namespace Client
             // fix
             Unloaded -= Page_Unloaded;
             rect.MouseUp -= Rectangle_MouseUp;
-            homie.Children.Clear();
+            NOTIFBUTTON.Click -= NotifBrowse_Click;
+            ALERTBUTTON.Click -= AlertBrowse_Click;
+            IMPORTANTALERTBUTTON.Click -= ImportantAlertBrowse_Click;
+            POSTBUTTON.Click -= PostBrowse_Click;
+            DELETEBUTTON.Click -= DeleteBrowse_Click;
+            LOGONBUTTON.Click -= LogonBrowse_Click;
+            LOGOFFBUTTON.Click -= LogonBrowse_Click;
+            NOTIFBOX.Items.Clear();
+            ALERTBOX.Items.Clear();
+            IMPORTANTALERTBOX.Items.Clear();
+            POSTBOX.Items.Clear();
+            DELETEBOX.Items.Clear();
+            LOGONBOX.Items.Clear();
+            LOGOFFBOX.Items.Clear();
+            OK.Click -= OK_Click;
+            Cancel.Click -= Cancel_Click;
+            Apply.Click -= Apply_Click;
             ((Grid)Content).Children.Clear();
             Content = null;
             GC.SuppressFinalize(this);
@@ -37,6 +59,13 @@ namespace Client
         private void ApplyStuff()
         {
             HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "isLOG", logcheck.IsChecked.ToString());
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "NOTIF", NOTIFBOX.Tag);
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "ALERT", ALERTBOX.Tag);
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "UPDATEALERT", IMPORTANTALERTBOX.Tag);
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "POST", POSTBOX.Tag);
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "DELETE", DELETEBOX.Tag);
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "LOGON", LOGONBOX.Tag);
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "LOGOFF", LOGOFFBOX.Tag);
         }
         public void HKCU_AddKey(string path, string key, object value)
         {
@@ -81,6 +110,27 @@ namespace Client
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             logcheck.IsChecked = bool.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "isLOG"));
+            string notifpath = HKCU_GetString(@"SOFTWARE\LonghornBluesky", "NOTIF");
+            ((ComboBoxItem)NOTIFBOX.Items[0]).Content = ConvertToProperName(Path.GetFileNameWithoutExtension(notifpath));
+            NOTIFBOX.Tag = notifpath;
+            string alertpath = HKCU_GetString(@"SOFTWARE\LonghornBluesky", "ALERT");
+            ((ComboBoxItem)ALERTBOX.Items[0]).Content = ConvertToProperName(Path.GetFileNameWithoutExtension(alertpath));
+            ALERTBOX.Tag = alertpath;
+            string UPDATEALERT = HKCU_GetString(@"SOFTWARE\LonghornBluesky", "UPDATEALERT");
+            ((ComboBoxItem)IMPORTANTALERTBOX.Items[0]).Content = ConvertToProperName(Path.GetFileNameWithoutExtension(UPDATEALERT));
+            IMPORTANTALERTBOX.Tag = UPDATEALERT;
+            string POST = HKCU_GetString(@"SOFTWARE\LonghornBluesky", "POST");
+            ((ComboBoxItem)POSTBOX.Items[0]).Content = ConvertToProperName(Path.GetFileNameWithoutExtension(POST));
+            POSTBOX.Tag = POST;
+            string DELETE = HKCU_GetString(@"SOFTWARE\LonghornBluesky", "DELETE");
+            ((ComboBoxItem)DELETEBOX.Items[0]).Content = ConvertToProperName(Path.GetFileNameWithoutExtension(DELETE));
+            DELETEBOX.Tag = DELETE;
+            string LOGON = HKCU_GetString(@"SOFTWARE\LonghornBluesky", "LOGON");
+            ((ComboBoxItem)LOGONBOX.Items[0]).Content = ConvertToProperName(Path.GetFileNameWithoutExtension(LOGON));
+            LOGONBOX.Tag = LOGON;
+            string LOGOFF = HKCU_GetString(@"SOFTWARE\LonghornBluesky", "LOGOFF");
+            ((ComboBoxItem)LOGOFFBOX.Items[0]).Content = ConvertToProperName(Path.GetFileNameWithoutExtension(LOGOFF));
+            LOGOFFBOX.Tag = LOGOFF;
         }
         private string OpenWAV()
         {
@@ -89,7 +139,12 @@ namespace Client
         }
         private void NotifBrowse_Click(object sender, RoutedEventArgs e)
         {
-            _ = MessageBox.Show(ConvertToProperName(Path.GetFileNameWithoutExtension(OpenWAV())));
+            string path = OpenWAV();
+            if (path != null)
+            {
+                ((ComboBoxItem)NOTIFBOX.Items[0]).Content = ConvertToProperName(Path.GetFileNameWithoutExtension(path));
+                NOTIFBOX.Tag = path;
+            }
         }
         private string ConvertToProperName(string filename)
         {
@@ -101,7 +156,7 @@ namespace Client
             // no
             switch (filename)
             {
-                case "LH_ACCOUNTDELETE":
+                case "LH_EXIT":
                     return "Longhorn Logoff";
                 case "LH_ALERT":
                     return "Longhorn Alert";
@@ -115,7 +170,7 @@ namespace Client
                     return "Longhorn Important Alert";
                 case "LH_WELCOME":
                     return "Longhorn Logon";
-                case "AERO_ACCOUNTDELETE":
+                case "AERO_EXIT":
                     return "Aero Logoff";
                 case "AERO_ALERT":
                     return "Aero Alert";
@@ -129,7 +184,7 @@ namespace Client
                     return "Aero Important Alert";
                 case "AERO_WELCOME":
                     return "Aero Logon";
-                case "EXP_ACCOUNTDELETE":
+                case "EXP_EXIT":
                     return "eXPerience Logoff";
                 case "EXP_ALERT":
                     return "eXPerience Alert";
@@ -143,7 +198,7 @@ namespace Client
                     return "eXPerience Important Alert";
                 case "EXP_WELCOME":
                     return "eXPerience Logon";
-                case "Y2K_ACCOUNTDELETE":
+                case "Y2K_EXIT":
                     return "Y2K Logoff";
                 case "Y2K_ALERT":
                     return "Y2K Alert";
@@ -157,7 +212,7 @@ namespace Client
                     return "Y2K Important Alert";
                 case "Y2K_WELCOME":
                     return "Y2K Logon";
-                case "NEO_ACCOUNTDELETE":
+                case "NEO_EXIT":
                     return "Neo-Chicago Logoff";
                 case "NEO_ALERT":
                     return "Neo-Chicago Alert";
@@ -173,6 +228,66 @@ namespace Client
                     return "Neo-Chicago Logon";
                 default:
                     return filename;
+            }
+        }
+
+        private void AlertBrowse_Click(object sender, RoutedEventArgs e)
+        {
+            string path = OpenWAV();
+            if (path != null)
+            {
+                ((ComboBoxItem)ALERTBOX.Items[0]).Content = ConvertToProperName(Path.GetFileNameWithoutExtension(path));
+                ALERTBOX.Tag = path;
+            }
+        }
+
+        private void ImportantAlertBrowse_Click(object sender, RoutedEventArgs e)
+        {
+            string path = OpenWAV();
+            if (path != null)
+            {
+                ((ComboBoxItem)IMPORTANTALERTBOX.Items[0]).Content = ConvertToProperName(Path.GetFileNameWithoutExtension(path));
+                IMPORTANTALERTBOX.Tag = path;
+            }
+        }
+
+        private void PostBrowse_Click(object sender, RoutedEventArgs e)
+        {
+            string path = OpenWAV();
+            if (path != null)
+            {
+                ((ComboBoxItem)POSTBOX.Items[0]).Content = ConvertToProperName(Path.GetFileNameWithoutExtension(path));
+                POSTBOX.Tag = path;
+            }
+        }
+
+        private void DeleteBrowse_Click(object sender, RoutedEventArgs e)
+        {
+            string path = OpenWAV();
+            if (path != null)
+            {
+                ((ComboBoxItem)DELETEBOX.Items[0]).Content = ConvertToProperName(Path.GetFileNameWithoutExtension(path));
+                DELETEBOX.Tag = path;
+            }
+        }
+
+        private void LogonBrowse_Click(object sender, RoutedEventArgs e)
+        {
+            string path = OpenWAV();
+            if (path != null)
+            {
+                ((ComboBoxItem)LOGONBOX.Items[0]).Content = ConvertToProperName(Path.GetFileNameWithoutExtension(path));
+                LOGONBOX.Tag = path;
+            }
+        }
+
+        private void LogoffBrowse_Click(object sender, RoutedEventArgs e)
+        {
+            string path = OpenWAV();
+            if (path != null)
+            {
+                ((ComboBoxItem)LOGOFFBOX.Items[0]).Content = ConvertToProperName(Path.GetFileNameWithoutExtension(path));
+                LOGOFFBOX.Tag = path;
             }
         }
     }

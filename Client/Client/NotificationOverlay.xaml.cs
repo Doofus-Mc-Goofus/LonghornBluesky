@@ -55,6 +55,7 @@ namespace Client
                     _ = await Task.Run(process.Start);
                     await Task.Run(process.WaitForExit);
                     await Task.Run(process.Close);
+                    await Task.Run(process.Dispose);
                 }
             }
         }
