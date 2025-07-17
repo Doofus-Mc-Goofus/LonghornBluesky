@@ -91,19 +91,21 @@
                             <Image Source="/res/NewspaperIcon.ico" Height="24" HorizontalAlignment="Left" Margin="14,0,0,0"/>
                             <Label x:Name="Content_Text" Foreground="#FF0D467A" Content="Content and Media" VerticalContentAlignment="Center" Margin="42,0,0,0"/>
                         </Grid>
-                        <Grid x:Name="Personalization" Height="32" Margin="0,0,0,2" MouseEnter="Personalization_MouseEnter" MouseLeave="Personalization_MouseLeave" MouseUp="Personalization_MouseUp">
-                            <Rectangle x:Name="Personalization_BG" Margin="2,0,2,0" Stroke="#540D467A" RadiusY="3" RadiusX="3" Visibility="Collapsed">
-                                <Rectangle.Fill>
-                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                        <GradientStop Color="#7FFFFFFF"/>
-                                        <GradientStop Color="#7FFFFFFF" Offset="1"/>
-                                        <GradientStop Color="#3FFFFFFF" Offset="0.654"/>
-                                    </LinearGradientBrush>
-                                </Rectangle.Fill>
-                            </Rectangle>
-                            <Image Source="/res/PersonalizationIcon.png" Height="24" HorizontalAlignment="Left" Margin="14,0,0,0"/>
-                            <Label x:Name="Personalization_Text" Foreground="#FF0D467A" Content="Appearance and Personalization" VerticalContentAlignment="Center" Margin="42,0,0,0"/>
-                        </Grid>
+                    </StackPanel>
+                    <Grid x:Name="Personalization" Height="32" Margin="0,0,0,2" MouseEnter="Personalization_MouseEnter" MouseLeave="Personalization_MouseLeave" MouseUp="Personalization_MouseUp">
+                        <Rectangle x:Name="Personalization_BG" Margin="2,0,2,0" Stroke="#540D467A" RadiusY="3" RadiusX="3" Visibility="Collapsed">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#7FFFFFFF"/>
+                                    <GradientStop Color="#7FFFFFFF" Offset="1"/>
+                                    <GradientStop Color="#3FFFFFFF" Offset="0.654"/>
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Image Source="/res/PersonalizationIcon.png" Height="24" HorizontalAlignment="Left" Margin="14,0,0,0"/>
+                        <Label x:Name="Personalization_Text" Foreground="#FF0D467A" Content="Appearance and Personalization" VerticalContentAlignment="Center" Margin="42,0,0,0"/>
+                    </Grid>
+                    <StackPanel x:Name="Secret2" Visibility="Collapsed">
                         <Grid x:Name="Accessibility" Height="32" Margin="0,0,0,2" MouseEnter="Accessibility_MouseEnter" MouseLeave="Accessibility_MouseLeave" MouseUp="Accessibility_MouseUp">
                             <Rectangle x:Name="Accessibility_BG" Margin="2,0,2,0" Stroke="#540D467A" RadiusY="3" RadiusX="3" Visibility="Collapsed">
                                 <Rectangle.Fill>

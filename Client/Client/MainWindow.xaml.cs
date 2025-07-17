@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Media;
 using System.Net.Http;
@@ -31,7 +29,7 @@ namespace Client
         private Dashboard dashboard;
         private readonly App app = (App)Application.Current;
         private readonly NotificationOverlay notificationOverlay = new NotificationOverlay();
-        private void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             string list = string.Empty;
             try
@@ -169,23 +167,14 @@ namespace Client
             {
                 HttpClient httpClient = new HttpClient();
                 // If you are making a fork of this client, PLEASE change the URLs below to your own. If you don't, the client will try to install the original client's updates, which may cause problems.
-                HttpResponseMessage response = await httpClient.GetAsync("https://system24.neocities.org/projects/api/LHbluesky/currentver");
+                HttpResponseMessage response = HKCU_GetString(@"SOFTWARE\LonghornBluesky", "isCanary") == "true"
+                    ? await httpClient.GetAsync("https://system24.neocities.org/projects/api/LHbluesky/currentCanaryVer")
+                    : await httpClient.GetAsync("https://system24.neocities.org/projects/api/LHbluesky/currentver");
                 string latestVer = await response.Content.ReadAsStringAsync();
                 if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "Ver") != latestVer)
                 {
-                    // notifyIcon1.BalloonTipTitle = "A new Bluesky update is available";
-                    // notifyIcon1.BalloonTipText = "Click here to install the updates now";
-                    // notifyIcon1.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-                    // notifyIcon1.ShowBalloonTip(10000);
-                    if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "isCanary") == "true")
-                    {
-                        notificationOverlay.CreateNotification("Automatic updates are unavailable", "Automatic updates are currently unavailable. You will have to check for them manually", 0);
-                    }
-                    else
-                    {
-                        isclientNotif = true;
-                        notificationOverlay.CreateNotification("A new Bluesky update is available", "Click here to install the updates", 0);
-                    }
+                    isclientNotif = true;
+                    notificationOverlay.CreateNotification("A new Bluesky update is available", "Click here to install the updates", 0);
                     SoundPlayer soundPlayer = new SoundPlayer(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "UPDATEALERT"));
                     soundPlayer.Play();
                     dispatcherTimer.Stop();

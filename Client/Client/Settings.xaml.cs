@@ -31,6 +31,7 @@ namespace Client
             if (File.Exists("config.ini") && myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "2")
             {
                 Secret.Visibility = Visibility.Visible;
+                Secret2.Visibility = Visibility.Visible;
             }
         }
         private void Back_MouseDown(object sender, MouseButtonEventArgs e)
