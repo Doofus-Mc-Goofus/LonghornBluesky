@@ -93,9 +93,9 @@ namespace Client
             Login loginpage = new Login(this);
             Content = loginpage;
             HKCU_AddKey(@"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", "Client.exe", 11000);
-            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.2.1a");
-            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "isCanary", "true");
-            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "Ver") == "")
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.2.1");
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "isCanary", "false");
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "ALERT") == null)
             {
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Remember", "false");
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "RememberUsername", "");
