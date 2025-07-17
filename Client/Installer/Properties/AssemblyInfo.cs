@@ -15,6 +15,7 @@ using System.Windows;
 [assembly: AssemblyCopyright("GPLv3")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+[assembly: Guid("9a3ceb13-317f-49e5-a02d-5379fc4a00f8")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from
