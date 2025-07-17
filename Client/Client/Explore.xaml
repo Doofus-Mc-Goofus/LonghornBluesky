@@ -3,7 +3,6 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Client"
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="540"
       Title="Explore" UseLayoutRounding="True" Unloaded="Page_Unloaded">
@@ -22,7 +21,7 @@
                     </Rectangle.Fill>
                 </Rectangle>
                 <Label Content="To begin, type in the search box" FontSize="16" VerticalAlignment="Top" Foreground="#FF0D467A" HorizontalAlignment="Center" Padding="10,14,10,14"/>
-                <TextBox x:Name="Search" Margin="15,48,46,10" Text="Search for posts, users, or feeds" Foreground="Gray" VerticalAlignment="Top" LostKeyboardFocus="Search_LostKeyboardFocus" GotKeyboardFocus="Search_GotKeyboardFocus" Padding="1,1,18,1"/>
+                <TextBox x:Name="Search" Margin="15,48,46,10" Text="Search for posts, users, or feeds" Foreground="Gray" VerticalAlignment="Top" LostKeyboardFocus="Search_LostKeyboardFocus" GotKeyboardFocus="Search_GotKeyboardFocus" Padding="1,1,18,1" FontStyle="Italic"/>
                 <Image x:Name="ClearButton" Source="/res/CloseNormal.png" Stretch="None" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,48,13" ToolTip="Clear" MouseDown="ClearButton_MouseDown" MouseEnter="ClearButton_MouseEnter" MouseLeave="ClearButton_MouseLeave" MouseUp="ClearButton_MouseUp" Visibility="Collapsed"/>
                 <Image x:Name="PassBoxButton" Source="/res/signinbutton-1.png" Stretch="None" HorizontalAlignment="Right" VerticalAlignment="Bottom" MouseDown="PassBoxButton_MouseDown" MouseEnter="PassBoxButton_MouseEnter" MouseLeave="PassBoxButton_MouseLeave" MouseUp="PassBoxButton_MouseUp" Margin="0,0,15,5" ToolTip="Go"/>
             </Grid>

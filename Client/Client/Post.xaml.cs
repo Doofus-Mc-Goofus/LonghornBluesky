@@ -39,7 +39,7 @@ namespace Client
         private bool isReposted;
         private readonly bool isReply;
         private readonly DispatcherTimer timer = new DispatcherTimer();
-        private readonly List<BitmapImage> bitmapImages = new List<BitmapImage>();
+        private readonly List<string> bitmapImages = new List<string>();
         private readonly List<string> altTexts = new List<string>();
         private readonly List<BitmapImage> bigmacImages = new List<BitmapImage>();
         private readonly List<Grid> bigmacGrid = new List<Grid>();
@@ -329,13 +329,7 @@ namespace Client
                         // {
                         // CacheOption = BitmapCacheOption.OnDemand
                         // });
-
-                        BitmapImage bitmapImage2 = new BitmapImage();
-                        bitmapImage2.BeginInit();
-                        bitmapImage2.CacheOption = BitmapCacheOption.OnDemand;
-                        bitmapImage2.UriSource = new Uri(jArray[i]["fullsize"].ToString());
-                        bitmapImage2.EndInit();
-                        bitmapImages.Add(bitmapImage2);
+                        bitmapImages.Add(jArray[i]["fullsize"].ToString());
                         altTexts.Add(jArray[i]["alt"].ToString());
                         Image image1 = new Image
                         {
@@ -347,10 +341,6 @@ namespace Client
                         if (bitmapImage.CanFreeze)
                         {
                             bitmapImage.Freeze();
-                        }
-                        if (bitmapImage2.CanFreeze)
-                        {
-                            bitmapImage2.Freeze();
                         }
                     }
                 }
@@ -522,13 +512,7 @@ namespace Client
                             // {
                             // CacheOption = BitmapCacheOption.OnDemand
                             // });
-
-                            BitmapImage bitmapImage2 = new BitmapImage();
-                            bitmapImage2.BeginInit();
-                            bitmapImage2.CacheOption = BitmapCacheOption.OnDemand;
-                            bitmapImage2.UriSource = new Uri(jArray[i]["fullsize"].ToString());
-                            bitmapImage2.EndInit();
-                            bitmapImages.Add(bitmapImage2);
+                            bitmapImages.Add(jArray[i]["fullsize"].ToString());
                             altTexts.Add(jArray[i]["alt"].ToString());
                             System.Windows.Controls.Image image1 = new System.Windows.Controls.Image
                             {
@@ -540,10 +524,6 @@ namespace Client
                             if (bitmapImage.CanFreeze)
                             {
                                 bitmapImage.Freeze();
-                            }
-                            if (bitmapImage2.CanFreeze)
-                            {
-                                bitmapImage2.Freeze();
                             }
                         }
                     }
@@ -642,7 +622,12 @@ namespace Client
         {
             if (e.ChangedButton == MouseButton.Left)
             {
-                Viewer viewer = new Viewer(bitmapImages, (byte)((Grid)sender).Tag, altTexts);
+                List<Uri> listthings = new List<Uri>();
+                for (byte i = 0; i < bitmapImages.Count; i++)
+                {
+                    listthings.Add(new Uri(bitmapImages[i]));
+                }
+                Viewer viewer = new Viewer(listthings, (byte)((Grid)sender).Tag, altTexts);
                 viewer.Show();
             }
         }
@@ -896,11 +881,6 @@ namespace Client
             RepostedGrid.Children.Clear();
             stackie.Children.Clear();
             ((Grid)Content).Children.Clear();
-            for (int i = 0; i < bitmapImages.Count; i++)
-            {
-                DisposeImage(bitmapImages[i]);
-                bitmapImages[i] = null;
-            }
             for (int i = 0; i < bigmacImages.Count; i++)
             {
                 DisposeImage(bigmacImages[i]);

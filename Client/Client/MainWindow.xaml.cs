@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Media;
@@ -30,12 +29,12 @@ namespace Client
         private Dashboard dashboard;
         private readonly App app = (App)Application.Current;
         private readonly NotificationOverlay notificationOverlay = new NotificationOverlay();
-        private void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            List<string> list = new List<string>();
+            string list = string.Empty;
             try
             {
-                list.Add("Error Code: " + e.Exception.HResult.ToString());
+                list += "\n\nError Code: " + e.Exception.HResult.ToString();
             }
             catch
             {
@@ -43,7 +42,7 @@ namespace Client
             }
             try
             {
-                list.Add("Inner Exception: " + e.Exception.InnerException.Message);
+                list += "\n\nInner Exception: " + e.Exception.InnerException.Message;
             }
             catch
             {
@@ -51,7 +50,7 @@ namespace Client
             }
             try
             {
-                list.Add("Stack Trace:" + e.Exception.StackTrace);
+                list += "\n\nStack Trace:" + e.Exception.StackTrace;
             }
             catch
             {
@@ -59,7 +58,7 @@ namespace Client
             }
             try
             {
-                list.Add("Target: " + e.Exception.TargetSite.ToString());
+                list += "\n\nTarget: " + e.Exception.TargetSite.ToString();
             }
             catch
             {
@@ -69,7 +68,7 @@ namespace Client
             _ = MessageBox.Show(message + "\n\nThe client will now create a log and close.", "Fatal Error", MessageBoxButton.OK, MessageBoxImage.Error);
             using (FileStream fs = File.Create(DateTime.Now.Ticks + ".log"))
             {
-                byte[] info = new UTF8Encoding(true).GetBytes(e.Exception.Message + "\n\n" + list);
+                byte[] info = new UTF8Encoding(true).GetBytes(e.Exception.Message + list);
                 fs.Write(info, 0, info.Length);
             }
             e.Handled = true;
@@ -94,8 +93,9 @@ namespace Client
             Login loginpage = new Login(this);
             Content = loginpage;
             HKCU_AddKey(@"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", "Client.exe", 11000);
-            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.2.0");
-            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "Ver") == "")
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.2.1");
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "isCanary", "false");
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "ALERT") == null)
             {
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Remember", "false");
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "RememberUsername", "");
@@ -111,7 +111,11 @@ namespace Client
             if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "LOGON") == null)
             {
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "LOGON", "LH_WELCOME.wav");
-                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "LOGOFF", "LH_ACCOUNTDELETE.wav");
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "LOGOFF", "LH_EXIT.wav");
+            }
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "LOGOFF") == "LH_ACCOUNTDELETE.wav")
+            {
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "LOGOFF", "LH_EXIT.wav");
             }
             if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "isLOG") == null)
             {
@@ -147,9 +151,9 @@ namespace Client
             notifyIcon1.Text = "Bluesky";
             notifyIcon1.Visible = true;
             notifyIcon1.MouseClick += PhuckYou;
-            notifyIcon1.BalloonTipClicked += (s, ee) => _ = FocusWindow();
+            notifyIcon1.BalloonTipClicked += (s, ee) => _ = FocusWindow(false);
             notifyIcon1.ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
-            _ = notifyIcon1.ContextMenuStrip.Items.Add("Check Notifications", null, (s, ee) => _ = FocusWindow());
+            _ = notifyIcon1.ContextMenuStrip.Items.Add("Check Notifications", null, (s, ee) => _ = FocusWindow(true));
             _ = notifyIcon1.ContextMenuStrip.Items.Add("Close Bluesky", null, (s, ee) => Application.Current.Shutdown());
             dispatcherTimer.Interval = TimeSpan.FromSeconds(10);
             dispatcherTimer.Tick += (s, ee) => _ = CheckForUpdates();
@@ -159,26 +163,34 @@ namespace Client
 
         public async Task CheckForUpdates()
         {
-            HttpClient httpClient = new HttpClient();
-            // If you are making a fork of this client, PLEASE change the URLs below to your own. If you don't, the client will try to install the original client's updates, which may cause problems.
-            HttpResponseMessage response = await httpClient.GetAsync("https://system24.neocities.org/projects/api/LHbluesky/currentver");
-            string latestVer = await response.Content.ReadAsStringAsync();
-            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "Ver") != latestVer)
+            try
             {
-                isclientNotif = true;
-                // notifyIcon1.BalloonTipTitle = "A new Bluesky update is available";
-                // notifyIcon1.BalloonTipText = "Click here to install the updates now";
-                // notifyIcon1.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-                // notifyIcon1.ShowBalloonTip(10000);
-                notificationOverlay.CreateNotification("A new Bluesky update is available", "Click here to install the updates", 0);
+                HttpClient httpClient = new HttpClient();
+                // If you are making a fork of this client, PLEASE change the URLs below to your own. If you don't, the client will try to install the original client's updates, which may cause problems.
+                HttpResponseMessage response = HKCU_GetString(@"SOFTWARE\LonghornBluesky", "isCanary") == "true"
+                    ? await httpClient.GetAsync("https://system24.neocities.org/projects/api/LHbluesky/currentCanaryVer")
+                    : await httpClient.GetAsync("https://system24.neocities.org/projects/api/LHbluesky/currentver");
+                string latestVer = await response.Content.ReadAsStringAsync();
+                if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "Ver") != latestVer)
+                {
+                    isclientNotif = true;
+                    notificationOverlay.CreateNotification("A new Bluesky update is available", "Click here to install the updates", 0);
+                    SoundPlayer soundPlayer = new SoundPlayer(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "UPDATEALERT"));
+                    soundPlayer.Play();
+                    dispatcherTimer.Stop();
+                }
+                else
+                {
+                    dispatcherTimer.Interval = TimeSpan.FromMinutes(1);
+                    dispatcherTimer.Start();
+                }
+            }
+            catch
+            {
+                notificationOverlay.CreateNotification("Automatic updates are unavailable", "Automatic updates are currently unavailable. You will have to check for them manually", 0);
                 SoundPlayer soundPlayer = new SoundPlayer(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "UPDATEALERT"));
                 soundPlayer.Play();
                 dispatcherTimer.Stop();
-            }
-            else
-            {
-                dispatcherTimer.Interval = TimeSpan.FromMinutes(1);
-                dispatcherTimer.Start();
             }
         }
 
@@ -196,17 +208,17 @@ namespace Client
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
-                _ = FocusWindow();
+                _ = FocusWindow(false);
             }
         }
 
-        private async Task FocusWindow()
+        private async Task FocusWindow(bool ignore)
         {
             _ = Activate();
             _ = Focus();
             if (issignedIn)
             {
-                if (isclientNotif)
+                if (isclientNotif && !ignore)
                 {
                     Process process = new Process
                     {
@@ -219,6 +231,7 @@ namespace Client
                     _ = await Task.Run(process.Start);
                     await Task.Run(process.WaitForExit);
                     await Task.Run(process.Close);
+                    await Task.Run(process.Dispose);
                     isclientNotif = false;
                 }
                 else

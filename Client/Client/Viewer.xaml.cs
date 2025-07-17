@@ -16,17 +16,25 @@ namespace Client
     /// </summary>
     public partial class Viewer : Window
     {
-        private readonly List<BitmapImage> images;
+        private readonly List<BitmapImage> images = new List<BitmapImage>();
         private byte selected;
         private double scale = 1;
         private readonly bool isSingle = false;
         private readonly List<string> altTexts;
-        public Viewer(List<BitmapImage> images, byte selected, List<string> altTexts)
+        public Viewer(List<Uri> images, byte selected, List<string> altTexts)
         {
             InitializeComponent();
+            for (byte i = 0; i < images.Count; i++)
+            {
+                BitmapImage bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.CacheOption = BitmapCacheOption.OnDemand;
+                bitmapImage.UriSource = images[i];
+                bitmapImage.EndInit();
+                this.images.Add(bitmapImage);
+            }
             try
             {
-                this.images = images;
                 this.selected = selected;
                 this.altTexts = altTexts;
                 if (images.Count == 1)
@@ -290,6 +298,10 @@ namespace Client
 
         private void Window_Unloaded(object sender, RoutedEventArgs e)
         {
+            for (int i = 0; i < images.Count; i++)
+            {
+                images[i].Freeze();
+            }
             Unloaded -= Window_Unloaded;
             TheImage.SizeChanged -= TheImage_SizeChanged;
             Slideshow.MouseDown -= Slideshow_MouseDown;

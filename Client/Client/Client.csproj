@@ -688,6 +688,7 @@
     <Resource Include="res\Bitmap602.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="res\SearchSmall.png" />
     <Resource Include="res\ViewerBorderThing.png" />
     <Resource Include="res\ForwardDisabled.png" />
     <Resource Include="res\ForwardHover.png" />
@@ -715,7 +716,7 @@
     <Resource Include="res\BackPressed.png" />
     <Resource Include="res\PhotoViewerIcon.png" />
     <None Include="logoicongray.ico" />
-    <Content Include="LH_ACCOUNTDELETE.wav">
+    <Content Include="LH_EXIT.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="LH_ALERT.wav">

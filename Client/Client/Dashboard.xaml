@@ -22,6 +22,7 @@
             <MenuItem Header="Actions" Padding="7,0,8,3">
                 <MenuItem Header="Create post" Click="CreatePost"/>
             </MenuItem>
+            <MenuItem Header="blah" Padding="7,0,8,3" Visibility="Collapsed"/>
             <MenuItem Header="Help" Padding="7,0,8,3">
                 <MenuItem Header="Help topics" Click="HelpTopics"/>
                 <MenuItem Header="About" Click="About"/>
