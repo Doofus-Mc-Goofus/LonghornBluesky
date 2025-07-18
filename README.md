@@ -33,9 +33,8 @@ A third-party Bluesky client with a Windows Longhorn theme.
 ✔ Windows 11 / Server 2025  
 ✔ Windows 10 / Server (2016/2019/2022)  
 ✔ Windows 8.x / Server 2012  
-🟡 Windows 7 (Client launches, but doesn't log in.)  
-🟡 Windows Server 2008 R2 (Client launches, but doesn't log in.)  
-🟡* Windows Vista / Windows Server 2008 (With SP2) (.NET 4.7.2 isn't normally support on Windows Vista, but I believe there might be a way to install it.) (Client launches, but doesn't log in.)  
+✔ Windows 7 / Server 2008 R2  
+🟡* Windows Vista / Windows Server 2008 (With SP2) (Untested) (.NET 4.7.2 isn't normally support on Windows Vista, but I believe there might be a way to install it.)
 ❓ Windows Betas / Insider Builds (They might work, but compatibilty isn't guaranteed)  
 ❌ Windows Longhorn (Pre-Reset) (Sorry)  
 ❌ Windows XP or earlier  
