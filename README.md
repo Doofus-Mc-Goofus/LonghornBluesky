@@ -19,7 +19,6 @@ A third-party Bluesky client with a Windows Longhorn theme.
 - Changable settings
 - Notifications, Chat, Feeds, and Lists
 - Finish Explore
-- Viewable post engagments
 - Reporting posts and users
 - Account creation and deletion
 - Tenor GIF support
