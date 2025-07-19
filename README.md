@@ -5,11 +5,6 @@ A third-party Bluesky client with a Windows Longhorn theme.
     ![My profile is open.](tease3.png)
     ![The home page of the client. There is a section with four tabs. The first tab, titled "Discover," is selected. Above it is a box for posting, with the default text "Whats Up?".](tease4.png)
 
-## How to install
-1. Download the zip file in the releases
-2. Extract the zip file
-3. Run Client.exe (or "Longhorn Bluesky" if you can't find Client.exe) from the extracted folder
-
 ## Upcoming Features (in no specific order)
 - Video playback
 - Proper high-DPI support (no bugs, just low quality icons)
