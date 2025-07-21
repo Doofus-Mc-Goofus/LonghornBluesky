@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Resources;
+using Microsoft.Win32;
 
 namespace Installer
 {
@@ -18,12 +19,14 @@ namespace Installer
     public partial class MainWindow : Window
     {
         private readonly App app = (App)Application.Current;
+        private bool isDispose = false;
         private void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            List<string> list = new List<string>();
+            isDispose = true;
+            string list = string.Empty;
             try
             {
-                list.Add("Error Code: " + e.Exception.HResult.ToString());
+                list += "\n\nError Code: " + ((uint)e.Exception.HResult).ToString();
             }
             catch
             {
@@ -31,7 +34,7 @@ namespace Installer
             }
             try
             {
-                list.Add("Inner Exception: " + e.Exception.InnerException.Message);
+                list += "\n\nInner Exception: " + e.Exception.InnerException.Message;
             }
             catch
             {
@@ -39,7 +42,7 @@ namespace Installer
             }
             try
             {
-                list.Add("Stack Trace:" + e.Exception.StackTrace);
+                list += "\n\nStack Trace:" + e.Exception.StackTrace;
             }
             catch
             {
@@ -47,7 +50,39 @@ namespace Installer
             }
             try
             {
-                list.Add("Target: " + e.Exception.TargetSite.ToString());
+                list += "\n\nDetailed Stack Trace: " + Environment.StackTrace.ToString();
+            }
+            catch
+            {
+
+            }
+            try
+            {
+                list += "\n\nTarget: " + e.Exception.TargetSite.ToString();
+            }
+            catch
+            {
+
+            }
+            try
+            {
+                list += "\n\nOS Version: " + Environment.OSVersion.ToString();
+            }
+            catch
+            {
+
+            }
+            try
+            {
+                list += "\n\n.NET Version: " + Environment.Version.ToString();
+            }
+            catch
+            {
+
+            }
+            try
+            {
+                list += "\n\nClient Version: " + HKCU_GetString(@"SOFTWARE\LonghornBluesky", "Ver");
             }
             catch
             {
@@ -57,11 +92,20 @@ namespace Installer
             _ = MessageBox.Show(message + "\n\nThe client will now create a log and close.", "Fatal Error", MessageBoxButton.OK, MessageBoxImage.Error);
             using (FileStream fs = File.Create(DateTime.Now.Ticks + ".log"))
             {
-                byte[] info = new UTF8Encoding(true).GetBytes(e.Exception.Message + "\n\n" + list);
+                byte[] info = new UTF8Encoding(true).GetBytes(e.Exception.Message + list);
                 fs.Write(info, 0, info.Length);
             }
             e.Handled = true;
             Application.Current.Shutdown();
+        }
+        public string HKCU_GetString(string path, string key)
+        {
+            try
+            {
+                RegistryKey rk = Registry.CurrentUser.OpenSubKey(path);
+                return rk == null ? "" : (string)rk.GetValue(key);
+            }
+            catch { return ""; }
         }
         public MainWindow()
         {
