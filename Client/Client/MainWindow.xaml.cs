@@ -4,12 +4,16 @@ using System.IO;
 using System.Media;
 using System.Net.Http;
 using System.Runtime;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Threading;
 using FishyFlip;
 using FishyFlip.Models;
@@ -29,12 +33,16 @@ namespace Client
         private Dashboard dashboard;
         private readonly App app = (App)Application.Current;
         private readonly NotificationOverlay notificationOverlay = new NotificationOverlay();
+        private Frame dashboardFrame;
+        private bool isAero;
+        private bool isDispose = false;
         private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
+            isDispose = true;
             string list = string.Empty;
             try
             {
-                list += "\n\nError Code: " + e.Exception.HResult.ToString();
+                list += "\n\nError Code: " + ((uint)e.Exception.HResult).ToString();
             }
             catch
             {
@@ -58,7 +66,39 @@ namespace Client
             }
             try
             {
+                list += "\n\nDetailed Stack Trace: " + Environment.StackTrace.ToString();
+            }
+            catch
+            {
+
+            }
+            try
+            {
                 list += "\n\nTarget: " + e.Exception.TargetSite.ToString();
+            }
+            catch
+            {
+
+            }
+            try
+            {
+                list += "\n\nOS Version: " + Environment.OSVersion.ToString();
+            }
+            catch
+            {
+
+            }
+            try
+            {
+                list += "\n\n.NET Version: " + Environment.Version.ToString();
+            }
+            catch
+            {
+
+            }
+            try
+            {
+                list += "\n\nClient Version: " + HKCU_GetString(@"SOFTWARE\LonghornBluesky", "Ver");
             }
             catch
             {
@@ -82,6 +122,7 @@ namespace Client
                 Dispatcher.UnhandledException += OnDispatcherUnhandledException;
             }
             InitializeComponent();
+            grid.Visibility = Visibility.Collapsed;
             if (SystemParameters.PrimaryScreenHeight < 768 || SystemParameters.PrimaryScreenWidth < 1024 || System.Windows.Forms.Screen.PrimaryScreen.BitsPerPixel < 32)
             {
                 _ = MessageBox.Show("Longhorn Bluesky requires a monitor with a resolution of at least 1024x768 and 32-bit color.", "Installation Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -91,10 +132,10 @@ namespace Client
             app.ChangeTheme(new Uri("pack://application:,,,/PresentationFramework.Aero;V4.0.0.0;31bf3856ad364e35;component/themes/aero.normalcolor.xaml"));
             GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
             Login loginpage = new Login(this);
-            Content = loginpage;
+            WindowContent.Content = loginpage;
             HKCU_AddKey(@"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", "Client.exe", 11000);
-            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.2.1");
-            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "isCanary", "false");
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.2.2a");
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "isCanary", "true");
             if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "ALERT") == null)
             {
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Remember", "false");
@@ -124,6 +165,10 @@ namespace Client
             if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "showMenu") == null)
             {
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "showMenu", "false");
+            }
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "checkUpdates") == null)
+            {
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "checkUpdates", "true");
             }
             if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_left") != null)
             {
@@ -159,37 +204,52 @@ namespace Client
             dispatcherTimer.Tick += (s, ee) => _ = CheckForUpdates();
             dispatcherTimer.Start();
             notificationOverlay.Show();
+            SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
         }
 
         public async Task CheckForUpdates()
         {
-            try
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "checkUpdates") == "true")
             {
-                HttpClient httpClient = new HttpClient();
-                // If you are making a fork of this client, PLEASE change the URLs below to your own. If you don't, the client will try to install the original client's updates, which may cause problems.
-                HttpResponseMessage response = HKCU_GetString(@"SOFTWARE\LonghornBluesky", "isCanary") == "true"
-                    ? await httpClient.GetAsync("https://system24.neocities.org/projects/api/LHbluesky/currentCanaryVer")
-                    : await httpClient.GetAsync("https://system24.neocities.org/projects/api/LHbluesky/currentver");
-                string latestVer = await response.Content.ReadAsStringAsync();
-                if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "Ver") != latestVer)
+                try
                 {
-                    isclientNotif = true;
-                    notificationOverlay.CreateNotification("A new Bluesky update is available", "Click here to install the updates", 0);
+                    HttpClient httpClient = new HttpClient();
+                    // If you are making a fork of this client, PLEASE change the URLs below to your own. If you don't, the client will try to install the original client's updates, which may cause problems.
+                    HttpResponseMessage response = HKCU_GetString(@"SOFTWARE\LonghornBluesky", "isCanary") == "true"
+                        ? await httpClient.GetAsync("https://system24.neocities.org/projects/api/LHbluesky/currentCanaryVer")
+                        : await httpClient.GetAsync("https://system24.neocities.org/projects/api/LHbluesky/currentver");
+                    string latestVer = await response.Content.ReadAsStringAsync();
+                    if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "Ver") != latestVer)
+                    {
+                        isclientNotif = true;
+                        notificationOverlay.CreateNotification("A new Bluesky update is available", "Click here to install the updates", 0);
+                        dispatcherTimer.Stop();
+                        try
+                        {
+                            SoundPlayer soundPlayer = new SoundPlayer(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "UPDATEALERT"));
+                            soundPlayer.Play();
+                        }
+                        catch
+                        {
+                            _ = new Exception();
+                        }
+                    }
+                    else
+                    {
+                        dispatcherTimer.Interval = TimeSpan.FromMinutes(1);
+                        dispatcherTimer.Start();
+                    }
+                }
+                catch
+                {
+                    notificationOverlay.CreateNotification("Automatic updates are unavailable", "Automatic updates are currently unavailable. You will have to check for them manually", 0);
+                    dispatcherTimer.Stop();
                     SoundPlayer soundPlayer = new SoundPlayer(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "UPDATEALERT"));
                     soundPlayer.Play();
-                    dispatcherTimer.Stop();
-                }
-                else
-                {
-                    dispatcherTimer.Interval = TimeSpan.FromMinutes(1);
-                    dispatcherTimer.Start();
                 }
             }
-            catch
+            else
             {
-                notificationOverlay.CreateNotification("Automatic updates are unavailable", "Automatic updates are currently unavailable. You will have to check for them manually", 0);
-                SoundPlayer soundPlayer = new SoundPlayer(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "UPDATEALERT"));
-                soundPlayer.Play();
                 dispatcherTimer.Stop();
             }
         }
@@ -261,8 +321,10 @@ namespace Client
         public async Task OpenFeed(Session session, ATProtocol aTProtocol)
         {
             Dashboard dashboard = new Dashboard(session, aTProtocol, this);
+            dashboardFrame = dashboard.PageFrame;
             await dashboard.Load();
-            Content = dashboard;
+            WindowContent.Content = dashboard;
+            WindowContent.NavigationService.Navigated += NavServiceOnNavigated;
             this.dashboard = dashboard;
             notifyIcon1.Icon = Properties.Resources.logoicon;
             issignedIn = true;
@@ -276,7 +338,14 @@ namespace Client
                 }
             }
         }
-
+        private void NavServiceOnNavigated(object sender, NavigationEventArgs args)
+        {
+            _ = WindowContent.NavigationService.RemoveBackEntry();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+            WindowContent.NavigationService.Navigated -= NavServiceOnNavigated;
+        }
         private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "wnd_left", Left.ToString());
@@ -286,14 +355,21 @@ namespace Client
             HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "wnd_state", WindowState.ToString());
             notifyIcon1.Dispose();
             notificationOverlay.Close();
-            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "isLOG") == "True" && issignedIn)
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "isLOG") == "True" && issignedIn && !isDispose)
             {
                 e.Cancel = true;
                 Visibility = Visibility.Hidden;
                 // IDK
                 await Task.Delay(100);
-                SoundPlayer soundPlayer = new SoundPlayer(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "LOGOFF"));
-                soundPlayer.PlaySync();
+                try
+                {
+                    SoundPlayer soundPlayer = new SoundPlayer(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "LOGOFF"));
+                    soundPlayer.PlaySync();
+                }
+                catch
+                {
+
+                }
                 e.Cancel = false;
                 Application.Current.Shutdown();
             }
@@ -305,6 +381,197 @@ namespace Client
             {
                 dashboard.ToggleMenu();
             }
+        }
+        private void Back_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Back.Source = !dashboardFrame.CanGoBack
+                ? new BitmapImage(new Uri("pack://application:,,,/res/BackDisabled.png"))
+                : new BitmapImage(new Uri("pack://application:,,,/res/BackPressed.png"));
+        }
+
+        private void Back_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Back.Source = !dashboardFrame.CanGoBack
+                ? new BitmapImage(new Uri("pack://application:,,,/res/BackDisabled.png"))
+                : new BitmapImage(new Uri("pack://application:,,,/res/BackHover.png"));
+        }
+
+        private void Back_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Back.Source = !dashboardFrame.CanGoBack
+                ? new BitmapImage(new Uri("pack://application:,,,/res/BackDisabled.png"))
+                : new BitmapImage(new Uri("pack://application:,,,/res/BackNormal.png"));
+        }
+        private void Back_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Back.Source = !dashboardFrame.CanGoBack
+                ? new BitmapImage(new Uri("pack://application:,,,/res/BackDisabled.png"))
+                : new BitmapImage(new Uri("pack://application:,,,/res/BackHover.png"));
+        }
+        private void Forward_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Forward.Source = !dashboardFrame.CanGoForward
+                ? new BitmapImage(new Uri("pack://application:,,,/res/ForwardDisabled.png"))
+                : new BitmapImage(new Uri("pack://application:,,,/res/ForwardPressed.png"));
+        }
+
+        private void Forward_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Forward.Source = !dashboardFrame.CanGoForward
+                ? new BitmapImage(new Uri("pack://application:,,,/res/ForwardDisabled.png"))
+                : new BitmapImage(new Uri("pack://application:,,,/res/ForwardHover.png"));
+        }
+
+        private void Forward_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Forward.Source = !dashboardFrame.CanGoForward
+                ? new BitmapImage(new Uri("pack://application:,,,/res/ForwardDisabled.png"))
+                : new BitmapImage(new Uri("pack://application:,,,/res/ForwardNormal.png"));
+        }
+        private void Forward_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Forward.Source = !dashboardFrame.CanGoForward
+                ? new BitmapImage(new Uri("pack://application:,,,/res/ForwardDisabled.png"))
+                : new BitmapImage(new Uri("pack://application:,,,/res/ForwardHover.png"));
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct MARGINS
+        {
+            public int cxLeftWidth;      // width of left border that retains its size
+            public int cxRightWidth;     // width of right border that retains its size
+            public int cyTopHeight;      // height of top border that retains its size
+            public int cyBottomHeight;   // height of bottom border that retains its size
+        };
+
+        [DllImport("DwmApi.dll")]
+        public static extern int DwmExtendFrameIntoClientArea(
+            IntPtr hwnd,
+            ref MARGINS pMarInset);
+        [DllImport("dwmapi.dll")]
+        public static extern IntPtr DwmIsCompositionEnabled(out bool pfEnabled);
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            IniFile myIni = new IniFile("config.ini");
+            if (myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "1" || myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "2")
+            {
+                MinHeight = 650;
+                try
+                {
+                    // Obtain the window handle for WPF application
+                    IntPtr mainWindowPtr = new WindowInteropHelper(this).Handle;
+                    HwndSource mainWindowSrc = HwndSource.FromHwnd(mainWindowPtr);
+                    _ = DwmIsCompositionEnabled(out bool istheAero);
+                    isAero = istheAero;
+                    UpdateExtendedFrames();
+                    // Get System Dpi
+                    System.Drawing.Graphics desktop = System.Drawing.Graphics.FromHwnd(mainWindowPtr);
+                    float DesktopDpiX = desktop.DpiX;
+                    float DesktopDpiY = desktop.DpiY;
+
+                    // Set Margins
+                    MARGINS margins = new MARGINS
+                    {
+                        // Extend glass frame into client area
+                        // Note that the default desktop Dpi is 96dpi. The  margins are
+                        // adjusted for the system Dpi.
+                        cxLeftWidth = 0,
+                        cxRightWidth = 0,
+                        cyTopHeight = 0,
+                        cyBottomHeight = 0
+                    };
+
+                    int hr = DwmExtendFrameIntoClientArea(mainWindowSrc.Handle, ref margins);
+                    //
+                    if (hr < 0)
+                    {
+                        //DwmExtendFrameIntoClientArea Failed
+                    }
+                }
+                // If not Vista, paint background white.
+                catch (DllNotFoundException)
+                {
+                    Application.Current.MainWindow.Background = Brushes.White;
+                }
+            }
+            grid.LayoutUpdated += Grid_LayoutUpdated;
+        }
+
+        private void Grid_LayoutUpdated(object sender, EventArgs e)
+        {
+            IniFile myIni = new IniFile("config.ini");
+            if (myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "1" || myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "2")
+            {
+                MinHeight = 650;
+                try
+                {
+                    // Obtain the window handle for WPF application
+                    IntPtr mainWindowPtr = new WindowInteropHelper(this).Handle;
+                    HwndSource mainWindowSrc = HwndSource.FromHwnd(mainWindowPtr);
+                    _ = DwmIsCompositionEnabled(out bool istheAero);
+                    isAero = istheAero;
+                    UpdateExtendedFrames();
+                    // Get System Dpi
+                    System.Drawing.Graphics desktop = System.Drawing.Graphics.FromHwnd(mainWindowPtr);
+                    float DesktopDpiX = desktop.DpiX;
+                    float DesktopDpiY = desktop.DpiY;
+
+                    // Set Margins
+                    MARGINS margins = new MARGINS
+                    {
+                        // Extend glass frame into client area
+                        // Note that the default desktop Dpi is 96dpi. The  margins are
+                        // adjusted for the system Dpi.
+                        cxLeftWidth = 0,
+                        cxRightWidth = 0,
+                        cyTopHeight = Convert.ToInt32(((int)topBar.ActualHeight) * (DesktopDpiX / 96)),
+                        cyBottomHeight = 0
+                    };
+
+                    int hr = DwmExtendFrameIntoClientArea(mainWindowSrc.Handle, ref margins);
+                    //
+                    if (hr < 0)
+                    {
+                        //DwmExtendFrameIntoClientArea Failed
+                    }
+                }
+                // If not Vista, paint background white.
+                catch (DllNotFoundException)
+                {
+                    Application.Current.MainWindow.Background = Brushes.White;
+                }
+            }
+        }
+
+        private void UpdateExtendedFrames()
+        {
+            IntPtr mainWindowPtr = new WindowInteropHelper(this).Handle;
+            HwndSource mainWindowSrc = HwndSource.FromHwnd(mainWindowPtr);
+            mainWindowSrc.CompositionTarget.BackgroundColor = isAero ? Color.FromArgb(0, 185, 209, 234) : IsActive ? Color.FromArgb(255, 185, 209, 234) : Color.FromArgb(255, 215, 228, 242);
+        }
+        private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
+        {
+            if (e.Category == UserPreferenceCategory.VisualStyle)
+            {
+                _ = DwmIsCompositionEnabled(out bool istheAero);
+                isAero = istheAero;
+                UpdateExtendedFrames();
+            }
+        }
+
+        private void Window_Focus(object sender, EventArgs e)
+        {
+            UpdateExtendedFrames();
+        }
+
+        private void TextBox_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            stackPanel.Visibility = Visibility.Collapsed;
+        }
+
+        private void TextBox_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            stackPanel.Visibility = Visibility.Visible;
         }
     }
 }

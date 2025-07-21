@@ -4,6 +4,7 @@ using System.IO;
 using System.Media;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -336,6 +337,7 @@ namespace Client
                             Source = bitmapImage,
                             Margin = new Thickness(5)
                         };
+                        RenderOptions.SetBitmapScalingMode(image1, BitmapScalingMode.Fant);
                         _ = grid.Children.Add(image1);
                         _ = Images.Children.Add(grid);
                         if (bitmapImage.CanFreeze)
@@ -571,6 +573,7 @@ namespace Client
                             Source = bitmapImage,
                             Margin = new Thickness(30, 5, 30, 5)
                         };
+                        RenderOptions.SetBitmapScalingMode(image1, BitmapScalingMode.Fant);
                         bigmacImages.Add(bitmapImage);
                         _ = grid.Children.Add(image1);
                         System.Windows.Shapes.Rectangle rect = new System.Windows.Shapes.Rectangle
@@ -939,8 +942,6 @@ namespace Client
                 result2.Switch(
                     success =>
                     {
-                        SoundPlayer soundPlayer = new SoundPlayer(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "DELETE"));
-                        soundPlayer.Play();
                         if (post["parent"] != null)
                         {
                             dashboard.NavigateToPost(post["parent"]["post"]["uri"].ToString());
@@ -955,6 +956,15 @@ namespace Client
                         else
                         {
                             dashboard.NavigateToProfile(post["post"]["author"]["did"].ToString());
+                        }
+                        try
+                        {
+                            SoundPlayer soundPlayer = new SoundPlayer(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "DELETE"));
+                            soundPlayer.Play();
+                        }
+                        catch
+                        {
+
                         }
                     },
                     error =>

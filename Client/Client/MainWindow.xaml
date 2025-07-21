@@ -4,8 +4,36 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Bluesky" Height="600" Width="800" MinWidth="800" MinHeight="600" UseLayoutRounding="True" Closing="Window_Closing" KeyUp="Window_KeyUp">
+        Title="Welcome to Bluesky!" Height="600" Width="800" MinWidth="800" MinHeight="600" UseLayoutRounding="True" Closing="Window_Closing" KeyUp="Window_KeyUp" Loaded="Window_Loaded" Background="Transparent" Activated="Window_Focus" Deactivated="Window_Focus">
     <Grid>
-        <Label Content="If you see this message, a critical error has occurred."/>
+        <DockPanel Name="mainDock">
+            <!-- The border is used to compute the rendered height with margins.
+           topBar contents will be displayed on the extended glass frame.-->
+            <Border Name="topBar" DockPanel.Dock="Top">
+                <Grid Name="grid" Margin="0,2,0,5">
+                    <Image x:Name="Back" Source="/res/BackDisabled.png" Stretch="None" HorizontalAlignment="Left" Margin="0,-5,0,0" MouseDown="Back_MouseDown" MouseEnter="Back_MouseEnter" MouseLeave="Back_MouseLeave" MouseUp="Back_MouseUp" VerticalAlignment="Top" />
+                    <Image x:Name="Forward" Source="/res/ForwardDisabled.png" Stretch="None" HorizontalAlignment="Left" Margin="40,-5,0,0" MouseEnter="Forward_MouseEnter" MouseLeave="Forward_MouseLeave" MouseDown="Forward_MouseDown" MouseUp="Forward_MouseUp" VerticalAlignment="Top"/>
+                    <Grid Margin="80,-5,141,0" VerticalAlignment="Center">
+                        <TextBox GotKeyboardFocus="TextBox_GotKeyboardFocus" LostKeyboardFocus="TextBox_LostKeyboardFocus"/>
+                        <StackPanel x:Name="stackPanel" VerticalAlignment="Center" Orientation="Horizontal" IsHitTestVisible="False">
+                            <Label Content="Bluesky" Foreground="#FF0D467A" Padding="6,3,6,3" HorizontalAlignment="Left"/>
+                            <Image Source="/res/PathArrow.png" Stretch="None" VerticalAlignment="Center" Margin="0,1,0,0"/>
+                            <Label Content="Home" Foreground="#FF0D467A" Padding="6,3,6,3" HorizontalAlignment="Left"/>
+                        </StackPanel>
+                    </Grid>
+                    <StackPanel x:Name="sideButtons" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,-5,5,0" Orientation="Horizontal">
+                        <Rectangle Fill="Gray" Width="1">
+                            <Rectangle.Effect>
+                                <DropShadowEffect ShadowDepth="0" Color="White" BlurRadius="12"/>
+                            </Rectangle.Effect>
+                        </Rectangle>
+                        <Image Source="/res/SearchIconAlt.png" Stretch="Fill" Height="32" Margin="10,0,0,0"/>
+                        <Image Source="/res/TermsIcon.png" Stretch="Fill" Height="32" Margin="10,0,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                        <Image Source="/res/StarButton.png" Stretch="Fill" Height="32" Margin="10,0,0,0"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+            <Frame x:Name="WindowContent" DockPanel.Dock="Top" Content="If you see this message, a critical error has occurred." NavigationUIVisibility="Hidden" Margin="-1,0,-1,-1"/>
+        </DockPanel>
     </Grid>
 </Window>

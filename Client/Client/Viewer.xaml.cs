@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -21,6 +23,8 @@ namespace Client
         private double scale = 1;
         private readonly bool isSingle = false;
         private readonly List<string> altTexts;
+        private bool isAero;
+        private int bottommargin;
         public Viewer(List<Uri> images, byte selected, List<string> altTexts)
         {
             InitializeComponent();
@@ -56,7 +60,7 @@ namespace Client
         {
             TheImage.Source = images[selected];
             TheActualImage.Source = images[selected];
-            TheActualImage.ToolTip = altTexts[selected] == string.Empty ? null : (object)altTexts[selected];
+            ImageTooltip.Text = altTexts[selected] == string.Empty ? null : altTexts[selected];
         }
 
         private void TheImage_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -88,7 +92,7 @@ namespace Client
                 }
             }
             Width = TheActualImage.Width + 10 + SystemParameters.WindowNonClientFrameThickness.Left + SystemParameters.WindowNonClientFrameThickness.Right;
-            Height = (TheActualImage.Width / (TheImage.ActualWidth / TheImage.ActualHeight)) + 10 + SystemParameters.WindowNonClientFrameThickness.Top + SystemParameters.WindowNonClientFrameThickness.Bottom;
+            Height = (TheActualImage.Width / (TheImage.ActualWidth / TheImage.ActualHeight)) + 10 + bottommargin + SystemParameters.WindowNonClientFrameThickness.Top + SystemParameters.WindowNonClientFrameThickness.Bottom;
         }
 
         private void ZoomSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -335,16 +339,6 @@ namespace Client
             GC.SuppressFinalize(this);
         }
 
-        private void Window_MouseEnter(object sender, MouseEventArgs e)
-        {
-            Controls.Visibility = Visibility.Visible;
-        }
-
-        private void Window_MouseLeave(object sender, MouseEventArgs e)
-        {
-            Controls.Visibility = Visibility.Collapsed;
-        }
-
         private void Window_KeyUp(object sender, KeyEventArgs e)
         {
             if (!isSingle)
@@ -371,6 +365,70 @@ namespace Client
                 Update();
             }
 
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct MARGINS
+        {
+            public int cxLeftWidth;      // width of left border that retains its size
+            public int cxRightWidth;     // width of right border that retains its size
+            public int cyTopHeight;      // height of top border that retains its size
+            public int cyBottomHeight;   // height of bottom border that retains its size
+        };
+
+        [DllImport("DwmApi.dll")]
+        public static extern int DwmExtendFrameIntoClientArea(
+            IntPtr hwnd,
+            ref MARGINS pMarInset);
+        [DllImport("dwmapi.dll")]
+        public static extern IntPtr DwmIsCompositionEnabled(out bool pfEnabled);
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Obtain the window handle for WPF application
+                IntPtr mainWindowPtr = new WindowInteropHelper(this).Handle;
+                HwndSource mainWindowSrc = HwndSource.FromHwnd(mainWindowPtr);
+                _ = DwmIsCompositionEnabled(out bool istheAero);
+                isAero = istheAero;
+                UpdateExtendedFrames();
+                // Get System Dpi
+                System.Drawing.Graphics desktop = System.Drawing.Graphics.FromHwnd(mainWindowPtr);
+                float DesktopDpiX = desktop.DpiX;
+                float DesktopDpiY = desktop.DpiY;
+                // Set Margins
+                bottommargin = Convert.ToInt32((60 + SystemParameters.WindowNonClientFrameThickness.Bottom) * (DesktopDpiX / 96));
+                MARGINS margins = new MARGINS
+                {
+                    // Extend glass frame into client area
+                    // Note that the default desktop Dpi is 96dpi. The  margins are
+                    // adjusted for the system Dpi.
+                    cxLeftWidth = 0,
+                    cxRightWidth = 0,
+                    cyTopHeight = 0,
+                    cyBottomHeight = bottommargin
+                };
+                scrollViewer.Margin = new Thickness(0, 0, 0, bottommargin);
+                Error.Margin = new Thickness(0, 0, 0, bottommargin);
+                int hr = DwmExtendFrameIntoClientArea(mainWindowSrc.Handle, ref margins);
+                //
+                if (hr < 0)
+                {
+                    //DwmExtendFrameIntoClientArea Failed
+                }
+            }
+            // If not Vista, paint background white.
+            catch (DllNotFoundException)
+            {
+                Application.Current.MainWindow.Background = Brushes.White;
+            }
+        }
+
+        private void UpdateExtendedFrames()
+        {
+            IntPtr mainWindowPtr = new WindowInteropHelper(this).Handle;
+            HwndSource mainWindowSrc = HwndSource.FromHwnd(mainWindowPtr);
+            mainWindowSrc.CompositionTarget.BackgroundColor = isAero ? Color.FromArgb(0, 185, 209, 234) : IsActive ? Color.FromArgb(255, 185, 209, 234) : Color.FromArgb(255, 215, 228, 242);
         }
     }
 }

@@ -13,6 +13,7 @@ using FishyFlip;
 using FishyFlip.Lexicon.App.Bsky.Actor;
 using FishyFlip.Lexicon.App.Bsky.Embed;
 using FishyFlip.Models;
+using INI;
 using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
 
@@ -81,6 +82,12 @@ namespace Client
                 _ = MessageBox.Show($"Error: {error.StatusCode} {error.Detail}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             );
+            mw.Title = "Bluesky";
+            IniFile myIni = new IniFile("config.ini");
+            if (myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "2")
+            {
+                mw.grid.Visibility = Visibility.Visible;
+            }
         }
         public void PlayWelcomeSound()
         {
@@ -116,7 +123,7 @@ namespace Client
             _ = PageFrame.NavigationService.Navigate(ProfilePage);
             if (session.Did.ToString() == ATDid.Create(Did).ToString())
             {
-                Profile_Text.FontFamily = new System.Windows.Media.FontFamily("Segoe UI Semibold");
+                Profile_Text.FontFamily = new FontFamily("Segoe UI Semibold");
                 Profile_BG.Visibility = Visibility.Visible;
                 Profile_BG.Opacity = 1;
                 selectobjectsidebar = 7;
@@ -173,7 +180,7 @@ namespace Client
         }
         public void QuotePost(EmbedRecord embedRecord)
         {
-            Home_Text.FontFamily = new System.Windows.Media.FontFamily("Segoe UI Semibold");
+            Home_Text.FontFamily = new FontFamily("Segoe UI Semibold");
             Home_BG.Visibility = Visibility.Visible;
             Home_BG.Opacity = 1;
             selectobjectsidebar = 1;
@@ -223,7 +230,7 @@ namespace Client
 
         private void Home_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Home_Text.FontFamily = new System.Windows.Media.FontFamily("Segoe UI Semibold");
+            Home_Text.FontFamily = new FontFamily("Segoe UI Semibold");
             Home_BG.Visibility = Visibility.Visible;
             Home_BG.Opacity = 1;
             selectobjectsidebar = 1;
@@ -280,7 +287,7 @@ namespace Client
 
         private void Notifs_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Notifs_Text.FontFamily = new System.Windows.Media.FontFamily("Segoe UI Semibold");
+            Notifs_Text.FontFamily = new FontFamily("Segoe UI Semibold");
             Notifs_BG.Visibility = Visibility.Visible;
             Notifs_BG.Opacity = 1;
             selectobjectsidebar = 3;
@@ -294,42 +301,42 @@ namespace Client
             if (selectobjectsidebar != 1)
             {
                 Home_BG.Visibility = Visibility.Collapsed;
-                Home_Text.FontFamily = new System.Windows.Media.FontFamily("Segoe UI");
+                Home_Text.FontFamily = new FontFamily("Segoe UI");
             }
             if (selectobjectsidebar != 2)
             {
                 Explore_BG.Visibility = Visibility.Collapsed;
-                Explore_Text.FontFamily = new System.Windows.Media.FontFamily("Segoe UI");
+                Explore_Text.FontFamily = new FontFamily("Segoe UI");
             }
             if (selectobjectsidebar != 3)
             {
                 Notifs_BG.Visibility = Visibility.Collapsed;
-                Notifs_Text.FontFamily = new System.Windows.Media.FontFamily("Segoe UI");
+                Notifs_Text.FontFamily = new FontFamily("Segoe UI");
             }
             if (selectobjectsidebar != 4)
             {
                 Chat_BG.Visibility = Visibility.Collapsed;
-                Chat_Text.FontFamily = new System.Windows.Media.FontFamily("Segoe UI");
+                Chat_Text.FontFamily = new FontFamily("Segoe UI");
             }
             if (selectobjectsidebar != 5)
             {
                 Feeds_BG.Visibility = Visibility.Collapsed;
-                Feeds_Text.FontFamily = new System.Windows.Media.FontFamily("Segoe UI");
+                Feeds_Text.FontFamily = new FontFamily("Segoe UI");
             }
             if (selectobjectsidebar != 6)
             {
                 Lists_BG.Visibility = Visibility.Collapsed;
-                Lists_Text.FontFamily = new System.Windows.Media.FontFamily("Segoe UI");
+                Lists_Text.FontFamily = new FontFamily("Segoe UI");
             }
             if (selectobjectsidebar != 7)
             {
                 Profile_BG.Visibility = Visibility.Collapsed;
-                Profile_Text.FontFamily = new System.Windows.Media.FontFamily("Segoe UI");
+                Profile_Text.FontFamily = new FontFamily("Segoe UI");
             }
             if (selectobjectsidebar != 8)
             {
                 Settings_BG.Visibility = Visibility.Collapsed;
-                Settings_Text.FontFamily = new System.Windows.Media.FontFamily("Segoe UI");
+                Settings_Text.FontFamily = new FontFamily("Segoe UI");
             }
         }
 
@@ -355,7 +362,7 @@ namespace Client
             Chat_BG.Visibility = Visibility.Visible;
             Chat_BG.Opacity = 1;
             selectobjectsidebar = 4;
-            Chat_Text.FontFamily = new System.Windows.Media.FontFamily("Segoe UI Semibold");
+            Chat_Text.FontFamily = new FontFamily("Segoe UI Semibold");
             HideOthersSidebar();
             HandleableError usororer = new HandleableError(new ATError(418, new ErrorDetail("", "I'm a teapot")));
             PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
@@ -381,7 +388,7 @@ namespace Client
 
         private void Feeds_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Feeds_Text.FontFamily = new System.Windows.Media.FontFamily("Segoe UI Semibold");
+            Feeds_Text.FontFamily = new FontFamily("Segoe UI Semibold");
             Feeds_BG.Visibility = Visibility.Visible;
             Feeds_BG.Opacity = 1;
             selectobjectsidebar = 5;
@@ -410,7 +417,7 @@ namespace Client
 
         private void Lists_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Lists_Text.FontFamily = new System.Windows.Media.FontFamily("Segoe UI Semibold");
+            Lists_Text.FontFamily = new FontFamily("Segoe UI Semibold");
             Lists_BG.Visibility = Visibility.Visible;
             Lists_BG.Opacity = 1;
             selectobjectsidebar = 6;
@@ -439,7 +446,7 @@ namespace Client
 
         private void Profile_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Profile_Text.FontFamily = new System.Windows.Media.FontFamily("Segoe UI Semibold");
+            Profile_Text.FontFamily = new FontFamily("Segoe UI Semibold");
             Profile_BG.Visibility = Visibility.Visible;
             Profile_BG.Opacity = 1;
             selectobjectsidebar = 7;
@@ -476,7 +483,7 @@ namespace Client
 
         private void Settings_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Settings_Text.FontFamily = new System.Windows.Media.FontFamily("Segoe UI Semibold");
+            Settings_Text.FontFamily = new FontFamily("Segoe UI Semibold");
             Settings_BG.Visibility = Visibility.Visible;
             Settings_BG.Opacity = 1;
             selectobjectsidebar = 8;
@@ -567,7 +574,7 @@ namespace Client
         {
             if (selectobjectsidebar != 1)
             {
-                Home_Text.FontFamily = new System.Windows.Media.FontFamily("Segoe UI Semibold");
+                Home_Text.FontFamily = new FontFamily("Segoe UI Semibold");
                 Home_BG.Visibility = Visibility.Visible;
                 Home_BG.Opacity = 1;
                 selectobjectsidebar = 1;
@@ -602,6 +609,22 @@ namespace Client
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "showMenu", "true");
                 Menu.Visibility = Visibility.Visible;
             }
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            VisualBrush brush = new VisualBrush(FrameMask)
+            {
+                Opacity = 1.0
+            };
+            Point offset = PageFrame.TranslatePoint(new Point(0, 0), FrameMask);
+            Point scale = new Point(FrameMask.ActualWidth / PageFrame.ActualWidth,
+                FrameMask.ActualHeight / PageFrame.ActualHeight);
+            TransformGroup group = new TransformGroup();
+            group.Children.Add(new ScaleTransform(scale.X, scale.Y, 0, 0));
+            group.Children.Add(new TranslateTransform(-offset.X, -offset.Y));
+            brush.Transform = group;
+            PageFrame.OpacityMask = brush;
         }
     }
 }

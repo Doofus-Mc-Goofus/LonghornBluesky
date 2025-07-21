@@ -9,7 +9,7 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto" ScrollChanged="ScrollViewer_ScrollChanged">
         <Grid>
             <Grid x:Name="wrapper" VerticalAlignment="Top" Margin="20">
-                <Image x:Name="Banner" Source="/res/Windows Vista Beta 1 Speech Tutorial.png" VerticalAlignment="Top" Stretch="UniformToFill" Height="136"/>
+                <Image x:Name="Banner" Source="/res/Windows Vista Beta 1 Speech Tutorial.png" VerticalAlignment="Top" Stretch="UniformToFill" Height="136" RenderOptions.BitmapScalingMode="Fant"/>
                 <Grid x:Name="test" Margin="0,110,0,0" VerticalAlignment="Top" LayoutUpdated="Wrapper_LayoutUpdated">
                     <Rectangle x:Name="Rectangular" RadiusX="3" RadiusY="3" Stroke="#54E0F6FF" MouseUp="Rectangle_MouseUp" Margin="0,25,0,0" Focusable="True">
                         <Rectangle.Effect>
@@ -23,7 +23,7 @@
                         </Rectangle.Fill>
                     </Rectangle>
                     <Image Source="/res/PFPShadow.png" Stretch="Fill" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,38,0,0" Width="64" Height="29"/>
-                    <Image x:Name="PFP" Source="/res/usertile.png" VerticalAlignment="Top" HorizontalAlignment="Left" Width="52" Margin="16,14,0,0" RenderTransformOrigin="0.5,0.5">
+                    <Image x:Name="PFP" Source="/res/usertile.png" VerticalAlignment="Top" HorizontalAlignment="Left" Width="52" Margin="16,14,0,0" RenderTransformOrigin="0.5,0.5" RenderOptions.BitmapScalingMode="Fant">
                         <Image.OpacityMask>
                             <ImageBrush ImageSource="/res/PFPBorderLock.png"/>
                         </Image.OpacityMask>
@@ -86,7 +86,7 @@
                     </Button>
                 </Grid>
             </Grid>
-            <Grid x:Name="FeedGrid" Focusable="True" Margin="20,271,20,20">
+            <Grid x:Name="FeedGrid" Focusable="True" Margin="Infinity,271,20,20">
                 <TabControl x:Name="FeedTabControl" Padding="0" ScrollViewer.CanContentScroll="True" BorderThickness="0" Background="{x:Null}" Panel.ZIndex="1" SelectedIndex="1">
                     <TabItem Header="Test" Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="#FF9FBDD2" Visibility="Collapsed">
                         <Grid/>

@@ -39,7 +39,7 @@ namespace Client
                     Wordmark.Margin = new Thickness(0, 0, 0, 140);
                     Welcome.FontSize = 24;
                 }
-                if (myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "2")
+                if (myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "1" || myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "2")
                 {
                     CreateAccount.Visibility = Visibility.Visible;
                     LoginGuest.Visibility = Visibility.Visible;

@@ -4,14 +4,22 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Photo Viewer" Height="300" Width="400" Background="Black" UseLayoutRounding="True" MinWidth="400" MinHeight="300" Icon="/res/PhotoViewerIcon.png" Unloaded="Window_Unloaded" MouseEnter="Window_MouseEnter" MouseLeave="Window_MouseLeave" KeyUp="Window_KeyUp">
+        Title="Photo Viewer" Height="360" Width="400" Background="Transparent" UseLayoutRounding="True" MinWidth="400" MinHeight="360" Icon="/res/PhotoViewerIcon.png" Unloaded="Window_Unloaded" KeyUp="Window_KeyUp" Loaded="Window_Loaded">
     <Grid>
-        <Label x:Name="Error" Content="Loading..." HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+        <Label x:Name="Error" Content="Loading..." HorizontalAlignment="Center" Foreground="White" Margin="0,0,0,60" VerticalContentAlignment="Center"/>
         <Image x:Name="TheImage" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Hidden" Source="/res/usertile.png" SizeChanged="TheImage_SizeChanged"/>
-        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <Image x:Name="TheActualImage" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <ScrollViewer x:Name="scrollViewer" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="0,0,0,60">
+            <Image x:Name="TheActualImage" HorizontalAlignment="Center" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="Fant">
+                <Image.ToolTip>
+                    <ToolTip>
+                        <ToolTip.Content>
+                            <TextBlock x:Name="ImageTooltip" TextWrapping="Wrap"/>
+                        </ToolTip.Content>
+                    </ToolTip>
+                </Image.ToolTip>
+            </Image>
         </ScrollViewer>
-        <Grid x:Name="Controls" Visibility="Collapsed">
+        <Grid x:Name="Controls">
             <Image Stretch="None" Source="/res/ViewerFrame.png" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
             <Image x:Name="Slideshow" Source="/res/ViewerSlideshowNormal.png" Height="48" VerticalAlignment="Bottom" Margin="0,0,0,7" HorizontalAlignment="Center" MouseEnter="Slideshow_MouseEnter" MouseLeave="Slideshow_MouseLeave" MouseDown="Slideshow_MouseDown" MouseUp="Slideshow_MouseUp"/>
             <Image x:Name="Next" Source="/res/ViewerForwardNormal.png" Height="25" VerticalAlignment="Bottom" Margin="95,0,0,17" HorizontalAlignment="Center" MouseEnter="Next_MouseEnter" MouseLeave="Next_MouseLeave" MouseDown="Next_MouseDown" MouseUp="Next_MouseUp"/>

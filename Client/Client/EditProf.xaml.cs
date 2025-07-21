@@ -9,7 +9,6 @@ using System.Windows.Media.Imaging;
 using FishyFlip;
 using FishyFlip.Lexicon;
 using FishyFlip.Lexicon.App.Bsky.Actor;
-using FishyFlip.Lexicon.Com.Atproto.Repo;
 using FishyFlip.Models;
 using INI;
 
@@ -82,8 +81,8 @@ namespace Client
                 DisplayName = Username.Text
             };
             // fix
-            Result<PutRecordOutput> result = await aTProtocol.PutProfileAsync(session.Did, "", profile);
-            _ = MessageBox.Show(result.Value.ToString());
+            _ = await aTProtocol.Actor.PutProfileAsync(aTProtocol.Session.AccessJwt, profile);
+            _ = MessageBox.Show("This feature has not been implemented yet.", string.Empty, MessageBoxButton.OK, MessageBoxImage.Information);
             dashboard.NavigateToProfile(ATDid.ToString());
         }
         private void Rectangle_MouseUp(object sender, MouseButtonEventArgs e)

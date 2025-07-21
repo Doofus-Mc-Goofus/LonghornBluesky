@@ -9,11 +9,11 @@
     <Grid x:Name="grid" Margin="20,0,20,0">
         <Grid x:Name="wrapper" VerticalAlignment="Top">
             <Grid x:Name="WhatsUpGrid" Width="{Binding ActualWidth, ElementName=grid, Mode=OneWay}" Focusable="True" Margin="0,20,0,20" LayoutUpdated="WhatsUpGrid_LayoutUpdated">
-                
+
             </Grid>
         </Grid>
         <Grid x:Name="FeedGrid" Focusable="True" Margin="0,Infinity,0,20">
-            <TabControl x:Name="FeedTabControl" Padding="0" ScrollViewer.CanContentScroll="True" BorderThickness="0" Background="{x:Null}" SelectionChanged="FeedTabControl_SelectionChanged" Panel.ZIndex="1">
+            <TabControl x:Name="FeedTabControl" Padding="0" ScrollViewer.CanContentScroll="True" BorderThickness="0" Background="{x:Null}" Panel.ZIndex="1">
                 <TabItem Header="Test" Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="#FF9FBDD2" Visibility="Collapsed"/>
             </TabControl>
             <Rectangle x:Name="rect" RadiusX="3" RadiusY="3" Stroke="#54E0F6FF" MouseUp="Rectangle_MouseUp" Margin="0,26,0,0">

@@ -5,14 +5,36 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="800"
-      Title="Bluesky" UseLayoutRounding="True">
+      Title="Bluesky" UseLayoutRounding="True" Loaded="Page_Loaded">
     <Grid>
-        <Grid.Background>
-            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="#FF6691B3"/>
-                <GradientStop Color="#FFCFEAFF" Offset="1"/>
-            </LinearGradientBrush>
-        </Grid.Background>
+        <Grid x:Name="FrameMask" Margin="260,0,0,0" MaxWidth="540">
+            <Rectangle Fill="Black" Margin="0,20,0,20"/>
+            <Rectangle VerticalAlignment="Bottom" Height="20">
+                <Rectangle.Fill>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="Black"/>
+                        <GradientStop Color="#00000000" Offset="1"/>
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle VerticalAlignment="Top" Height="20">
+                <Rectangle.Fill>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#00000000"/>
+                        <GradientStop Color="Black" Offset="1"/>
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+            <Rectangle HorizontalAlignment="Right" Width="16" Fill="Black"/>
+        </Grid>
+        <Rectangle>
+            <Rectangle.Fill>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF6691B3"/>
+                    <GradientStop Color="#FFCFEAFF" Offset="1"/>
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
         <Image x:Name="BG" Source="/res/Windows Vista Beta 1 Speech Tutorial.png" Opacity="0.25" Focusable="True" MouseUp="BG_MouseUp" Stretch="Fill"/>
         <Menu x:Name="Menu" VerticalAlignment="Top" Height="20" LayoutUpdated="Menu_LayoutUpdated" Visibility="Collapsed">
             <MenuItem Header="File" Padding="7,0,8,3">
@@ -43,7 +65,7 @@
                         </Rectangle.Fill>
                     </Rectangle>
                     <Image Source="/res/PFPShadow.png" Stretch="Fill" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,40,0,0" Width="64" Height="29"/>
-                    <Image x:Name="PFP" Source="/res/usertile7.png" VerticalAlignment="Center" HorizontalAlignment="Left" Width="52" Margin="16,0,0,0" RenderTransformOrigin="0.5,0.5">
+                    <Image x:Name="PFP" Source="/res/usertile7.png" VerticalAlignment="Center" HorizontalAlignment="Left" Width="52" Margin="16,0,0,0" RenderTransformOrigin="0.5,0.5" RenderOptions.BitmapScalingMode="Fant">
                         <Image.OpacityMask>
                             <ImageBrush ImageSource="/res/PFPBorderLock.png"/>
                         </Image.OpacityMask>
@@ -254,7 +276,7 @@
                     </Grid>
                 </Grid>
             </StackPanel>
-            <Frame x:Name="PageFrame" Margin="260,0,0,0" NavigationUIVisibility="Hidden"/>
+            <Frame x:Name="PageFrame" Margin="260,0,0,0" NavigationUIVisibility="Hidden" Background="Transparent"/>
         </Grid>
     </Grid>
 </Page>

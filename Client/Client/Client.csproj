@@ -688,6 +688,9 @@
     <Resource Include="res\Bitmap602.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="res\ReplyIconGray.png" />
+    <Resource Include="res\StarButton.png" />
+    <Resource Include="res\PathArrow.png" />
     <Resource Include="res\SearchSmall.png" />
     <Resource Include="res\ViewerBorderThing.png" />
     <Resource Include="res\ForwardDisabled.png" />

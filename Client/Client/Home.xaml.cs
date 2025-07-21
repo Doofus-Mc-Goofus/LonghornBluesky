@@ -30,6 +30,7 @@ namespace Client
         private readonly List<Post> posts = new List<Post>();
         private readonly List<ScrollViewer> scrollViewers = new List<ScrollViewer>();
         private readonly WhatsUpControl whatsUpControl;
+
         public Home(JArray feeds, ATProtocol aTProtocol, Dashboard dashboard)
         {
             InitializeComponent();
@@ -120,7 +121,7 @@ namespace Client
                         );
                     }
                 }
-                feedCursor.Add("");
+                feedCursor.Add(string.Empty);
                 feedUriString.Add(feeds[i].SelectToken("value").ToString());
             }
             canEdit = true;
@@ -139,60 +140,75 @@ namespace Client
                 int numb = FeedTabControl.SelectedIndex;
                 try
                 {
-                    AtUri = ATUri.Create(feedUriString[numb]);
-                    Result<GetFeedOutput> test = await aTProtocol.GetFeedAsync(AtUri, 10, feedCursor[numb]);
-                    feedlist = JArray.Parse(JObject.Parse(test.Value.ToString())["feed"].ToString());
-                    for (int i = 0; i < feedlist.Count; i++)
+                    if (feedUriString[numb].StartsWith("at"))
                     {
-                        JObject postdata = JObject.Parse(feedlist[i].ToString());
-                        Post post = new Post(postdata, dashboard, aTProtocol, false, false, false);
-                        _ = stackPanel.Children.Add(post);
-                        posts.Add(post);
+                        AtUri = ATUri.Create(feedUriString[numb]);
+                        Result<GetFeedOutput> test = await aTProtocol.GetFeedAsync(AtUri, 10, feedCursor[numb]);
+                        test.Switch(
+                            success =>
+                            {
+                                feedlist = JArray.Parse(JObject.Parse(test.Value.ToString())["feed"].ToString());
+                                for (int i = 0; i < feedlist.Count; i++)
+                                {
+                                    JObject postdata = JObject.Parse(feedlist[i].ToString());
+                                    Post post = new Post(postdata, dashboard, aTProtocol, false, false, false);
+                                    _ = stackPanel.Children.Add(post);
+                                    posts.Add(post);
+                                }
+                                // MessageBox.Show(feedCursor);
+                                // I think i'd be a lot happier if I didn't force myself to work on this constantly.
+                                // It's not that I hate this project, it's just that I've spent 98% of the day working on it alone.
+                                // My fault for teasing this project when all there was was the ability to log in and a half finished dashboard.
+                                // MessageBox.Show(JObject.Parse(test.Value.ToString())["cursor"].ToString());
+                                feedCursor[numb] = JObject.Parse(test.Value.ToString())["cursor"].ToString();
+                            },
+                            error =>
+                            {
+                                _ = MessageBox.Show($"Error: {error.StatusCode} {error.Detail}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                        );
                     }
-                    // MessageBox.Show(feedCursor);
-                    // I think i'd be a lot happier if I didn't force myself to work on this constantly.
-                    // It's not that I hate this project, it's just that I've spent 98% of the day working on it alone.
-                    // My fault for teasing this project when all there was was the ability to log in and a half finished dashboard.
-                    // MessageBox.Show(JObject.Parse(test.Value.ToString())["cursor"].ToString());
-                    feedCursor[numb] = JObject.Parse(test.Value.ToString())["cursor"].ToString();
-                    stillLoading = false;
+                    else
+                    {
+                        Result<GetTimelineOutput> test = await aTProtocol.GetTimelineAsync(feedUriString[numb], 10, feedCursor[numb]);
+                        test.Switch(
+                            success =>
+                            {
+                                feedlist = JArray.Parse(JObject.Parse(test.Value.ToString())["feed"].ToString());
+                                // System.Windows.Forms.Clipboard.SetText(feedlist.ToString());
+                                for (int i = 0; i < feedlist.Count; i++)
+                                {
+                                    JObject postdata = JObject.Parse(feedlist[i].ToString());
+                                    Post post = new Post(postdata, dashboard, aTProtocol, false, false, false);
+                                    _ = stackPanel.Children.Add(post);
+                                    posts.Add(post);
+                                }
+                                if (feedlist.Count > 0)
+                                {
+                                    DateTime dateTime = feedlist[feedlist.Count - 1]["reason"] != null
+                                        ? (DateTime)feedlist[feedlist.Count - 1]["reason"]["indexedAt"]
+                                        : (DateTime)feedlist[feedlist.Count - 1]["post"]["record"]["createdAt"];
+                                    feedCursor[numb] = dateTime.ToString("yyyy-MM-dd") + "T" + dateTime.ToString("HH:mm:ss") + "Z";
+                                }
+                            },
+                            error =>
+                            {
+                                _ = MessageBox.Show($"Error: {error.StatusCode} {error.Detail}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            });
+                    }
                 }
-                catch
+                catch (Exception ex)
                 {
                     try
                     {
-                        Result<GetTimelineOutput> test = await aTProtocol.GetTimelineAsync(feedUriString[numb], 10, feedCursor[numb]);
-                        feedlist = JArray.Parse(JObject.Parse(test.Value.ToString())["feed"].ToString());
-                        // System.Windows.Forms.Clipboard.SetText(feedlist.ToString());
-                        for (int i = 0; i < feedlist.Count; i++)
-                        {
-                            JObject postdata = JObject.Parse(feedlist[i].ToString());
-                            Post post = new Post(postdata, dashboard, aTProtocol, false, false, false);
-                            _ = stackPanel.Children.Add(post);
-                            posts.Add(post);
-                        }
-                        if (feedlist.Count > 0)
-                        {
-                            DateTime dateTime = feedlist[feedlist.Count - 1]["reason"] != null
-                                ? (DateTime)feedlist[feedlist.Count - 1]["reason"]["indexedAt"]
-                                : (DateTime)feedlist[feedlist.Count - 1]["post"]["record"]["createdAt"];
-                            feedCursor[numb] = dateTime.ToString("yyyy-MM-dd") + "T" + dateTime.ToString("HH:mm:ss") + "Z";
-                        }
-                        stillLoading = false;
+                        _ = MessageBox.Show(ex.Message.ToString() + "\n" + ex.InnerException.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
-                    catch (Exception ex)
+                    catch
                     {
-                        try
-                        {
-                            _ = MessageBox.Show(ex.Message.ToString() + "\n" + ex.InnerException.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
-                        catch
-                        {
-                            _ = MessageBox.Show(ex.Message.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
-                        stillLoading = false;
+                        _ = MessageBox.Show(ex.Message.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
+                stillLoading = false;
                 // lazy
                 GC.Collect();
             }
@@ -203,22 +219,13 @@ namespace Client
             _ = WhatsUpGrid.Focus();
         }
 
-        private void WhatsUpGrid_LayoutUpdated(object sender, System.EventArgs e)
+        private void WhatsUpGrid_LayoutUpdated(object sender, EventArgs e)
         {
             if (canEdit)
             {
                 FeedGrid.Margin = new Thickness(0, wrapper.ActualHeight, 0, 20);
             }
         }
-
-        private void FeedTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (canEdit)
-            {
-
-            }
-        }
-
 
         private void MediaPlayer_MediaEnded(object sender, EventArgs e)
         {
@@ -234,9 +241,9 @@ namespace Client
             try
             {
                 RegistryKey rk = Registry.CurrentUser.OpenSubKey(path);
-                return rk == null ? "" : (string)rk.GetValue(key);
+                return rk == null ? string.Empty : (string)rk.GetValue(key);
             }
-            catch { return ""; }
+            catch { return string.Empty; }
         }
 
         public System.IO.MemoryStream ImageSourceToMemoryStream(BitmapEncoder BitEncoder, ImageSource ImgSource)
@@ -273,7 +280,6 @@ namespace Client
             }
             Unloaded -= Page_Unloaded;
             WhatsUpGrid.Children.Clear();
-            FeedTabControl.SelectionChanged -= FeedTabControl_SelectionChanged;
             rect.MouseUp -= Rectangle_MouseUp;
             FeedTabControl.Items.Clear();
             FeedGrid.Children.Clear();

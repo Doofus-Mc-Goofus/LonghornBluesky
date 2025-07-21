@@ -28,7 +28,7 @@
             </Grid>
             <Grid x:Name="brirb">
                 <Rectangle x:Name="SelectPost" Margin="-15,1,-15,1" Fill="#3FFFFFFF" MouseEnter="SelectPost_MouseEnter" MouseLeave="SelectPost_MouseLeave" MouseUp="SelectPost_MouseUp" Opacity="0"/>
-                <Image x:Name="PFP" Source="/res/usertile.png" Width="32" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top">
+                <Image x:Name="PFP" Source="/res/usertile.png" Width="32" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="Fant">
                     <Image.Effect>
                         <DropShadowEffect Opacity="0.33" BlurRadius="5" ShadowDepth="2"/>
                     </Image.Effect>
@@ -58,7 +58,7 @@
                             </Rectangle.Fill>
                         </Rectangle>
                         <Rectangle x:Name="SelectQuotePost" Margin="-9,1,-9,1" Fill="#3FFFFFFF" MouseEnter="SelectQuote_MouseEnter" MouseLeave="SelectQuote_MouseLeave" MouseUp="SelectQuote_MouseUp" Opacity="0"/>
-                        <Image x:Name="QuotePFP" Source="/res/usertile.png" Width="16" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top">
+                        <Image x:Name="QuotePFP" Source="/res/usertile.png" Width="16" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="Fant">
                             <Image.Effect>
                                 <DropShadowEffect Opacity="0.33" BlurRadius="2.5" ShadowDepth="1"/>
                             </Image.Effect>
