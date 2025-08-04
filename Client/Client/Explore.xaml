@@ -6,7 +6,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="540"
       Title="Explore" UseLayoutRounding="True" Unloaded="Page_Unloaded">
-    <ScrollViewer VerticalScrollBarVisibility="Auto" ScrollChanged="ScrollViewer_ScrollChanged">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" ScrollChanged="ScrollViewer_ScrollChanged" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI">
         <StackPanel Margin="20">
             <Grid x:Name="SearchGrid" Margin="0,0,0,20">
                 <Rectangle x:Name="rect" RadiusX="3" RadiusY="3" Stroke="#54E0F6FF" Focusable="True" >
@@ -21,7 +21,7 @@
                     </Rectangle.Fill>
                 </Rectangle>
                 <Label Content="To begin, type in the search box" FontSize="16" VerticalAlignment="Top" Foreground="#FF0D467A" HorizontalAlignment="Center" Padding="10,14,10,14"/>
-                <TextBox x:Name="Search" Margin="15,48,46,10" Text="Search for posts, users, or feeds" Foreground="Gray" VerticalAlignment="Top" LostKeyboardFocus="Search_LostKeyboardFocus" GotKeyboardFocus="Search_GotKeyboardFocus" Padding="1,1,18,1" FontStyle="Italic"/>
+                <TextBox x:Name="Search" Margin="15,48,46,10" Text="Search for posts, users, or feeds" Foreground="Gray" VerticalAlignment="Top" LostKeyboardFocus="Search_LostKeyboardFocus" GotKeyboardFocus="Search_GotKeyboardFocus" Padding="1,1,18,1" FontFamily="/SegoeUI7/segoeuii_0.ttf#Segoe UI"/>
                 <Image x:Name="ClearButton" Source="/res/CloseNormal.png" Stretch="None" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,48,13" ToolTip="Clear" MouseDown="ClearButton_MouseDown" MouseEnter="ClearButton_MouseEnter" MouseLeave="ClearButton_MouseLeave" MouseUp="ClearButton_MouseUp" Visibility="Collapsed"/>
                 <Image x:Name="PassBoxButton" Source="/res/signinbutton-1.png" Stretch="None" HorizontalAlignment="Right" VerticalAlignment="Bottom" MouseDown="PassBoxButton_MouseDown" MouseEnter="PassBoxButton_MouseEnter" MouseLeave="PassBoxButton_MouseLeave" MouseUp="PassBoxButton_MouseUp" Margin="0,0,15,5" ToolTip="Go"/>
             </Grid>
@@ -37,6 +37,11 @@
                         </LinearGradientBrush>
                     </Rectangle.Fill>
                 </Rectangle>
+                <TabControl Padding="0" ScrollViewer.CanContentScroll="True" BorderThickness="0" Background="{x:Null}" Margin="0,-2,0,0">
+                    <TabItem Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="#FF9FBDD2" Visibility="Collapsed">
+                        <StackPanel x:Name="TrendingStack"/>
+                    </TabItem>
+                </TabControl>
             </Grid>
 
             <Grid x:Name="FeedGrid" Focusable="True" Margin="0,0,0,0" Visibility="Collapsed">
@@ -49,9 +54,8 @@
                         <StackPanel x:Name="PeopleStack"/>
                     </TabItem>
                     <TabItem x:Name="Feeds" Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="#FF9FBDD2" Header="Feeds">
-                        <StackPanel x:Name="FeedsStack">
-                            <Label Content="No items match your search" HorizontalAlignment="Center" Foreground="#FF0D467A" Padding="5,10,5,10"/>
-                        </StackPanel>
+                        <StackPanel x:Name="FeedsStack"/>
+
                     </TabItem>
                 </TabControl>
                 <Rectangle RadiusX="3" RadiusY="3" Stroke="#54E0F6FF" Margin="0,26,0,0">

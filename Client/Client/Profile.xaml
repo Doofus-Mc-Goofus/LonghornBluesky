@@ -6,7 +6,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="540"
       Title="Profile" UseLayoutRounding="True" Unloaded="Page_Unloaded">
-    <ScrollViewer VerticalScrollBarVisibility="Auto" ScrollChanged="ScrollViewer_ScrollChanged">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" ScrollChanged="ScrollViewer_ScrollChanged" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI">
         <Grid>
             <Grid x:Name="wrapper" VerticalAlignment="Top" Margin="20">
                 <Image x:Name="Banner" Source="/res/Windows Vista Beta 1 Speech Tutorial.png" VerticalAlignment="Top" Stretch="UniformToFill" Height="136" RenderOptions.BitmapScalingMode="Fant"/>
@@ -46,27 +46,24 @@
                             </TransformGroup>
                         </Image.RenderTransform>
                     </Image>
-                    <TextBlock x:Name="Username" Text="Loading..." FontSize="14" Margin="80,35,170,15" VerticalAlignment="Top" FontFamily="Segoe UI Semibold" Foreground="#FF0D467A" TextTrimming="CharacterEllipsis"/>
-                    <TextBlock x:Name="Fullname" Text="@" FontSize="11" Margin="80,55,170,0" VerticalAlignment="Top" FontStyle="Italic" Foreground="#FF0D467A" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock x:Name="Username" Text="Loading..." FontSize="14" Margin="80,35,170,15" VerticalAlignment="Top" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold" Foreground="#FF0D467A" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock x:Name="Fullname" Text="@" FontSize="11" Margin="80,55,170,0" VerticalAlignment="Top" FontFamily="/SegoeUI7/segoeuii_0.ttf#Segoe UI" Foreground="#FF0D467A" TextTrimming="CharacterEllipsis"/>
                     <StackPanel x:Name="detailsStack" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,35,0,0" Orientation="Horizontal">
                         <Grid Margin="0,0,10,0">
-                            <TextBlock x:Name="PostNum" Text="0" FontSize="14" VerticalAlignment="Top" FontFamily="Segoe UI Semibold" Foreground="#FF0D467A" TextTrimming="CharacterEllipsis" HorizontalAlignment="Center"/>
+                            <TextBlock x:Name="PostNum" Text="0" FontSize="14" VerticalAlignment="Top" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold" Foreground="#FF0D467A" TextTrimming="CharacterEllipsis" HorizontalAlignment="Center"/>
                             <TextBlock Text="posts" VerticalAlignment="Top" Foreground="#FF0D467A" TextTrimming="CharacterEllipsis" HorizontalAlignment="Center" Margin="0,18,0,0"/>
                         </Grid>
                         <Grid Margin="0,0,10,0">
-                            <TextBlock x:Name="FollowersNum" Text="0" FontSize="14" VerticalAlignment="Top" FontFamily="Segoe UI Semibold" Foreground="#FF0D467A" TextTrimming="CharacterEllipsis" HorizontalAlignment="Center" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Cursor="Hand" MouseUp="FollowersNum_MouseUp"/>
+                            <TextBlock x:Name="FollowersNum" Text="0" FontSize="14" VerticalAlignment="Top" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold" Foreground="#FF0D467A" TextTrimming="CharacterEllipsis" HorizontalAlignment="Center" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Cursor="Hand" MouseUp="FollowersNum_MouseUp"/>
                             <TextBlock Text="followers" VerticalAlignment="Top" Foreground="#FF0D467A" TextTrimming="CharacterEllipsis" HorizontalAlignment="Center" Margin="0,18,0,0"/>
                         </Grid>
                         <Grid Margin="0,0,15,0">
-                            <TextBlock x:Name="FolliwingNum" Text="0" FontSize="14" VerticalAlignment="Top" FontFamily="Segoe UI Semibold" Foreground="#FF0D467A" TextTrimming="CharacterEllipsis" HorizontalAlignment="Center" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Cursor="Hand" MouseUp="FolliwingNum_MouseUp"/>
+                            <TextBlock x:Name="FolliwingNum" Text="0" FontSize="14" VerticalAlignment="Top" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold" Foreground="#FF0D467A" TextTrimming="CharacterEllipsis" HorizontalAlignment="Center" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Cursor="Hand" MouseUp="FolliwingNum_MouseUp"/>
                             <TextBlock Text="following" VerticalAlignment="Top" Foreground="#FF0D467A" TextTrimming="CharacterEllipsis" HorizontalAlignment="Center" Margin="0,18,0,0"/>
                         </Grid>
                     </StackPanel>
-                    <TextBlock x:Name="Bio" VerticalAlignment="Top" TextTrimming="CharacterEllipsis" HorizontalAlignment="Left" Margin="15,72,15,33" TextWrapping="Wrap">
-                        <TextBlock.Effect>
-                            <DropShadowEffect Color="White" ShadowDepth="0" BlurRadius="12"/>
-                        </TextBlock.Effect>
-                    </TextBlock>
+                    <TextBlock x:Name="Bio" VerticalAlignment="Top" TextTrimming="CharacterEllipsis" HorizontalAlignment="Left" Margin="15,72,15,33" TextWrapping="Wrap"/>
+
                     <TextBlock x:Name="ShowMore" Text="Show more..." VerticalAlignment="Bottom" TextTrimming="CharacterEllipsis" HorizontalAlignment="Left" Margin="15,0,15,12" TextWrapping="Wrap" Foreground="#FF0D467A" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Panel.ZIndex="1" Cursor="Hand" MouseUp="ShowMore_MouseUp" Visibility="Collapsed"/>
                     <Button x:Name="EditProf" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,35,10" Content="Edit Profile" Padding="0,1,0,1" Width="80" Visibility="Collapsed" Click="EditProf_Click"/>
                     <Button x:Name="Follow" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,35,10" Content="Follow" Padding="16,1,16,1" Click="Follow_Click"/>
@@ -104,9 +101,7 @@
                         <StackPanel x:Name="LikesStack" VerticalAlignment="Top"/>
                     </TabItem>
                     <TabItem x:Name="Feeds" Header="Feeds" Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="#FF9FBDD2">
-                        <StackPanel x:Name="FeedsStack" VerticalAlignment="Top">
-                            <Label HorizontalAlignment="Center" Content="It looks like there's nothing here" Foreground="#FF0D467A" Padding="10"/>
-                        </StackPanel>
+                        <StackPanel x:Name="FeedsStack" VerticalAlignment="Top"/>
                     </TabItem>
                     <TabItem x:Name="StarterPacks" Header="Starter Packs" Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="#FF9FBDD2">
                         <StackPanel x:Name="StarterPacksStack" VerticalAlignment="Top">

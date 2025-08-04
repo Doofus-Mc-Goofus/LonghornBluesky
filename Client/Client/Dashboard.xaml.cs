@@ -44,7 +44,7 @@ namespace Client
             this.mw = mw;
             this.aTProtocol = aTProtocol;
             selectobjectsidebar = 1;
-            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "showMenu") == "true")
+            if (bool.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "showMenu")))
             {
                 Menu.Visibility = Visibility.Visible;
             }
@@ -83,11 +83,7 @@ namespace Client
             }
             );
             mw.Title = "Bluesky";
-            IniFile myIni = new IniFile("config.ini");
-            if (myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "2")
-            {
-                mw.grid.Visibility = Visibility.Visible;
-            }
+            UpdateDashboardLayout();
         }
         public void PlayWelcomeSound()
         {
@@ -123,7 +119,7 @@ namespace Client
             _ = PageFrame.NavigationService.Navigate(ProfilePage);
             if (session.Did.ToString() == ATDid.Create(Did).ToString())
             {
-                Profile_Text.FontFamily = new FontFamily("Segoe UI Semibold");
+                Profile_Text.FontFamily = new FontFamily(new Uri("pack://application:,,,/SegoeUI7/seguisb_0.ttf"), "Segoe UI Semibold");
                 Profile_BG.Visibility = Visibility.Visible;
                 Profile_BG.Opacity = 1;
                 selectobjectsidebar = 7;
@@ -180,7 +176,7 @@ namespace Client
         }
         public void QuotePost(EmbedRecord embedRecord)
         {
-            Home_Text.FontFamily = new FontFamily("Segoe UI Semibold");
+            Home_Text.FontFamily = new FontFamily(new Uri("pack://application:,,,/SegoeUI7/seguisb_0.ttf"), "Segoe UI Semibold");
             Home_BG.Visibility = Visibility.Visible;
             Home_BG.Opacity = 1;
             selectobjectsidebar = 1;
@@ -230,7 +226,7 @@ namespace Client
 
         private void Home_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Home_Text.FontFamily = new FontFamily("Segoe UI Semibold");
+            Home_Text.FontFamily = new FontFamily(new Uri("pack://application:,,,/SegoeUI7/seguisb_0.ttf"), "Segoe UI Semibold");
             Home_BG.Visibility = Visibility.Visible;
             Home_BG.Opacity = 1;
             selectobjectsidebar = 1;
@@ -259,7 +255,7 @@ namespace Client
 
         private void Explore_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Explore_Text.FontFamily = new FontFamily("Segoe UI Semibold");
+            Explore_Text.FontFamily = new FontFamily(new Uri("pack://application:,,,/SegoeUI7/seguisb_0.ttf"), "Segoe UI Semibold");
             Explore_BG.Visibility = Visibility.Visible;
             Explore_BG.Opacity = 1;
             selectobjectsidebar = 2;
@@ -287,7 +283,7 @@ namespace Client
 
         private void Notifs_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Notifs_Text.FontFamily = new FontFamily("Segoe UI Semibold");
+            Notifs_Text.FontFamily = new FontFamily(new Uri("pack://application:,,,/SegoeUI7/seguisb_0.ttf"), "Segoe UI Semibold");
             Notifs_BG.Visibility = Visibility.Visible;
             Notifs_BG.Opacity = 1;
             selectobjectsidebar = 3;
@@ -362,7 +358,7 @@ namespace Client
             Chat_BG.Visibility = Visibility.Visible;
             Chat_BG.Opacity = 1;
             selectobjectsidebar = 4;
-            Chat_Text.FontFamily = new FontFamily("Segoe UI Semibold");
+            Chat_Text.FontFamily = new FontFamily(new Uri("pack://application:,,,/SegoeUI7/seguisb_0.ttf"), "Segoe UI Semibold");
             HideOthersSidebar();
             HandleableError usororer = new HandleableError(new ATError(418, new ErrorDetail("", "I'm a teapot")));
             PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
@@ -388,7 +384,7 @@ namespace Client
 
         private void Feeds_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Feeds_Text.FontFamily = new FontFamily("Segoe UI Semibold");
+            Feeds_Text.FontFamily = new FontFamily(new Uri("pack://application:,,,/SegoeUI7/seguisb_0.ttf"), "Segoe UI Semibold");
             Feeds_BG.Visibility = Visibility.Visible;
             Feeds_BG.Opacity = 1;
             selectobjectsidebar = 5;
@@ -417,7 +413,7 @@ namespace Client
 
         private void Lists_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Lists_Text.FontFamily = new FontFamily("Segoe UI Semibold");
+            Lists_Text.FontFamily = new FontFamily(new Uri("pack://application:,,,/SegoeUI7/seguisb_0.ttf"), "Segoe UI Semibold");
             Lists_BG.Visibility = Visibility.Visible;
             Lists_BG.Opacity = 1;
             selectobjectsidebar = 6;
@@ -446,7 +442,7 @@ namespace Client
 
         private void Profile_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Profile_Text.FontFamily = new FontFamily("Segoe UI Semibold");
+            Profile_Text.FontFamily = new FontFamily(new Uri("pack://application:,,,/SegoeUI7/seguisb_0.ttf"), "Segoe UI Semibold");
             Profile_BG.Visibility = Visibility.Visible;
             Profile_BG.Opacity = 1;
             selectobjectsidebar = 7;
@@ -483,7 +479,7 @@ namespace Client
 
         private void Settings_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Settings_Text.FontFamily = new FontFamily("Segoe UI Semibold");
+            Settings_Text.FontFamily = new FontFamily(new Uri("pack://application:,,,/SegoeUI7/seguisb_0.ttf"), "Segoe UI Semibold");
             Settings_BG.Visibility = Visibility.Visible;
             Settings_BG.Opacity = 1;
             selectobjectsidebar = 8;
@@ -567,14 +563,37 @@ namespace Client
 
         private void Menu_LayoutUpdated(object sender, EventArgs e)
         {
+            FrameMask.Margin = new Thickness(260, Menu.ActualHeight, 0, 0);
             LayoutLayout.Margin = new Thickness(0, Menu.ActualHeight, 0, 0);
         }
 
+        public void UpdateDashboardLayout()
+        {
+            _ = new IniFile("config.ini");
+            mw.grid.Visibility = HKCU_GetString(@"SOFTWARE\LonghornBluesky", "showNavigation") == "True" ? Visibility.Visible : Visibility.Collapsed;
+            switch (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "fillLayout"))
+            {
+                case "True":
+                    FrameMask.MaxWidth = double.PositiveInfinity;
+                    LayoutLayout.MaxWidth = double.PositiveInfinity;
+                    break;
+                default:
+                    FrameMask.MaxWidth = 540;
+                    LayoutLayout.MaxWidth = 800;
+                    break;
+            }
+            Menu.Visibility = bool.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "showMenu")) ? Visibility.Visible : Visibility.Collapsed;
+        }
         private void CreatePost(object sender, RoutedEventArgs e)
+        {
+            CreatePostRaw();
+        }
+
+        public void CreatePostRaw()
         {
             if (selectobjectsidebar != 1)
             {
-                Home_Text.FontFamily = new FontFamily("Segoe UI Semibold");
+                Home_Text.FontFamily = new FontFamily(new Uri("pack://application:,,,/SegoeUI7/seguisb_0.ttf"), "Segoe UI Semibold");
                 Home_BG.Visibility = Visibility.Visible;
                 Home_BG.Opacity = 1;
                 selectobjectsidebar = 1;
@@ -583,6 +602,45 @@ namespace Client
                 PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
                 _ = PageFrame.NavigationService.Navigate(homePage);
             }
+        }
+
+        public void NavigateToExplore()
+        {
+            if (selectobjectsidebar != 2)
+            {
+                Explore_Text.FontFamily = new FontFamily(new Uri("pack://application:,,,/SegoeUI7/seguisb_0.ttf"), "Segoe UI Semibold");
+                Explore_BG.Visibility = Visibility.Visible;
+                Explore_BG.Opacity = 1;
+                selectobjectsidebar = 2;
+                HideOthersSidebar();
+                Explore explore = new Explore(aTProtocol, this);
+                PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+                _ = PageFrame.NavigationService.Navigate(explore);
+            }
+        }
+
+        public void NavigateToHome()
+        {
+            if (selectobjectsidebar != 1)
+            {
+                Home_Text.FontFamily = new FontFamily(new Uri("pack://application:,,,/SegoeUI7/seguisb_0.ttf"), "Segoe UI Semibold");
+                Home_BG.Visibility = Visibility.Visible;
+                Home_BG.Opacity = 1;
+                selectobjectsidebar = 1;
+                HideOthersSidebar();
+                Home homePage = new Home(feeds, aTProtocol, this);
+                PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+                _ = PageFrame.NavigationService.Navigate(homePage);
+            }
+        }
+
+        public void NavigateToFeed(string Uri, JObject feed)
+        {
+            selectobjectsidebar = 0;
+            HideOthersSidebar();
+            FeedPage feedPage = new FeedPage(ATUri.Create(Uri), aTProtocol, this, feed);
+            PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+            _ = PageFrame.NavigationService.Navigate(feedPage);
         }
 
         private void HelpTopics(object sender, RoutedEventArgs e)
@@ -625,6 +683,11 @@ namespace Client
             group.Children.Add(new TranslateTransform(-offset.X, -offset.Y));
             brush.Transform = group;
             PageFrame.OpacityMask = brush;
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

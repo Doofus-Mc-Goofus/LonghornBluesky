@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignWidth="540">
+             d:DesignWidth="540" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI">
     <Grid Margin="15,0,15,0">
         <Rectangle x:Name="TheBackground" RadiusX="3" RadiusY="3" Stroke="#FF9FBDD2" Margin="-25,0,-25,0" Focusable="True">
             <Rectangle.Fill>
@@ -17,8 +17,8 @@
         <StackPanel x:Name="stackie">
             <Grid x:Name="RepostedGrid" Margin="0,0,0,-5" Panel.ZIndex="1" Visibility="Collapsed">
                 <Image x:Name="RepostIcon" VerticalAlignment="Top" Source="/res/RepostIconGray.png" Width="16" Height="16" HorizontalAlignment="Left" Margin="0,5,5,0" MouseEnter="SelectPost_MouseEnter" MouseLeave="SelectPost_MouseLeave" MouseUp="SelectPost_MouseUp"/>
-                <TextBlock x:Name="RepostedBy" Text="Reposted by" FontStyle="Italic" Foreground="#FF9AA6B1" Margin="20,5,0,0" HorizontalAlignment="Left" MouseEnter="SelectPost_MouseEnter" MouseLeave="SelectPost_MouseLeave" MouseUp="SelectPost_MouseUp"/>
-                <TextBlock x:Name="Reposted" Text="USERNAME" FontStyle="Italic" Foreground="#FF9AA6B1" Margin="86,5,0,0" MouseLeave="Label_MouseLeave" MouseEnter="Label_MouseEnter" Cursor="Hand" MouseUp="Username_MouseUp" HorizontalAlignment="Left"/>
+                <TextBlock x:Name="RepostedBy" Text="Reposted by" FontFamily="/SegoeUI7/segoeuii_0.ttf#Segoe UI" Foreground="#FF9AA6B1" Margin="20,5,0,0" HorizontalAlignment="Left" MouseEnter="SelectPost_MouseEnter" MouseLeave="SelectPost_MouseLeave" MouseUp="SelectPost_MouseUp"/>
+                <TextBlock x:Name="Reposted" Text="USERNAME" FontFamily="/SegoeUI7/segoeuii_0.ttf#Segoe UI" Foreground="#FF9AA6B1" Margin="86,5,0,0" MouseLeave="Label_MouseLeave" MouseEnter="Label_MouseEnter" Cursor="Hand" MouseUp="Username_MouseUp" HorizontalAlignment="Left"/>
             </Grid>
             <Grid x:Name="RootPost" Margin="-15,0,-15,0" Visibility="Collapsed">
                 <Rectangle Fill="#FF9FBDD2" HorizontalAlignment="Left" Width="2" Margin="30,42,0,-10"/>
@@ -36,7 +36,7 @@
                 <Image x:Name="Frame" Source="/res/PFPFrameSmal.png" Width="32" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top"/>
                 <TextBlock x:Name="Username" Margin="40,9,0,0" Foreground="#FF0D467A" FontSize="14" MouseLeave="Label_MouseLeave" MouseEnter="Label_MouseEnter" MouseUp="Username_MouseUp" Cursor="Hand" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                 <TextBlock x:Name="Time" Text="0m" Margin="40,11,0,0" Foreground="#FF9AA6B1" HorizontalAlignment="Right" VerticalAlignment="Top" MouseEnter="SelectPost_MouseEnter" MouseLeave="SelectPost_MouseLeave" MouseUp="SelectPost_MouseUp"/>
-                <TextBlock x:Name="Fullname" FontStyle="Italic" Foreground="#FF9AA6B1" Margin="40,26,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="SelectPost_MouseEnter" MouseLeave="SelectPost_MouseLeave" MouseUp="SelectPost_MouseUp"/>
+                <TextBlock x:Name="Fullname" FontFamily="/SegoeUI7/segoeuii_0.ttf#Segoe UI" Foreground="#FF9AA6B1" Margin="40,26,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="SelectPost_MouseEnter" MouseLeave="SelectPost_MouseLeave" MouseUp="SelectPost_MouseUp"/>
                 <StackPanel x:Name="wrapPanel" Margin="0,46,0,32" >
                     <TextBlock x:Name="Text" TextWrapping="Wrap" Width="{Binding ActualWidth, ElementName=wrapPanel, Mode=OneWay}" MouseEnter="SelectPost_MouseEnter" MouseLeave="SelectPost_MouseLeave" MouseUp="SelectPost_MouseUp"/>
                     <Expander x:Name="ContentHidden" Header="Content Hidden" BorderBrush="#FF9FBDD2" Padding="5" Visibility="Collapsed" Margin="0,10,0,5">
@@ -47,7 +47,19 @@
                             </LinearGradientBrush>
                         </Expander.Background>
                     </Expander>
-                    <StackPanel x:Name="Images" Orientation="Horizontal" Margin="0,10,0,5" Visibility="Collapsed"/>
+                    <StackPanel x:Name="Images" Orientation="Horizontal" Margin="0,10,0,5" Visibility="Collapsed">
+                        <Grid x:Name="Link" MouseEnter="SelectPost_MouseEnter" MouseLeave="SelectPost_MouseLeave" MouseUp="SelectPost_MouseUp" Width="{Binding ActualWidth, ElementName=Images, Mode=OneWay}" Visibility="Collapsed">
+                            <Rectangle RadiusX="3" RadiusY="3" Stroke="#FF9FBDD2">
+                                <Rectangle.Fill>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#BFEDF7FF"/>
+                                        <GradientStop Color="#7FE0F1FF" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <TextBlock Text="Deleted" Margin="10,5,10,5"/>
+                        </Grid>
+                    </StackPanel>
                     <Grid x:Name="Quote" Margin="10,10,10,5" Visibility="Collapsed">
                         <Rectangle RadiusX="3" RadiusY="3" Stroke="#FF9FBDD2" Margin="-10,0,-10,0">
                             <Rectangle.Fill>

@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Welcome to Bluesky!" Height="600" Width="800" MinWidth="800" MinHeight="600" UseLayoutRounding="True" Closing="Window_Closing" KeyUp="Window_KeyUp" Loaded="Window_Loaded" Background="Transparent" Activated="Window_Focus" Deactivated="Window_Focus">
+        Title="Welcome to Bluesky!" Height="600" Width="800" MinWidth="800" MinHeight="600" UseLayoutRounding="True" Closing="Window_Closing" KeyUp="Window_KeyUp" Loaded="Window_Loaded" Background="Transparent" Activated="Window_Focus" Deactivated="Window_Focus" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI">
     <Grid>
         <DockPanel Name="mainDock">
             <!-- The border is used to compute the rendered height with margins.
@@ -13,7 +13,7 @@
                 <Grid Name="grid" Margin="0,2,0,5">
                     <Image x:Name="Back" Source="/res/BackDisabled.png" Stretch="None" HorizontalAlignment="Left" Margin="0,-5,0,0" MouseDown="Back_MouseDown" MouseEnter="Back_MouseEnter" MouseLeave="Back_MouseLeave" MouseUp="Back_MouseUp" VerticalAlignment="Top" />
                     <Image x:Name="Forward" Source="/res/ForwardDisabled.png" Stretch="None" HorizontalAlignment="Left" Margin="40,-5,0,0" MouseEnter="Forward_MouseEnter" MouseLeave="Forward_MouseLeave" MouseDown="Forward_MouseDown" MouseUp="Forward_MouseUp" VerticalAlignment="Top"/>
-                    <Grid Margin="80,-5,141,0" VerticalAlignment="Center">
+                    <Grid Margin="80,-5,146,0" VerticalAlignment="Center">
                         <TextBox GotKeyboardFocus="TextBox_GotKeyboardFocus" LostKeyboardFocus="TextBox_LostKeyboardFocus"/>
                         <StackPanel x:Name="stackPanel" VerticalAlignment="Center" Orientation="Horizontal" IsHitTestVisible="False">
                             <Label Content="Bluesky" Foreground="#FF0D467A" Padding="6,3,6,3" HorizontalAlignment="Left"/>
@@ -21,15 +21,50 @@
                             <Label Content="Home" Foreground="#FF0D467A" Padding="6,3,6,3" HorizontalAlignment="Left"/>
                         </StackPanel>
                     </Grid>
-                    <StackPanel x:Name="sideButtons" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,-5,5,0" Orientation="Horizontal">
-                        <Rectangle Fill="Gray" Width="1">
-                            <Rectangle.Effect>
-                                <DropShadowEffect ShadowDepth="0" Color="White" BlurRadius="12"/>
-                            </Rectangle.Effect>
+                    <StackPanel x:Name="sideButtons" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,-5,0,0" Orientation="Horizontal" Height="36">
+                        <Rectangle Width="2" Margin="0,0,5,0">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <LinearGradientBrush.RelativeTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                                            <SkewTransform CenterX="0.5" CenterY="0.5"/>
+                                            <RotateTransform Angle="90" CenterX="0.5" CenterY="0.5"/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </LinearGradientBrush.RelativeTransform>
+                                    <GradientStop Color="Gray"/>
+                                    <GradientStop Color="White" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
                         </Rectangle>
-                        <Image Source="/res/SearchIconAlt.png" Stretch="Fill" Height="32" Margin="10,0,0,0"/>
-                        <Image Source="/res/TermsIcon.png" Stretch="Fill" Height="32" Margin="10,0,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
-                        <Image Source="/res/StarButton.png" Stretch="Fill" Height="32" Margin="10,0,0,0"/>
+                        <Grid Margin="3,0,3,0">
+                            <Rectangle x:Name="Search_BG" Margin="0,0,0,0" Stroke="#540D467A" RadiusY="3" RadiusX="3" Width="36" Opacity="0.005" MouseLeave="Search_BG_MouseLeave" MouseEnter="Search_BG_MouseEnter" MouseUp="Search_MouseUp" MouseDown="Search_BG_MouseDown">
+                                <Rectangle.Fill>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#7FFFFFFF"/>
+                                        <GradientStop Color="#7FFFFFFF" Offset="1"/>
+                                        <GradientStop Color="#3FFFFFFF" Offset="0.654"/>
+                                    </LinearGradientBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Image Source="/res/SearchIconLarge.png" Stretch="Fill" Height="32" ToolTip="Search" MouseLeave="Search_BG_MouseLeave" MouseEnter="Search_BG_MouseEnter" MouseUp="Search_MouseUp" MouseDown="Search_BG_MouseDown" HorizontalAlignment="Center"/>
+                        </Grid>
+                        <Grid Margin="3,0,3,0">
+                            <Rectangle x:Name="CreatePost_BG" Margin="0,0,0,0" Stroke="#540D467A" RadiusY="3" RadiusX="3" Width="36" Opacity="0" MouseLeave="CreatePost_BG_MouseLeave" MouseEnter="CreatePost_BG_MouseEnter" MouseUp="CreatePost_MouseUp" MouseDown="CreatePost_BG_MouseDown">
+                                <Rectangle.Fill>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#7FFFFFFF"/>
+                                        <GradientStop Color="#7FFFFFFF" Offset="1"/>
+                                        <GradientStop Color="#3FFFFFFF" Offset="0.654"/>
+                                    </LinearGradientBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Image Source="/res/CreatePostIcon.png" Stretch="Fill" Height="32" ToolTip="Create Post" MouseLeave="CreatePost_BG_MouseLeave" MouseEnter="CreatePost_BG_MouseEnter" MouseUp="CreatePost_MouseUp" MouseDown="CreatePost_BG_MouseDown" HorizontalAlignment="Center"/>
+                        </Grid>
+                        <Grid Margin="5,0,5,0">
+                            <Image x:Name="Notification" Source="/res/StarButtonNormal.png" Stretch="Fill" Height="32" ToolTip="Notifications" MouseUp="Notif_MouseUp" MouseEnter="Image_MouseEnter" MouseLeave="Image_MouseLeave" MouseDown="Image_MouseDown"/>
+                        </Grid>
                     </StackPanel>
                 </Grid>
             </Border>

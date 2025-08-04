@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="500"
-      Title="Personalization" UseLayoutRounding="True" Unloaded="Page_Unloaded" Loaded="Page_Loaded">
+      Title="Personalization" UseLayoutRounding="True" Unloaded="Page_Unloaded" Loaded="Page_Loaded" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI">
     <Grid Margin="20">
         <Rectangle x:Name="rect" RadiusX="3" RadiusY="3" Stroke="#54E0F6FF" MouseUp="Rectangle_MouseUp" Focusable="True">
             <Rectangle.Effect>
@@ -22,7 +22,7 @@
             <StackPanel x:Name="Secret" Visibility="Collapsed">
                 <Expander>
                     <Expander.Header>
-                        <TextBlock Text="Themes" Foreground="#FF0D467A" FontFamily="Segoe UI Semibold"/>
+                        <TextBlock Text="Themes" Foreground="#FF0D467A" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold"/>
                     </Expander.Header>
                     <StackPanel Margin="0,10,0,0">
                         <Label Content="Visual Styles:" Padding="0,0,0,5" />
@@ -52,7 +52,18 @@
             </StackPanel>
             <Expander>
                 <Expander.Header>
-                    <TextBlock Text="Sounds" Foreground="#FF0D467A" FontFamily="Segoe UI Semibold"/>
+                    <TextBlock Text="Layout" Foreground="#FF0D467A" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold"/>
+                </Expander.Header>
+                <StackPanel Margin="0,10,0,0">
+                    <CheckBox x:Name="showMenu" Margin="0,0,0,7" Content="Menu Bar"/>
+                    <CheckBox x:Name="showNavigation" Margin="0,0,0,7" Content="Navigation Bar (Experimental)"/>
+                    <CheckBox x:Name="fillLayout" Margin="0,0,0,7" Content="Fill Dashboard Layout (Experimental)"/>
+                </StackPanel>
+            </Expander>
+            <Separator/>
+            <Expander>
+                <Expander.Header>
+                    <TextBlock Text="Sounds" Foreground="#FF0D467A" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold"/>
                 </Expander.Header>
                 <StackPanel Margin="0,10,0,0">
                     <Label Content="Notification Sound:" Padding="0,0,0,5" />

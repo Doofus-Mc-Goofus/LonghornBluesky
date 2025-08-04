@@ -3,6 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" Height="600" Width="800" Topmost="True" ResizeMode="NoResize" WindowState="Maximized" WindowStyle="None" Background="{x:Null}" Loaded="Window_Loaded" AllowsTransparency="True" ShowInTaskbar="False" UseLayoutRounding="True">
+        mc:Ignorable="d" Height="600" Width="800" Topmost="True" ResizeMode="NoResize" WindowState="Maximized" WindowStyle="None" Background="{x:Null}" Loaded="Window_Loaded" AllowsTransparency="True" ShowInTaskbar="False" UseLayoutRounding="True" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI">
     <StackPanel x:Name="stack" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
 </Window>

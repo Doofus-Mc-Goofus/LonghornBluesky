@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="80" d:DesignWidth="500" Unloaded="UserControl_Unloaded">
+             d:DesignHeight="80" d:DesignWidth="500" Unloaded="UserControl_Unloaded" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI">
     <StackPanel x:Name="wrapper" VerticalAlignment="Top">
         <Grid x:Name="WhatsUpGrid" Width="{Binding ActualWidth, ElementName=grid, Mode=OneWay}" Focusable="True">
             <Rectangle RadiusX="3" RadiusY="3" Stroke="#54E0F6FF" MouseUp="Rectangle_MouseUp">
@@ -50,7 +50,7 @@
             </StackPanel>
             <Rectangle VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,10,5" Height="28" Width="100" Fill="White" Stroke="#FFABADB3"/>
             <Rectangle VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,11,32" Height="1" Width="99" Fill="White"/>
-            <Label x:Name="CharCount" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,76,7" Content="300" FontFamily="Segoe UI Semibold" Foreground="DimGray"/>
+            <Label x:Name="CharCount" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,76,7" Content="300" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold" Foreground="DimGray"/>
             <Button x:Name="Post" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,14,9" Width="60" Height="22" Content="Post" Padding="0" Click="Post_Click"/>
             <Button VerticalAlignment="Bottom" Width="16" Height="16" HorizontalAlignment="Left" Margin="10,0,0,10" Content="Attach Image" Opacity="0"/>
             <Image x:Name="ImagesButton" VerticalAlignment="Bottom" Source="/res/ImageIcon.png" Width="16" Height="16" HorizontalAlignment="Left" Margin="10,0,0,10" Cursor="Hand" ToolTip="Images" MouseUp="ImagesButton_MouseUp"/>

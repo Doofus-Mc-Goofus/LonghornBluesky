@@ -262,7 +262,7 @@ namespace Client
             Title.Text = "Appearance and Personalization";
             PageFrame.Visibility = Visibility.Visible;
             homie.Visibility = Visibility.Collapsed;
-            Personalization usororer = new Personalization(this);
+            Personalization usororer = new Personalization(this, dashboard);
             PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
             _ = PageFrame.NavigationService.Navigate(usororer);
         }

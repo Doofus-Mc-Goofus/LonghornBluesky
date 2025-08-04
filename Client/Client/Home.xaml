@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="540"
-      Title="Home" UseLayoutRounding="True" Unloaded="Page_Unloaded">
+      Title="Home" UseLayoutRounding="True" Unloaded="Page_Unloaded" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI">
     <Grid x:Name="grid" Margin="20,0,20,0">
         <Grid x:Name="wrapper" VerticalAlignment="Top">
             <Grid x:Name="WhatsUpGrid" Width="{Binding ActualWidth, ElementName=grid, Mode=OneWay}" Focusable="True" Margin="0,20,0,20" LayoutUpdated="WhatsUpGrid_LayoutUpdated">

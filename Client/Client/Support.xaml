@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Bluesky Support" Height="550" Width="450" Closed="Window_Closed" Icon="/res/HelpIcon.png">
+        Title="Bluesky Support" Height="550" Width="450" Closed="Window_Closed" Icon="/res/HelpIcon.png" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI">
     <Grid>
         <Grid.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">

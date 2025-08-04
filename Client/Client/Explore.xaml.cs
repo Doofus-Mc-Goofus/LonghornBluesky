@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,6 +24,8 @@ namespace Client
         private readonly List<string> feedCursor = new List<string>();
         private readonly List<Post> posts = new List<Post>();
         private readonly List<User> users = new List<User>();
+        private readonly List<Feed> feeds = new List<Feed>();
+
         private readonly Dashboard dashboard;
         public Explore(ATProtocol aTProtocol, Dashboard dashboard)
         {
@@ -40,10 +41,14 @@ namespace Client
         }
         private async Task Load()
         {
-#pragma warning disable IDE0059 // Unnecessary assignment of a value
-            FishyFlip.Models.Result<GetTrendingTopicsOutput> result = await aTProtocol.GetTrendingTopicsAsync();
-#pragma warning restore IDE0059 // Unnecessary assignment of a value
-                               // System.Windows.Forms.Clipboard.SetText(result.Value.ToString());
+            FishyFlip.Models.Result<GetTrendsOutput> result = await aTProtocol.GetTrendsAsync();
+            JObject jarjar = JObject.Parse(result.Value.ToString());
+            for (int i = 0; i < JArray.Parse(jarjar["trends"].ToString()).Count; i++)
+            {
+                Trending trending = new Trending(JObject.Parse(jarjar["trends"][i].ToString()), dashboard, aTProtocol, (byte)(i + 1));
+                _ = TrendingStack.Children.Add(trending);
+            }
+            // System.Windows.Forms.Clipboard.SetText(result.Value.ToString());
         }
         private void Search_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
@@ -122,6 +127,22 @@ namespace Client
                             User post = new User(postdata, dashboard, aTProtocol);
                             _ = ((StackPanel)((TabItem)FeedTabControl.Items[index]).Content).Children.Add(post);
                             users.Add(post);
+                        }
+                        if (JObject.Parse(result.Value.ToString())["cursor"] != null)
+                        {
+                            feedCursor[index] = JObject.Parse(result.Value.ToString())["cursor"].ToString();
+                        }
+                    }
+                    else if (index == 3)
+                    {
+                        FishyFlip.Models.Result<GetPopularFeedGeneratorsOutput> result = await aTProtocol.GetPopularFeedGeneratorsAsync(10, feedCursor[index], Search.Text);
+                        JArray feedlist = JArray.Parse(JObject.Parse(result.Value.ToString())["feeds"].ToString());
+                        for (int i = 0; i < feedlist.Count; i++)
+                        {
+                            JObject postdata = JObject.Parse(feedlist[i].ToString());
+                            Feed post = new Feed(postdata, dashboard, aTProtocol);
+                            _ = ((StackPanel)((TabItem)FeedTabControl.Items[index]).Content).Children.Add(post);
+                            feeds.Add(post);
                         }
                         if (JObject.Parse(result.Value.ToString())["cursor"] != null)
                         {

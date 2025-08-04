@@ -127,7 +127,14 @@ namespace Client
             canEdit = true;
             // Old code (DO NOT UNCOMMENT!)
             // FeedTabControl.SelectionChanged += (s, ee) => LoadFeed((StackPanel)((TabItem)FeedTabControl.SelectedItem).Tag, false);
-            FeedTabControl.SelectedIndex = 1;
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "selectedIndex") != null)
+            {
+                FeedTabControl.SelectedIndex = int.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "selectedIndex"));
+            }
+            else
+            {
+                FeedTabControl.SelectedIndex = 1;
+            } 
         }
 
         private async Task LoadFeed(StackPanel stackPanel)
@@ -278,6 +285,7 @@ namespace Client
             {
                 scrollViewers[i].ScrollChanged -= ScrollViewer_ScrollChanged;
             }
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "selectedIndex", FeedTabControl.SelectedIndex.ToString());
             Unloaded -= Page_Unloaded;
             WhatsUpGrid.Children.Clear();
             rect.MouseUp -= Rectangle_MouseUp;
@@ -286,6 +294,11 @@ namespace Client
             wrapper.Children.Clear();
             grid.Children.Clear();
             GC.SuppressFinalize(this);
+        }
+        public void HKCU_AddKey(string path, string key, object value)
+        {
+            RegistryKey rk = Registry.CurrentUser.CreateSubKey(path);
+            rk.SetValue(key, value);
         }
     }
 }

@@ -6,7 +6,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="540"
       Title="Settings" UseLayoutRounding="True" SizeChanged="Page_SizeChanged" Unloaded="Page_Unloaded">
-    <ScrollViewer x:Name="aegaegaegag" VerticalScrollBarVisibility="Auto">
+    <ScrollViewer x:Name="aegaegaegag" VerticalScrollBarVisibility="Auto" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI">
         <Grid>
             <StackPanel x:Name="test" Margin="20" VerticalAlignment="Top">
                 <Grid Height="52" Margin="0,0,0,20" VerticalAlignment="Top">
@@ -22,7 +22,7 @@
                         </Rectangle.Fill>
                     </Rectangle>
                     <Image x:Name="Back" Source="/res/BackDisabled.png" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" MouseDown="Back_MouseDown" MouseEnter="Back_MouseEnter" MouseLeave="Back_MouseLeave" MouseUp="Back_MouseUp" ToolTip="Back"/>
-                    <TextBlock x:Name="Title" Text="Settings" FontSize="14" Margin="57,0,20,0" VerticalAlignment="Center" FontFamily="Segoe UI Semibold" Foreground="#FF0D467A" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock x:Name="Title" Text="Settings" FontSize="14" Margin="57,0,20,0" VerticalAlignment="Center" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold" Foreground="#FF0D467A" TextTrimming="CharacterEllipsis"/>
                 </Grid>
             </StackPanel>
             <Grid x:Name="homie" Margin="20,92,20,20">

@@ -1,4 +1,4 @@
-﻿<Page x:Class="Client.QuotePage"
+﻿<Page x:Class="Client.FeedPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -23,8 +23,8 @@
                 <TabItem Visibility="Collapsed">
                     <Grid x:Name="PostGrid" Width="{Binding ActualWidth, ElementName=PostStack, Mode=OneWay}" VerticalAlignment="Top">
                         <Image x:Name="Back" Source="/res/BackNormal.png" Stretch="None" HorizontalAlignment="Left" Margin="5,0,0,0" MouseDown="Back_MouseDown" MouseEnter="Back_MouseEnter" MouseLeave="Back_MouseLeave" MouseUp="Back_MouseUp"/>
-                        <TextBlock Margin="52,9,0,0" Foreground="#FF0D467A" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold" Text="Quotes"/>
-                        <TextBlock x:Name="Number" Foreground="#FF0D467A" Margin="52,27,0,11" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <TextBlock x:Name="Name" Margin="52,9,0,0" Foreground="#FF0D467A" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold" Text="Feed Name"/>
+                        <TextBlock x:Name="Author" Foreground="#FF0D467A" Margin="52,27,0,11" HorizontalAlignment="Left" VerticalAlignment="Top" Text="@fuck.you"/>
                     </Grid>
                 </TabItem>
             </TabControl>

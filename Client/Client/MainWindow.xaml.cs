@@ -128,13 +128,21 @@ namespace Client
                 _ = MessageBox.Show("Longhorn Bluesky requires a monitor with a resolution of at least 1024x768 and 32-bit color.", "Installation Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 Application.Current.Shutdown();
             }
+            if ((RenderCapability.Tier >> 16) < 2)
+            {
+                MessageBoxResult test = MessageBox.Show("Your graphics card may not be optimal for Longhorn Bluesky. While Longhorn Bluesky may run, you may notice heavily degraded perfomance. Are you sure you want to continue?", "Performance Warning", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                if (test == MessageBoxResult.No)
+                {
+                    Application.Current.Shutdown();
+                }
+            }
             app = (App)Application.Current;
             app.ChangeTheme(new Uri("pack://application:,,,/PresentationFramework.Aero;V4.0.0.0;31bf3856ad364e35;component/themes/aero.normalcolor.xaml"));
             GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
             Login loginpage = new Login(this);
             WindowContent.Content = loginpage;
             HKCU_AddKey(@"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", "Client.exe", 11000);
-            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.2.2a");
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.2.2b");
             HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "isCanary", "true");
             if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "ALERT") == null)
             {
@@ -169,6 +177,14 @@ namespace Client
             if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "checkUpdates") == null)
             {
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "checkUpdates", "true");
+            }
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "fillLayout") == null)
+            {
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "fillLayout", "false");
+            }
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "showNavigation") == null)
+            {
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "showNavigation", "false");
             }
             if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_left") != null)
             {
@@ -222,7 +238,7 @@ namespace Client
                     if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "Ver") != latestVer)
                     {
                         isclientNotif = true;
-                        notificationOverlay.CreateNotification("A new Bluesky update is available", "Click here to install the updates", 0);
+                        notificationOverlay.CreateNotification("A new Bluesky update is available", "Version \"" + latestVer + "\" is available\nClick here to install the update", 0);
                         dispatcherTimer.Stop();
                         try
                         {
@@ -452,97 +468,88 @@ namespace Client
         public static extern IntPtr DwmIsCompositionEnabled(out bool pfEnabled);
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            IniFile myIni = new IniFile("config.ini");
-            if (myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "1" || myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "2")
+            MinHeight = 650;
+            try
             {
-                MinHeight = 650;
-                try
-                {
-                    // Obtain the window handle for WPF application
-                    IntPtr mainWindowPtr = new WindowInteropHelper(this).Handle;
-                    HwndSource mainWindowSrc = HwndSource.FromHwnd(mainWindowPtr);
-                    _ = DwmIsCompositionEnabled(out bool istheAero);
-                    isAero = istheAero;
-                    UpdateExtendedFrames();
-                    // Get System Dpi
-                    System.Drawing.Graphics desktop = System.Drawing.Graphics.FromHwnd(mainWindowPtr);
-                    float DesktopDpiX = desktop.DpiX;
-                    float DesktopDpiY = desktop.DpiY;
+                // Obtain the window handle for WPF application
+                IntPtr mainWindowPtr = new WindowInteropHelper(this).Handle;
+                HwndSource mainWindowSrc = HwndSource.FromHwnd(mainWindowPtr);
+                _ = DwmIsCompositionEnabled(out bool istheAero);
+                isAero = istheAero;
+                UpdateExtendedFrames();
+                // Get System Dpi
+                System.Drawing.Graphics desktop = System.Drawing.Graphics.FromHwnd(mainWindowPtr);
+                float DesktopDpiX = desktop.DpiX;
+                float DesktopDpiY = desktop.DpiY;
 
-                    // Set Margins
-                    MARGINS margins = new MARGINS
-                    {
-                        // Extend glass frame into client area
-                        // Note that the default desktop Dpi is 96dpi. The  margins are
-                        // adjusted for the system Dpi.
-                        cxLeftWidth = 0,
-                        cxRightWidth = 0,
-                        cyTopHeight = 0,
-                        cyBottomHeight = 0
-                    };
-
-                    int hr = DwmExtendFrameIntoClientArea(mainWindowSrc.Handle, ref margins);
-                    //
-                    if (hr < 0)
-                    {
-                        //DwmExtendFrameIntoClientArea Failed
-                    }
-                }
-                // If not Vista, paint background white.
-                catch (DllNotFoundException)
+                // Set Margins
+                MARGINS margins = new MARGINS
                 {
-                    Application.Current.MainWindow.Background = Brushes.White;
+                    // Extend glass frame into client area
+                    // Note that the default desktop Dpi is 96dpi. The  margins are
+                    // adjusted for the system Dpi.
+                    cxLeftWidth = 0,
+                    cxRightWidth = 0,
+                    cyTopHeight = 0,
+                    cyBottomHeight = 0
+                };
+
+                int hr = DwmExtendFrameIntoClientArea(mainWindowSrc.Handle, ref margins);
+                //
+                if (hr < 0)
+                {
+                    //DwmExtendFrameIntoClientArea Failed
                 }
+            }
+            // If not Vista, paint background white.
+            catch (DllNotFoundException)
+            {
+                Application.Current.MainWindow.Background = Brushes.White;
             }
             grid.LayoutUpdated += Grid_LayoutUpdated;
         }
 
         private void Grid_LayoutUpdated(object sender, EventArgs e)
         {
-            IniFile myIni = new IniFile("config.ini");
-            if (myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "1" || myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "2")
+            MinHeight = 650;
+            try
             {
-                MinHeight = 650;
-                try
-                {
-                    // Obtain the window handle for WPF application
-                    IntPtr mainWindowPtr = new WindowInteropHelper(this).Handle;
-                    HwndSource mainWindowSrc = HwndSource.FromHwnd(mainWindowPtr);
-                    _ = DwmIsCompositionEnabled(out bool istheAero);
-                    isAero = istheAero;
-                    UpdateExtendedFrames();
-                    // Get System Dpi
-                    System.Drawing.Graphics desktop = System.Drawing.Graphics.FromHwnd(mainWindowPtr);
-                    float DesktopDpiX = desktop.DpiX;
-                    float DesktopDpiY = desktop.DpiY;
+                // Obtain the window handle for WPF application
+                IntPtr mainWindowPtr = new WindowInteropHelper(this).Handle;
+                HwndSource mainWindowSrc = HwndSource.FromHwnd(mainWindowPtr);
+                _ = DwmIsCompositionEnabled(out bool istheAero);
+                isAero = istheAero;
+                UpdateExtendedFrames();
+                // Get System Dpi
+                System.Drawing.Graphics desktop = System.Drawing.Graphics.FromHwnd(mainWindowPtr);
+                float DesktopDpiX = desktop.DpiX;
+                float DesktopDpiY = desktop.DpiY;
 
-                    // Set Margins
-                    MARGINS margins = new MARGINS
-                    {
-                        // Extend glass frame into client area
-                        // Note that the default desktop Dpi is 96dpi. The  margins are
-                        // adjusted for the system Dpi.
-                        cxLeftWidth = 0,
-                        cxRightWidth = 0,
-                        cyTopHeight = Convert.ToInt32(((int)topBar.ActualHeight) * (DesktopDpiX / 96)),
-                        cyBottomHeight = 0
-                    };
-
-                    int hr = DwmExtendFrameIntoClientArea(mainWindowSrc.Handle, ref margins);
-                    //
-                    if (hr < 0)
-                    {
-                        //DwmExtendFrameIntoClientArea Failed
-                    }
-                }
-                // If not Vista, paint background white.
-                catch (DllNotFoundException)
+                // Set Margins
+                MARGINS margins = new MARGINS
                 {
-                    Application.Current.MainWindow.Background = Brushes.White;
+                    // Extend glass frame into client area
+                    // Note that the default desktop Dpi is 96dpi. The  margins are
+                    // adjusted for the system Dpi.
+                    cxLeftWidth = 0,
+                    cxRightWidth = 0,
+                    cyTopHeight = Convert.ToInt32(((int)topBar.ActualHeight) * (DesktopDpiX / 96)),
+                    cyBottomHeight = 0
+                };
+
+                int hr = DwmExtendFrameIntoClientArea(mainWindowSrc.Handle, ref margins);
+                //
+                if (hr < 0)
+                {
+                    //DwmExtendFrameIntoClientArea Failed
                 }
             }
+            // If not Vista, paint background white.
+            catch (DllNotFoundException)
+            {
+                Application.Current.MainWindow.Background = Brushes.White;
+            }
         }
-
         private void UpdateExtendedFrames()
         {
             IntPtr mainWindowPtr = new WindowInteropHelper(this).Handle;
@@ -572,6 +579,69 @@ namespace Client
         private void TextBox_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             stackPanel.Visibility = Visibility.Visible;
+        }
+
+        private void Search_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Search_BG.Opacity = 1;
+            dashboard.NavigateToExplore();
+        }
+
+        private void CreatePost_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            CreatePost_BG.Opacity = 1;
+            dashboard.CreatePostRaw();
+        }
+
+        private void Notif_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            dashboard.NavigateToNotifications();
+            Notification.Source = new BitmapImage(new Uri("pack://application:,,,/res/StarButtonHover.png"));
+        }
+
+        private void Search_BG_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Search_BG.Opacity = 0;
+        }
+
+        private void Search_BG_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Search_BG.Opacity = 1;
+        }
+
+        private void CreatePost_BG_MouseLeave(object sender, MouseEventArgs e)
+        {
+            CreatePost_BG.Opacity = 0;
+        }
+
+        private void CreatePost_BG_MouseEnter(object sender, MouseEventArgs e)
+        {
+            CreatePost_BG.Opacity = 1;
+        }
+
+        private void Search_BG_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Search_BG.Opacity = 0.5;
+        }
+
+        private void CreatePost_BG_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            CreatePost_BG.Opacity = 0.5;
+        }
+
+        private void Image_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Notification.Source = new BitmapImage(new Uri("pack://application:,,,/res/StarButtonHover.png"));
+        }
+
+        private void Image_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Notification.Source = new BitmapImage(new Uri("pack://application:,,,/res/StarButtonNormal.png"));
+        }
+
+        private void Image_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Notification.Source = new BitmapImage(new Uri("pack://application:,,,/res/StarButtonPressed.png"));
         }
     }
 }

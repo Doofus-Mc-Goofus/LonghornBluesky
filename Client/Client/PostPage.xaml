@@ -6,7 +6,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="540"
       Title="Post" UseLayoutRounding="True" Unloaded="Page_Unloaded">
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI">
         <Grid Margin="20">
             <Rectangle RadiusX="3" RadiusY="3" Stroke="#54E0F6FF" Height="{Binding ActualHeight, ElementName=PostStack, Mode=OneWay}" VerticalAlignment="Top">
                 <Rectangle.Effect>

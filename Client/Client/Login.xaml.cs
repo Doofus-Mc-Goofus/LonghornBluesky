@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
-using System.Net.Sockets;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -28,7 +27,7 @@ namespace Client
             LoginPage.Visibility = Visibility.Visible;
             WelcomePage.Visibility = Visibility.Collapsed;
             mw = mainWindow;
-            PassBoxButton.MouseUp += (s, ee) => _ = SignIntoBlueSky(UserBox.Text, PassBox.Password, HostProv.Text);
+            PassBoxButton.MouseUp += (s, ee) => SignIntoBlueSky(UserBox.Text, PassBox.Password, HostProv.Text);
             if (File.Exists("config.ini"))
             {
                 IniFile myIni = new IniFile("config.ini");
@@ -48,10 +47,10 @@ namespace Client
             }
             if (mainWindow.HKCU_GetString(@"SOFTWARE\LonghornBluesky", "Remember") == "true")
             {
-                _ = SignIntoBlueSky(mainWindow.HKCU_GetString(@"SOFTWARE\LonghornBluesky", "RememberUsername"), mainWindow.HKCU_GetString(@"SOFTWARE\LonghornBluesky", "RememberPassword"), mainWindow.HKCU_GetString(@"SOFTWARE\LonghornBluesky", "RememberHost"));
+                SignIntoBlueSky(mainWindow.HKCU_GetString(@"SOFTWARE\LonghornBluesky", "RememberUsername"), mainWindow.HKCU_GetString(@"SOFTWARE\LonghornBluesky", "RememberPassword"), mainWindow.HKCU_GetString(@"SOFTWARE\LonghornBluesky", "RememberHost"));
             }
         }
-        private async Task SignIntoBlueSky(string identifier, string password, string provider)
+        private async void SignIntoBlueSky(string identifier, string password, string provider)
         {
             SupportText.Visibility = Visibility.Collapsed;
             PassBoxButton.Visibility = Visibility.Collapsed;
@@ -71,6 +70,14 @@ namespace Client
                 return;
             }
             WelcomeText.Content = "Connecting to Bluesky...";
+            bool isConnected = await IsConnectedToInternet();
+            if (!isConnected)
+            {
+                ShowPageAgain();
+                Error.Visibility = Visibility.Visible;
+                Error.Content = "Unable to connect to the server";
+                return;
+            }
             ATProtocol atProtocol = new ATProtocolBuilder()
             .WithLogger(new DebugLoggerProvider().CreateLogger("FishyFlip"))
             .WithInstanceUrl(new Uri(HostProv.Text))
@@ -250,8 +257,28 @@ namespace Client
             PassBoxButton.MouseLeave -= PassBoxButton_MouseLeave;
             PassBoxButton.MouseDown -= PassBoxButton_MouseDown;
             PassBoxButton.MouseUp -= PassBoxButton_MouseLeave;
-            PassBoxButton.MouseUp -= (s, ee) => _ = SignIntoBlueSky(UserBox.Text, PassBox.Password, HostProv.Text);
+            PassBoxButton.MouseUp -= (s, ee) => SignIntoBlueSky(UserBox.Text, PassBox.Password, HostProv.Text);
             GC.SuppressFinalize(this);
+        }
+        public static async Task<bool> IsConnectedToInternet()
+        {
+            if (!NetworkInterface.GetIsNetworkAvailable())
+            {
+                return false;
+            }
+
+            try
+            {
+                using (Ping ping = new Ping())
+                {
+                    PingReply reply = await ping.SendPingAsync("www.google.com", 5);
+                    return reply.Status == IPStatus.Success;
+                }
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

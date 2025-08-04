@@ -26,7 +26,7 @@ namespace Client
                 case "app.bsky.feed.post":
                     Description.Text = "You have chosen to submit a report regarding the post \"" + data + "\". Please enter the details below and submit the report to us.";
                     break;
-                case "app.bsky.actor.profile":
+                case "app.bsky.actor.feed":
                     Description.Text = "You have chosen to submit a report regarding the user \"" + data + "\". Please enter the details below and submit the report to us.";
                     break;
                 default:

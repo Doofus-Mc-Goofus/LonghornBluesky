@@ -4,7 +4,6 @@ using System.IO;
 using System.Media;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -385,7 +384,7 @@ namespace Client
                     bitmapImage.CacheOption = BitmapCacheOption.OnDemand;
                     bitmapImage.UriSource = new Uri(post["post"]["embed"]["thumbnail"].ToString());
                     bitmapImage.EndInit();
-                    System.Windows.Controls.Image image1 = new System.Windows.Controls.Image
+                    Image image1 = new Image
                     {
                         Source = bitmapImage,
                         Margin = new Thickness(30, 5, 30, 5)
@@ -394,7 +393,14 @@ namespace Client
                     _ = grid.Children.Add(image1);
                     System.Windows.Shapes.Rectangle rect = new System.Windows.Shapes.Rectangle
                     {
-                        Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/res/VideoFrameWide.png")))
+                        Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/res/VideoFrameWide.png"))),
+                        Cursor = Cursors.Hand,
+                        ToolTip = "Play Video"
+                    };
+                    rect.MouseUp += (s, ee) =>
+                    {
+                        MediaPlayer media = new MediaPlayer("fuck", new Uri(post["post"]["embed"]["playlist"].ToString()));
+                        media.Show();
                     };
                     DropShadowEffect shadow = new DropShadowEffect
                     {
@@ -404,6 +410,7 @@ namespace Client
                         Direction = 315
                     };
                     rect.Effect = shadow;
+                    RenderOptions.SetBitmapScalingMode(image1, BitmapScalingMode.Fant);
                     _ = grid.Children.Add(rect);
                     _ = Images.Children.Add(grid);
                     if (bitmapImage.CanFreeze)
@@ -516,11 +523,12 @@ namespace Client
                             // });
                             bitmapImages.Add(jArray[i]["fullsize"].ToString());
                             altTexts.Add(jArray[i]["alt"].ToString());
-                            System.Windows.Controls.Image image1 = new System.Windows.Controls.Image
+                            Image image1 = new Image
                             {
                                 Source = bitmapImage,
                                 Margin = new Thickness(5)
                             };
+                            RenderOptions.SetBitmapScalingMode(image1, BitmapScalingMode.Fant);
                             _ = grid.Children.Add(image1);
                             _ = Images.Children.Add(grid);
                             if (bitmapImage.CanFreeze)
@@ -538,7 +546,6 @@ namespace Client
                         HttpResponseMessage playlistraw = await httpClient.GetAsync(post["post"]["embed"]["media"]["playlist"].ToString());
                         string playlist = await playlistraw.Content.ReadAsStringAsync();
                         MasterPlaylist masterPlaylist = MasterPlaylist.LoadFromText(playlist);
-                        // This code should typically give us the highest resolution video possible. IDC if it's dumb, what matters is that it works.
                         string videoPlaylistUri = masterPlaylist.Streams[masterPlaylist.Streams.Count - 1].Uri;
                         HttpResponseMessage videoplaylistraw = await httpClient.GetAsync(post["post"]["embed"]["media"]["playlist"].ToString() + @"/../" + videoPlaylistUri);
                         string videoplaylist = await videoplaylistraw.Content.ReadAsStringAsync();
@@ -578,7 +585,14 @@ namespace Client
                         _ = grid.Children.Add(image1);
                         System.Windows.Shapes.Rectangle rect = new System.Windows.Shapes.Rectangle
                         {
-                            Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/res/VideoFrameWide.png")))
+                            Fill = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/res/VideoFrameWide.png"))),
+                            Cursor = Cursors.Hand,
+                            ToolTip = "Play Video"
+                        };
+                        rect.MouseUp += (s, ee) =>
+                        {
+                            MediaPlayer media = new MediaPlayer("fuck", new Uri(post["post"]["embed"]["media"]["playlist"].ToString()));
+                            media.Show();
                         };
                         DropShadowEffect shadow = new DropShadowEffect
                         {

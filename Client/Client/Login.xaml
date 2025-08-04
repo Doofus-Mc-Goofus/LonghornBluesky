@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="800"
-      Title="Login" UseLayoutRounding="True" Unloaded="Page_Unloaded">
+      Title="Login" UseLayoutRounding="True" Unloaded="Page_Unloaded" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI">
     <Grid>
         <Grid.Background>
             <RadialGradientBrush>
@@ -36,7 +36,7 @@
                 <TextBox x:Name="HostProv" Width="500" Text="https://bsky.social" Foreground="Gray" LostKeyboardFocus="HostProv_LostKeyboardFocus" GotKeyboardFocus="HostProv_GotKeyboardFocus" Margin="0,0,0,5"/>
             </StackPanel>
             <CheckBox x:Name="RememberCheckBox" Content="Remember me" Margin="0,0,0,5"/>
-            <Label x:Name="Error" Content="Error message." Padding="0" Margin="0,0,0,5" Foreground="#FFB33C3C" FontFamily="Segoe UI Semibold" Visibility="Collapsed"/>
+            <Label x:Name="Error" Content="Error message." Padding="0" Margin="0,0,0,5" Foreground="#FFB33C3C" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold" Visibility="Collapsed"/>
             <StackPanel Orientation="Horizontal">
                 <TextBlock x:Name="CreateAccount" Text="Create account..." Foreground="{DynamicResource ö}" Margin="0,0,20,0" Cursor="Hand" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Visibility="Collapsed"/>
                 <TextBlock x:Name="LoginGuest" Text="Login as guest..." Foreground="{DynamicResource ö}" Margin="0,0,20,0" Cursor="Hand" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Visibility="Collapsed"/>
@@ -46,7 +46,7 @@
         <TextBlock x:Name="SupportText" Text="Support" Foreground="{DynamicResource ö}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,15" Cursor="Hand" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" MouseUp="Support_Click" Visibility="Collapsed"/>
         <Image x:Name="PassBoxButton" Source="/res/signinbutton-1.png" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="530,107,0,0" MouseDown="PassBoxButton_MouseDown" MouseEnter="PassBoxButton_MouseEnter" MouseLeave="PassBoxButton_MouseLeave" MouseUp="PassBoxButton_MouseLeave" Visibility="Collapsed"/>
         <Grid x:Name="WelcomePage" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Label x:Name="Welcome" Content="Welcome" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="Segoe UI Semilight"/>
+            <Label x:Name="Welcome" Content="Welcome" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="/SegoeUI7/segoeuisl_0.ttf#Segoe UI Semilight"/>
             <ProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,95,0,0" Width="500" Height="20" IsIndeterminate="True" Background="#FFB1BED2" Foreground="#FF94C832"/>
             <Label x:Name="WelcomeText" Padding="0" Content="Please wait..." Margin="0,140,0,0"/>
         </Grid>

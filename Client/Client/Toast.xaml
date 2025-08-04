@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="130" d:DesignWidth="240" UseLayoutRounding="True">
+             d:DesignHeight="130" d:DesignWidth="240" UseLayoutRounding="True" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI">
     <Grid MinHeight="120" Margin="0,10,0,0" MaxWidth="240">
         <Rectangle RadiusX="3" RadiusY="3" Stroke="#54E0F6FF" MouseUp="MouseUp">
             <Rectangle.Effect>

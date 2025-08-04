@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Photo Viewer" Height="360" Width="400" Background="Transparent" UseLayoutRounding="True" MinWidth="400" MinHeight="360" Icon="/res/PhotoViewerIcon.png" Unloaded="Window_Unloaded" KeyUp="Window_KeyUp" Loaded="Window_Loaded">
+        Title="Photo Viewer" Height="360" Width="400" Background="Transparent" UseLayoutRounding="True" MinWidth="400" MinHeight="360" Icon="/res/PhotoViewerIcon.png" Unloaded="Window_Unloaded" KeyUp="Window_KeyUp" Loaded="Window_Loaded" Activated="Window_Focus" Deactivated="Window_Focus" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI">
     <Grid>
         <Label x:Name="Error" Content="Loading..." HorizontalAlignment="Center" Foreground="White" Margin="0,0,0,60" VerticalContentAlignment="Center"/>
         <Image x:Name="TheImage" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Hidden" Source="/res/usertile.png" SizeChanged="TheImage_SizeChanged"/>

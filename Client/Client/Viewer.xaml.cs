@@ -430,5 +430,10 @@ namespace Client
             HwndSource mainWindowSrc = HwndSource.FromHwnd(mainWindowPtr);
             mainWindowSrc.CompositionTarget.BackgroundColor = isAero ? Color.FromArgb(0, 185, 209, 234) : IsActive ? Color.FromArgb(255, 185, 209, 234) : Color.FromArgb(255, 215, 228, 242);
         }
+
+        private void Window_Focus(object sender, EventArgs e)
+        {
+            UpdateExtendedFrames();
+        }
     }
 }

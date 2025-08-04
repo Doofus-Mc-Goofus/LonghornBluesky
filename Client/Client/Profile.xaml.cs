@@ -35,6 +35,7 @@ namespace Client
         private bool isBlocking = false;
         private string actualBio;
         private readonly List<Post> posts = new List<Post>();
+        private readonly List<Feed> feeds = new List<Feed>();
         private readonly List<ScrollViewer> scrollViewers = new List<ScrollViewer>();
 
         public Profile(ATDid Uri, ATProtocol aTProtocol, Session session, Dashboard dashboard)
@@ -159,29 +160,49 @@ namespace Client
                         feedlist = JArray.Parse(JObject.Parse(postsresult.Value.ToString())["feed"].ToString());
                         postresultparse = JObject.Parse(postsresult.Value.ToString());
                     }
+                    else if (numb == 5 && cursors[numb] != "fish")
+                    {
+                        Result<GetActorFeedsOutput> test = await aTProtocol.GetActorFeedsAsync(ATDid, 10, cursors[numb]);
+                        feedlist = JArray.Parse(JObject.Parse(test.Value.ToString())["feeds"].ToString());
+                        postresultparse = JObject.Parse(test.Value.ToString());
+                    }
                     else
                     {
 
                     }
-                    for (int i = 0; i < feedlist.Count; i++)
+                    if (numb == 5 && cursors[numb] != "fish")
                     {
-                        JObject postdata = JObject.Parse(feedlist[i].ToString());
-                        Post post = new Post(postdata, dashboard, aTProtocol, false, false, false);
-                        _ = stackPanel.Children.Add(post);
-                        posts.Add(post);
-                    }
-                    if (feedlist.Count > 0)
-                    {
-                        DateTime dateTime = feedlist[feedlist.Count - 1]["reason"] != null
-                        ? (DateTime)feedlist[feedlist.Count - 1]["reason"]["indexedAt"]
-                        : (DateTime)feedlist[feedlist.Count - 1]["post"]["record"]["createdAt"];
-                        if (numb <= 3)
+                        for (int i = 0; i < feedlist.Count; i++)
                         {
-                            cursors[numb] = dateTime.ToString("yyyy-MM-dd") + "T" + dateTime.ToString("HH:mm:ss") + "Z";
+                            JObject postdata = JObject.Parse(feedlist[i].ToString());
+                            Feed feed = new Feed(postdata, dashboard, aTProtocol);
+                            _ = stackPanel.Children.Add(feed);
+                            feeds.Add(feed);
                         }
-                        else if (numb == 4)
+                        cursors[numb] = postresultparse["cursor"] != null ? postresultparse["cursor"].ToString() : "fish";
+                    }
+                    else
+                    {
+                        for (int i = 0; i < feedlist.Count; i++)
                         {
-                            cursors[numb] = postresultparse["cursor"].ToString();
+                            JObject postdata = JObject.Parse(feedlist[i].ToString());
+                            Post post = new Post(postdata, dashboard, aTProtocol, false, false, false);
+                            _ = stackPanel.Children.Add(post);
+                            posts.Add(post);
+                        }
+                        if (feedlist.Count > 0)
+                        {
+                            DateTime dateTime = feedlist[feedlist.Count - 1]["reason"] != null
+                            ? (DateTime)feedlist[feedlist.Count - 1]["reason"]["indexedAt"]
+                            : (DateTime)feedlist[feedlist.Count - 1]["post"]["record"]["createdAt"];
+                            if (numb <= 3)
+                            {
+                                cursors[numb] = dateTime.ToString("yyyy-MM-dd") + "T" + dateTime.ToString("HH:mm:ss") + "Z";
+                            }
+                            else if (numb == 4)
+                            {
+                                cursors[numb] = postresultparse["cursor"].ToString();
+                            }
                         }
                     }
                 }
@@ -237,7 +258,7 @@ namespace Client
 
         private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            if (((ScrollViewer)sender).ScrollableHeight - ((ScrollViewer)sender).VerticalOffset <= 320 && FeedTabControl.SelectedIndex <= 4)
+            if (((ScrollViewer)sender).ScrollableHeight - ((ScrollViewer)sender).VerticalOffset <= 320 && FeedTabControl.SelectedIndex <= 5)
             {
                 _ = LoadPosts((StackPanel)((TabItem)FeedTabControl.SelectedItem).Content);
             }
@@ -430,7 +451,7 @@ namespace Client
         private void CopyLink_Click(object sender, RoutedEventArgs e)
         {
             System.Windows.Forms.Clipboard.SetText("at://" + ATDid.ToString());
-            _ = MessageBox.Show("Copied link to profile", "", MessageBoxButton.OK, MessageBoxImage.Information);
+            _ = MessageBox.Show("Copied link to feed", "", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

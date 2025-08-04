@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="540"
-      Title="fuf" UseLayoutRounding="True" Unloaded="Page_Unloaded">
+      Title="fuf" UseLayoutRounding="True" Unloaded="Page_Unloaded" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI">
     <ScrollViewer VerticalScrollBarVisibility="Auto" ScrollChanged="ScrollViewer_ScrollChanged">
         <Grid Margin="20">
             <Rectangle RadiusX="3" RadiusY="3" Stroke="#54E0F6FF" Height="{Binding ActualHeight, ElementName=PostGrid, Mode=OneWay}" VerticalAlignment="Top">
@@ -23,7 +23,7 @@
                 <TabItem Visibility="Collapsed">
                     <Grid x:Name="PostGrid" Width="{Binding ActualWidth, ElementName=PostStack, Mode=OneWay}" VerticalAlignment="Top">
                         <Image x:Name="Back" Source="/res/BackNormal.png" Stretch="None" HorizontalAlignment="Left" Margin="5,0,0,0" MouseDown="Back_MouseDown" MouseEnter="Back_MouseEnter" MouseLeave="Back_MouseLeave" MouseUp="Back_MouseUp"/>
-                        <TextBlock x:Name="Username" Margin="52,9,0,0" Foreground="#FF0D467A" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Segoe UI Semibold"/>
+                        <TextBlock x:Name="Username" Margin="52,9,0,0" Foreground="#FF0D467A" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold"/>
                         <TextBlock x:Name="Number" Foreground="#FF0D467A" Margin="52,27,0,11" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                     </Grid>
                 </TabItem>

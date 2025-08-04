@@ -37,7 +37,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>
     </DefineConstants>
@@ -81,11 +81,23 @@
     <Reference Include="Duende.IdentityModel.OidcClient.Extensions, Version=6.0.0.0, Culture=neutral, PublicKeyToken=e7877f4675df049f, processorArchitecture=MSIL">
       <HintPath>..\packages\Duende.IdentityModel.OidcClient.Extensions.6.0.1\lib\netstandard2.0\Duende.IdentityModel.OidcClient.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="ffme.win, Version=4.4.350.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FFME.Windows.4.4.350\lib\net461\ffme.win.dll</HintPath>
+    </Reference>
+    <Reference Include="FFmpeg.AutoGen, Version=4.4.0.0, Culture=neutral, PublicKeyToken=9b7632533a381715, processorArchitecture=MSIL">
+      <HintPath>..\packages\FFmpeg.AutoGen.4.4.0\lib\net472\FFmpeg.AutoGen.dll</HintPath>
+    </Reference>
+    <Reference Include="FFMpegCore, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FFMpegCore.5.2.0\lib\netstandard2.0\FFMpegCore.dll</HintPath>
+    </Reference>
     <Reference Include="FishyFlip, Version=3.11.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FishyFlip.3.11.0-alpha.3\lib\netstandard2.0\FishyFlip.dll</HintPath>
     </Reference>
     <Reference Include="Google.Protobuf, Version=3.26.1.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Protobuf.3.26.1\lib\net45\Google.Protobuf.dll</HintPath>
+    </Reference>
+    <Reference Include="Instances, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Instances.3.0.1\lib\netstandard2.0\Instances.dll</HintPath>
     </Reference>
     <Reference Include="IpfsShipyard.Ipfs.Core, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\IpfsShipyard.Ipfs.Core.0.7.0\lib\netstandard2.0\IpfsShipyard.Ipfs.Core.dll</HintPath>
@@ -307,6 +319,7 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -353,6 +366,12 @@
     <Compile Include="Explore.xaml.cs">
       <DependentUpon>Explore.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Feed.xaml.cs">
+      <DependentUpon>Feed.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FeedPage.xaml.cs">
+      <DependentUpon>FeedPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FollowPage.xaml.cs">
       <DependentUpon>FollowPage.xaml</DependentUpon>
     </Compile>
@@ -363,6 +382,9 @@
       <DependentUpon>Home.xaml</DependentUpon>
     </Compile>
     <Compile Include="IniFile.cs" />
+    <Compile Include="MediaPlayer.xaml.cs">
+      <DependentUpon>MediaPlayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NotificationOverlay.xaml.cs">
       <DependentUpon>NotificationOverlay.xaml</DependentUpon>
     </Compile>
@@ -394,6 +416,9 @@
     <Compile Include="Toast.xaml.cs">
       <DependentUpon>Toast.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Trending.xaml.cs">
+      <DependentUpon>Trending.xaml</DependentUpon>
+    </Compile>
     <Compile Include="User.xaml.cs">
       <DependentUpon>User.xaml</DependentUpon>
     </Compile>
@@ -412,6 +437,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Explore.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Feed.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FeedPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -446,6 +479,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MediaPlayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="NotificationOverlay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -483,6 +520,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Toast.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Trending.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -526,6 +567,10 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Resource Include="SegoeUI7\segoeuii_0.ttf" />
+    <Resource Include="SegoeUI7\segoeuisl_0.ttf" />
+    <Resource Include="SegoeUI7\segoeui_0.ttf" />
+    <Resource Include="SegoeUI7\seguisb_0.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -627,6 +672,7 @@
     <Resource Include="res\MoreIcon.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="README.md" />
     <None Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -688,8 +734,46 @@
     <Resource Include="res\Bitmap602.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="res\PlayerBarEmptyEdge.png" />
+    <Resource Include="res\PlayerBarEmptyFill.png" />
+    <Resource Include="res\PlayerBarFullEdge.png" />
+    <Resource Include="res\PlayerBarFullFill.png" />
+    <Resource Include="res\MediaPlayerBG.png" />
+    <Resource Include="res\Repeat0.png" />
+    <Resource Include="res\Repeat1.png" />
+    <Resource Include="res\Stop0.png" />
+    <Resource Include="res\Stop1.png" />
+    <Resource Include="res\VolumeSelectHover.png" />
+    <Resource Include="res\VolumeSelectNormal.png" />
+    <Resource Include="res\VolumeSelectPressed.png" />
+    <Resource Include="res\PlayerBarEmpty.png" />
+    <Resource Include="res\PlayerBarFull.png" />
+    <Resource Include="res\PlayerKnobHover.png" />
+    <Resource Include="res\PlayerKnobNormal.png" />
+    <Resource Include="res\PlayerKnobPressed.png" />
+    <Resource Include="res\Volume0.png" />
+    <Resource Include="res\Volume1.png" />
+    <Resource Include="res\Volume2.png" />
+    <Resource Include="res\Volume3.png" />
+    <Resource Include="res\Volume4.png" />
+    <Resource Include="res\VolumeKnobHover.png" />
+    <Resource Include="res\VolumeKnobNormal.png" />
+    <Resource Include="res\VolumeKnobPressed.png" />
+    <Resource Include="res\MediaPauseDisabled.png" />
+    <Resource Include="res\MediaPauseHover.png" />
+    <Resource Include="res\MediaPauseNormal.png" />
+    <Resource Include="res\MediaPausePressed.png" />
+    <Resource Include="res\MediaPlayDisabled.png" />
+    <Resource Include="res\MediaPlayHover.png" />
+    <Resource Include="res\MediaPlayNormal.png" />
+    <Resource Include="res\MediaPlayPressed.png" />
+    <Resource Include="res\FeedIcon.png" />
+    <Resource Include="res\StarButtonHover.png" />
+    <Resource Include="res\StarButtonPressed.png" />
+    <Resource Include="res\CreatePostIcon.png" />
+    <Resource Include="res\SearchIconLarge.png" />
     <Resource Include="res\ReplyIconGray.png" />
-    <Resource Include="res\StarButton.png" />
+    <Resource Include="res\StarButtonNormal.png" />
     <Resource Include="res\PathArrow.png" />
     <Resource Include="res\SearchSmall.png" />
     <Resource Include="res\ViewerBorderThing.png" />

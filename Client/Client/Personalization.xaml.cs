@@ -14,11 +14,13 @@ namespace Client
     public partial class Personalization : Page
     {
         private readonly Settings settings;
+        private readonly Dashboard dashboard;
         private readonly OpenFileDialog dialog = new OpenFileDialog();
-        public Personalization(Settings settings)
+        public Personalization(Settings settings, Dashboard dashboard)
         {
             InitializeComponent();
             this.settings = settings;
+            this.dashboard = dashboard;
             dialog.Filter = "WAV Files|*.wav"; // Filter files by extension
             IniFile myIni = new IniFile("config.ini");
             if (File.Exists("config.ini") && myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "2")
@@ -66,6 +68,10 @@ namespace Client
             HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "DELETE", DELETEBOX.Tag);
             HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "LOGON", LOGONBOX.Tag);
             HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "LOGOFF", LOGOFFBOX.Tag);
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "showMenu", showMenu.IsChecked);
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "showNavigation", showNavigation.IsChecked);
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "fillLayout", fillLayout.IsChecked);
+            dashboard.UpdateDashboardLayout();
         }
         public void HKCU_AddKey(string path, string key, object value)
         {
@@ -131,6 +137,9 @@ namespace Client
             string LOGOFF = HKCU_GetString(@"SOFTWARE\LonghornBluesky", "LOGOFF");
             ((ComboBoxItem)LOGOFFBOX.Items[0]).Content = ConvertToProperName(Path.GetFileNameWithoutExtension(LOGOFF));
             LOGOFFBOX.Tag = LOGOFF;
+            showMenu.IsChecked = bool.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "showMenu"));
+            showNavigation.IsChecked = bool.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "showNavigation"));
+            fillLayout.IsChecked = bool.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "fillLayout"));
         }
         private string OpenWAV()
         {
