@@ -14,29 +14,12 @@
         </Grid.Background>
         <Image x:Name="BG" Source="BG.png" Opacity="0.33" Focusable="True" Stretch="Fill" MouseDown="BG_MouseDown"/>
         <Grid x:Name="SelectPage">
-            <Label Content="Longhorn Bluesky Setup" FontSize="20" Margin="15,50,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" Foreground="#FF0D467A" MouseDown="BG_MouseDown"/>
-            <TextBlock Margin="15,80,15,0" Text="To continue, please read the notices and forewarnings below." HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" MouseDown="BG_MouseDown"/>
-            <RichTextBox HorizontalAlignment="Center" VerticalAlignment="Top" Margin="15,115,15,70" IsReadOnly="True" VerticalScrollBarVisibility="Auto" Padding="1,5,1,0">
-                <FlowDocument>
-                    <Paragraph>Please read this information carefully before you install Longhorn Bluesky.
-                    </Paragraph>
-                    <Paragraph>
-                        <Bold>1. Scam Warning</Bold>
-                    </Paragraph>
-                    <Paragraph>Longhorn Bluesky should not be sold by itself, or as part of a bundle. If you have paid for this software, you have been scammed and should immediately ask for your money back. Longhorn Bluesky is, and will always be, free and open-source software.</Paragraph>
-                    <Paragraph>
-                        <Bold>2. Pre-release Warning</Bold>
-                    </Paragraph>
-                    <Paragraph>
-                        Longhorn Bluesky is pre-release software. As such, you may run across issues while using it. If you encounter any errors or inconsistencies, please report them to our GitHub page.
-                    </Paragraph>
-                    <Paragraph>
-                        <Bold>3. Licenses</Bold>
-                    </Paragraph>
-                    <Paragraph>The Longhorn Bluesky Installer and Client are all provided under the GPL v3 license. For more information about the GPL v3 license, visit https://www.gnu.org/licenses/gpl-3.0.html.</Paragraph>
-                    <Paragraph Padding="0,0,0,6">THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</Paragraph>
-                </FlowDocument>
-            </RichTextBox>
+            <Label Content="Choose the components you want to install" FontSize="20" Margin="15,50,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" Foreground="#FF0D467A" MouseDown="BG_MouseDown"/>
+            <TextBlock Margin="15,80,15,0" Text="Hover on each component name for details" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" MouseDown="BG_MouseDown"/>
+            <CheckBox Margin="15,104,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Longhorn Bluesky" ToolTip="This cannot be disabled" IsChecked="True" Click="CheckBox_Click" Foreground="#FF404040"/>
+            <CheckBox x:Name="FFmpegCheck" Margin="15,124,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="FFmpeg for Longhorn Bluesky" ToolTip="Allows you to play videos on the Longhorn Bluesky client"/>
+            <CheckBox x:Name="DesktopShortcutCheck" Margin="15,144,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Create desktop shortcut" ToolTip="Creates a desktop shortcut"/>
+            <CheckBox x:Name="StartShortcutCheck" Margin="15,164,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Create start menu item" ToolTip="Creates a start menu item"/>
             <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Continue" Padding="0,1,0,1" Width="80" Click="Continue_Click" Margin="0,0,103,15"/>
             <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Cancel" Padding="0,1,0,1" Width="80" Click="CancelNormal_Click" Margin="0,0,15,15"/>
         </Grid>
@@ -54,8 +37,7 @@
         <Grid x:Name="Finish" Visibility="Collapsed">
             <Label Content="Longhorn Bluesky Setup" FontSize="20" Margin="15,50,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" Foreground="#FF0D467A"/>
             <TextBlock x:Name="TexBex" Margin="15,80,15,0" Text="Longhorn Bluesky has succesfully installed. Click &quot;Finish&quot; to exit setup." HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap"/>
-            <CheckBox x:Name="DesktopShortcutCheck" Margin="15,104,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Create desktop shortcut"/>
-            <CheckBox x:Name="RunCheck" Margin="15,125,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Run Longhorn Bluesky after finishing setup"/>
+            <CheckBox x:Name="RunCheck" Margin="15,104,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Run Longhorn Bluesky after finishing setup"/>
             <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Finish" Padding="0,1,0,1" Width="80" Click="Finish_Click" Margin="0,0,15,15"/>
         </Grid>
     </Grid>

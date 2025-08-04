@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -8,6 +7,7 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Resources;
 using Microsoft.Win32;
 
@@ -19,6 +19,8 @@ namespace Installer
     public partial class MainWindow : Window
     {
         private readonly App app = (App)Application.Current;
+        private byte progress = 0;
+        private byte total = 4;
         private bool isDispose = false;
         private void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
@@ -80,14 +82,6 @@ namespace Installer
             {
 
             }
-            try
-            {
-                list += "\n\nClient Version: " + HKCU_GetString(@"SOFTWARE\LonghornBluesky", "Ver");
-            }
-            catch
-            {
-
-            }
             string message = "A fatal error has occurred.\n\n" + e.Exception.Message;
             _ = MessageBox.Show(message + "\n\nThe client will now create a log and close.", "Fatal Error", MessageBoxButton.OK, MessageBoxImage.Error);
             using (FileStream fs = File.Create(DateTime.Now.Ticks + ".log"))
@@ -114,11 +108,6 @@ namespace Installer
                 Dispatcher.UnhandledException += OnDispatcherUnhandledException;
             }
             InitializeComponent();
-            if (Environment.OSVersion.Version.Major + Environment.OSVersion.Version.Minor < 8)
-            {
-                _ = MessageBox.Show("Longhorn Bluesky is not compatible with this version of Windows. You will need Windows 8 or newer to install this program.", "Installation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                Application.Current.Shutdown();
-            }
             if (SystemParameters.PrimaryScreenHeight < 768 || SystemParameters.PrimaryScreenWidth < 1024 || System.Windows.Forms.Screen.PrimaryScreen.BitsPerPixel < 32)
             {
                 _ = MessageBox.Show("Longhorn Bluesky requires a monitor with a resolution of at least 1024x768 and 32-bit color.", "Installation Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -170,6 +159,10 @@ namespace Installer
         }
         private async Task InstallLHBSKY()
         {
+            if (FFmpegCheck.IsChecked == true)
+            {
+                total += 2;
+            }
             bool isConnected = await IsConnectedToInternet();
             if (isConnected)
             {
@@ -183,7 +176,8 @@ namespace Installer
 
                     // Downloads that file
                     DownloadText.Content = "Downloading Longhorn Bluesky...";
-                    ProgressBar.Value = 25;
+                    progress++;
+                    ProgressBar.Value = progress / (double)total * 100;
                     string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "..\\client.package");
                     Stream stream = await httpClient.GetStreamAsync(latestVer);
                     FileStream fileStream = new FileStream(Path.Combine(Path.GetDirectoryName(filePath), Path.GetFileNameWithoutExtension(filePath) + ".tmp"), FileMode.Create, FileAccess.Write);
@@ -193,7 +187,8 @@ namespace Installer
 
                     // Cleans up
                     DownloadText.Content = "Preparing to install...";
-                    ProgressBar.Value = 50;
+                    progress++;
+                    ProgressBar.Value = progress / (double)total * 100;
                     await Task.Delay(100);
                     string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles).Replace(" (x86)", ""), "LonghornBluesky");
                     if (Directory.Exists(folder))
@@ -202,7 +197,8 @@ namespace Installer
                     }
                     // Extracts it
                     DownloadText.Content = "Installing Longhorn Bluesky...";
-                    ProgressBar.Value = 75;
+                    progress++;
+                    ProgressBar.Value = progress / (double)total * 100;
                     try
                     {
                         await Task.Run(() => ZipFile.ExtractToDirectory(filePath, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles).Replace(" (x86)", ""), "LonghornBluesky")));
@@ -211,22 +207,69 @@ namespace Installer
                     {
                         _ = MessageBox.Show(ex.Message.ToString());
                     }
-
+                    if (FFmpegCheck.IsChecked == true)
+                    {
+                        if (Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles).Replace(" (x86)", ""), "FFMPEG")))
+                        {
+                            await Task.Run(() => Directory.Delete(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles).Replace(" (x86)", ""), "FFMPEG"), true));
+                        }
+                        DownloadText.Content = "Downloading FFmpeg for Longhorn Bluesky...";
+                        progress++;
+                        ProgressBar.Value = progress / (double)total * 100;
+                        string filePath2 = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "..\\ffmpeg.package");
+                        Stream stream2 = await httpClient.GetStreamAsync("https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2023-09-30-12-56/ffmpeg-n4.4.4-6-gd5fa6e3a91-win64-gpl-shared-4.4.zip");
+                        FileStream fileStream2 = new FileStream(Path.Combine(Path.GetDirectoryName(filePath2), Path.GetFileNameWithoutExtension(filePath2) + ".tmp"), FileMode.Create, FileAccess.Write);
+                        await stream2.CopyToAsync(fileStream2);
+                        fileStream2.Close();
+                        _ = UpdateFile(filePath2);
+                        DownloadText.Content = "Installing FFmpeg for Longhorn Bluesky...";
+                        progress++;
+                        ProgressBar.Value = progress / (double)total * 100;
+                        try
+                        {
+                            await Task.Run(() => ZipFile.ExtractToDirectory(filePath2, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles).Replace(" (x86)", ""), "FFMPEG")));
+                        }
+                        catch (Exception ex)
+                        {
+                            _ = MessageBox.Show(ex.Message.ToString());
+                        }
+                        await Task.Run(() => Directory.Move(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles).Replace(" (x86)", ""), "FFMPEG\\ffmpeg-n4.4.4-6-gd5fa6e3a91-win64-gpl-shared-4.4\\bin"), Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles).Replace(" (x86)", ""), "LonghornBluesky\\bin")));
+                        await Task.Run(() => Directory.Delete(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles).Replace(" (x86)", ""), "FFMPEG"), true));
+                    }
                     // And then finishes up
-                    ProgressBar.Value = 100;
+                    progress++;
+                    ProgressBar.Value = progress / (double)total * 100;
                     DownloadText.Content = "Finishing up...";
                     await Task.Delay(100);
                     File.Delete(filePath);
                     stream.Close();
                     httpClient.Dispose();
                     response.Dispose();
+                    if (DesktopShortcutCheck.IsChecked == true)
+                    {
+                        string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\Longhorn Bluesky.lnk";
+                        Uri uri = new Uri("pack://application:,,,/LonghornBluesky.shortcut");
+                        StreamResourceInfo imageInfo = Application.GetResourceStream(uri);
+                        FileStream fileStream2 = new FileStream(desktopPath, FileMode.Create, FileAccess.Write);
+                        imageInfo.Stream.CopyTo(fileStream2);
+                        fileStream2.Close();
+                    }
+                    if (StartShortcutCheck.IsChecked == true)
+                    {
+                        string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.StartMenu) + "\\Longhorn Bluesky.lnk";
+                        Uri uri = new Uri("pack://application:,,,/LonghornBluesky.shortcut");
+                        StreamResourceInfo imageInfo = Application.GetResourceStream(uri);
+                        FileStream fileStream2 = new FileStream(desktopPath, FileMode.Create, FileAccess.Write);
+                        imageInfo.Stream.CopyTo(fileStream2);
+                        fileStream2.Close();
+                    }
                 }
                 catch (Exception ex)
                 {
-                    List<string> list = new List<string>();
+                    string list = string.Empty;
                     try
                     {
-                        list.Add("Error Code: " + ex.HResult.ToString());
+                        list += "\n\nError Code: " + ((uint)ex.HResult).ToString();
                     }
                     catch
                     {
@@ -234,7 +277,7 @@ namespace Installer
                     }
                     try
                     {
-                        list.Add("Inner Exception: " + ex.InnerException.Message);
+                        list += "\n\nInner Exception: " + ex.InnerException.Message;
                     }
                     catch
                     {
@@ -242,7 +285,7 @@ namespace Installer
                     }
                     try
                     {
-                        list.Add("Stack Trace:" + ex.StackTrace);
+                        list += "\n\nStack Trace:" + ex.StackTrace;
                     }
                     catch
                     {
@@ -250,17 +293,41 @@ namespace Installer
                     }
                     try
                     {
-                        list.Add("Target: " + ex.TargetSite.ToString());
+                        list += "\n\nDetailed Stack Trace: " + Environment.StackTrace.ToString();
+                    }
+                    catch
+                    {
+
+                    }
+                    try
+                    {
+                        list += "\n\nTarget: " + ex.TargetSite.ToString();
+                    }
+                    catch
+                    {
+
+                    }
+                    try
+                    {
+                        list += "\n\nOS Version: " + Environment.OSVersion.ToString();
+                    }
+                    catch
+                    {
+
+                    }
+                    try
+                    {
+                        list += "\n\n.NET Version: " + Environment.Version.ToString();
                     }
                     catch
                     {
 
                     }
                     string message = "A fatal error has occurred.\n\n" + ex.Message;
-                    _ = MessageBox.Show(message + "\n\nSetup will now create a log and close.", "Fatal Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    _ = MessageBox.Show(message + "\n\nThe client will now create a log and close.", "Fatal Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     using (FileStream fs = File.Create(DateTime.Now.Ticks + ".log"))
                     {
-                        byte[] info = new UTF8Encoding(true).GetBytes(ex.Message + "\n\n" + list);
+                        byte[] info = new UTF8Encoding(true).GetBytes(ex.Message + list);
                         fs.Write(info, 0, info.Length);
                     }
                     Application.Current.Shutdown();
@@ -304,21 +371,17 @@ namespace Installer
                 };
                 _ = Task.Run(process.Start);
             }
-            if (DesktopShortcutCheck.IsChecked == true)
-            {
-                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\Longhorn Bluesky.lnk";
-                Uri uri = new Uri("pack://application:,,,/lhbsky.shortcut");
-                StreamResourceInfo imageInfo = Application.GetResourceStream(uri);
-                FileStream fileStream = new FileStream(desktopPath, FileMode.Create, FileAccess.Write);
-                imageInfo.Stream.CopyTo(fileStream);
-                fileStream.Close();
-            }
             Application.Current.Shutdown();
         }
 
         private void BG_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            BG.Focus();
+            _ = BG.Focus();
+        }
+
+        private void CheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            ((CheckBox)sender).IsChecked = true;
         }
     }
 }
