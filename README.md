@@ -5,10 +5,15 @@ A third-party Bluesky client with a Windows Longhorn theme.
     ![My profile is open.](tease3.png)
     ![The home page of the client. There is a section with four tabs. The first tab, titled "Discover," is selected. Above it is a box for posting, with the default text "Whats Up?".](tease4.png)
 
-## How to install
+## Manual Installation
+### How to install the client
 1. Download the zip file in the releases
 2. Extract the zip file
 3. Run Client.exe (or "Longhorn Bluesky" if you can't find Client.exe) from the extracted folder
+### How to install "FFmpeg for Longhorn Bluesky"
+1. [Download the zip file from here](https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2023-09-30-12-56/ffmpeg-n4.4.4-6-gd5fa6e3a91-win64-gpl-shared-4.4.zip)
+2. Extract the zip file
+3. Locate the "bin" folder, and copy it to the same directory as the client
 
 ## Upcoming Features (in no specific order)
 - Video playback
