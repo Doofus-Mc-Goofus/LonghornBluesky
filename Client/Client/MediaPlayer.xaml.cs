@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Runtime.InteropServices;
@@ -10,9 +11,10 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using FFMpegCore;
+using INI;
 using Microsoft.Win32;
 using Unosquare.FFME.Common;
-
 namespace Client
 {
     // fix ALL of this code
@@ -22,15 +24,17 @@ namespace Client
     public partial class MediaPlayer : Window
     {
         private bool isPaused = false;
+        private bool load = true;
         private string Vid360p = string.Empty;
         private string Vid720p = string.Empty;
-        private int videoLength = 0;
         private readonly bool useHD = true;
         private readonly Uri url;
+        private bool moveVideoPlayerBarBased = true;
         private bool move = true;
         private bool repeat = false;
         private byte playState = 0;
         private bool isAero;
+        private readonly List<string> videoString = new List<string>();
         private int bottommargin;
         public MediaPlayer(string altText, Uri url)
         {
@@ -45,6 +49,9 @@ namespace Client
                 Video.ToolTip = null;
             }
             this.url = url;
+            Video.ScrubbingEnabled = true;
+            GlobalFFOptions.Configure(options => options.BinaryFolder = "./bin");
+
             CompositionTarget.Rendering += CompositionTarget_Rendering;
         }
         private async Task LoadVideoPlaylist()
@@ -89,19 +96,17 @@ namespace Client
             UpdateFile(filePath);
             // split the sub-playlist into an array so that we can get the videos
             string[] listofthings = File.ReadAllText(filePath).Split(char.Parse("\n"));
-            double videoLengthTemp = 0;
+            double videoCount = 0;
             for (uint i = 4; i < listofthings.Length; i++)
             {
                 if (listofthings[i].Contains("#EXTINF"))
                 {
-                    // gets the metadata and grabs the sub-playlist urls
-                    string metadata = listofthings[i].Substring(listofthings[i].IndexOf(":") + 1, 4);
-                    videoLengthTemp += double.Parse(metadata);
+                    videoCount++;
                 }
             }
             // we gotta create a new playlist because the regular one is incompatible
             string newPlaylist = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-PLAYLIST-TYPE:VOD\n#EXT-X-MEDIA-SEQUENCE:0\n#EXT-X-TARGETDURATION:6";
-            videoLength = (int)TimeSpan.FromSeconds(videoLengthTemp).TotalMilliseconds;
+            double fishcount = 0;
             for (uint i = 4; i < listofthings.Length; i++)
             {
                 if (listofthings[i].Contains("#EXTINF"))
@@ -116,15 +121,24 @@ namespace Client
                     await streamGot2.CopyToAsync(fileStream2);
                     fileStream2.Close();
                     UpdateFile(filePath2);
+                    fishcount++;
+                    videoString.Add(filePath2);
+                    Error.Text = "Loading... (" + Math.Round(fishcount / videoCount * 100) + "%)";
                 }
             }
-            newPlaylist += "\n#EXT-X-ENDLIST";
-            using (FileStream fs = File.Create(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "vid.m3u")))
+            if (load)
             {
-                byte[] info = new UTF8Encoding().GetBytes(newPlaylist);
-                fs.Write(info, 0, info.Length);
+                newPlaylist += "\n#EXT-X-ENDLIST";
+                using (FileStream fs = File.Create(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "vid.m3u")))
+                {
+                    byte[] info = new UTF8Encoding().GetBytes(newPlaylist);
+                    fs.Write(info, 0, info.Length);
+                }
+                _ = await Video.Open(new Uri(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "vid.m3u")));
             }
-            _ = await Video.Open(new Uri(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "vid.m3u")));
+            // The MS-DOS 5 upgrade is a hit...
+            // ...and no PC should be without it
+            // _ = await Video.Open(new Uri("C:\\Users\\Michael\\Videos\\Windows Archive\\1. MS-DOS\\MS-DOS 5 Upgrade.mp4"));
         }
         private void UpdateFile(string filename)
         {
@@ -135,23 +149,27 @@ namespace Client
 
         private void CompositionTarget_Rendering(object sender, EventArgs e)
         {
-            move = false;
-            if (Video.Source != null && Video.NaturalDuration.HasValue)
+            if (moveVideoPlayerBarBased && load)
             {
-                if (physicalSlider.Value != (double)(Video.Position.TotalMilliseconds / Video.NaturalDuration.Value.TotalMilliseconds) && (Video.Position.TotalMilliseconds / Video.NaturalDuration.Value.TotalMilliseconds).ToString() != double.NaN.ToString())
+                move = false;
+                if (Video.Source != null && Video.NaturalDuration.HasValue)
                 {
-                    physicalSlider.Value = (double)(Video.Position.TotalMilliseconds / Video.NaturalDuration.Value.TotalMilliseconds);
+                    if (physicalSlider.Value != (double)((Video.Position.TotalMilliseconds - 1000) / Video.NaturalDuration.Value.TotalMilliseconds) && (Video.Position.TotalMilliseconds / Video.NaturalDuration.Value.TotalMilliseconds).ToString() != double.NaN.ToString())
+                    {
+                        physicalSlider.Value = (double)((Video.Position.TotalMilliseconds - 1000) / Video.NaturalDuration.Value.TotalMilliseconds);
+                    }
+                    Time.Text = string.Format("{0:mm\\:ss}", Video.Position - TimeSpan.FromSeconds(1));
+                    Time.Visibility = Width >= 480 ? Visibility.Visible : Visibility.Collapsed;
+                    TimeShadow.Visibility = Width >= 480 ? Visibility.Visible : Visibility.Collapsed;
                 }
-                Time.Text = string.Format("{0:mm\\:ss}", Video.Position);
-                Time.Visibility = Width >= 480 ? Visibility.Visible : Visibility.Collapsed;
-                TimeShadow.Visibility = Width >= 480 ? Visibility.Visible : Visibility.Collapsed;
-            }
-            else
-            {
-                physicalSlider.Value = 0;
-                Time.Visibility = Visibility.Collapsed;
-                TimeShadow.Visibility = Visibility.Collapsed;
-                Time.Text = string.Empty;
+                else
+                {
+                    physicalSlider.Value = 0;
+                    Time.Visibility = Visibility.Collapsed;
+                    TimeShadow.Visibility = Visibility.Collapsed;
+                    Time.Text = string.Empty;
+                }
+                move = true;
             }
         }
 
@@ -198,6 +216,7 @@ namespace Client
                 };
                 Video.Margin = new Thickness(0, 0, 0, bottommargin);
                 Error.Margin = new Thickness(0, 0, 0, bottommargin);
+                rect.Margin = new Thickness(0, 0, 0, bottommargin);
                 int hr = DwmExtendFrameIntoClientArea(mainWindowSrc.Handle, ref margins);
                 //
                 if (hr < 0)
@@ -219,9 +238,35 @@ namespace Client
             if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "mediaRepeat") != null)
             {
                 repeat = bool.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "mediaRepeat"));
+                contextRepeat.IsChecked = repeat;
+                Video.LoopingBehavior = repeat ? MediaPlaybackState.Play : MediaPlaybackState.Stop;
                 RepeatIcon.Source = repeat
-                    ? new BitmapImage(new Uri("pack://application:,,,/res/Repeat1.png"))
-                    : new BitmapImage(new Uri("pack://application:,,,/res/Repeat0.png"));
+                        ? new BitmapImage(new Uri("pack://application:,,,/res/Repeat1.png"))
+                        : new BitmapImage(new Uri("pack://application:,,,/res/Repeat0.png"));
+            }
+            string fuckkk = HKCU_GetString(@"SOFTWARE\LonghornBluesky", "mediaSpeed");
+            if (fuckkk != null)
+            {
+                switch (fuckkk)
+                {
+                    case "0.5":
+                        mediaSpeedSlow.IsChecked = true;
+                        break;
+                    case "1":
+                        mediaSpeedNorm.IsChecked = true;
+                        break;
+                    case "2":
+                        mediaSpeedFast.IsChecked = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            IniFile myIni = new IniFile("config.ini");
+            if (myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "2")
+            {
+                SeperatorDownload.Visibility = Visibility.Visible;
+                Download.Visibility = Visibility.Visible;
             }
             if (Directory.Exists("bin"))
             {
@@ -229,7 +274,11 @@ namespace Client
                 StopIcon.Source = new BitmapImage(new Uri("pack://application:,,,/res/Stop1.png"));
                 // _ = await Video.Open(url);
                 await LoadVideoPlaylist();
-                _ = await Video.Play();
+                if (load)
+                {
+                    _ = await Video.Play();
+                }
+
                 Play.Source = new BitmapImage(new Uri("pack://application:,,,/res/MediaPauseNormal.png"));
             }
             else
@@ -248,14 +297,6 @@ namespace Client
         private void Window_Focus(object sender, EventArgs e)
         {
             UpdateExtendedFrames();
-        }
-
-        private void Window_Unloaded(object sender, RoutedEventArgs e)
-        {
-            Unloaded -= Window_Unloaded;
-            _ = Video.Close();
-            ((Grid)Content).Children.Clear();
-            GC.SuppressFinalize(this);
         }
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
@@ -299,7 +340,14 @@ namespace Client
         private void GoNext()
         {
             HideVolumeSlider();
-            Video.Position += TimeSpan.FromSeconds(5);
+            if (Video.Position < Video.NaturalDuration - TimeSpan.FromSeconds(6))
+            {
+                Video.Position += TimeSpan.FromSeconds(5);
+            }
+            else
+            {
+                Video.Position = (TimeSpan)(Video.NaturalDuration + TimeSpan.FromSeconds(1));
+            }
         }
         private void Back_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -346,7 +394,14 @@ namespace Client
                         break;
                 }
             }
-            Video.Position -= TimeSpan.FromSeconds(5);
+            if (Video.Position.TotalSeconds > 7)
+            {
+                Video.Position -= TimeSpan.FromSeconds(5);
+            }
+            else
+            {
+                Video.Position = new TimeSpan(0, 0, 2);
+            }
         }
         private void Play_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -386,7 +441,8 @@ namespace Client
                 if (Video.Visibility == Visibility.Collapsed)
                 {
                     Error.Text = "Loading...";
-                    Video.Position = new TimeSpan(0, 0, 0);
+                    Video.Position = new TimeSpan(0, 0, 1);
+                    _ = Video.Play();
                 }
                 StopIcon.Source = new BitmapImage(new Uri("pack://application:,,,/res/Stop1.png"));
                 _ = Video.Play();
@@ -442,10 +498,12 @@ namespace Client
         {
             HideVolumeSlider();
             repeat = !repeat;
+            Video.LoopingBehavior = repeat ? MediaPlaybackState.Play : MediaPlaybackState.Stop;
             ((Grid)sender).Background = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/res/ViewerSelectHover.png")));
             RepeatIcon.Source = repeat
                 ? new BitmapImage(new Uri("pack://application:,,,/res/Repeat1.png"))
                 : new BitmapImage(new Uri("pack://application:,,,/res/Repeat0.png"));
+            contextRepeat.IsChecked = repeat;
             HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "mediaRepeat", repeat.ToString());
         }
         public void HKCU_AddKey(string path, string key, object value)
@@ -523,13 +581,7 @@ namespace Client
 
         private void Video_MediaEnded(object sender, EventArgs e)
         {
-            if (repeat)
-            {
-                Video.Position = new TimeSpan(0, 0, 0);
-                StopIcon.Source = new BitmapImage(new Uri("pack://application:,,,/res/Stop1.png"));
-                _ = Video.Play();
-            }
-            else
+            if (!repeat)
             {
                 Error.Text = "This video has ended";
                 StopIcon.Source = new BitmapImage(new Uri("pack://application:,,,/res/Stop0.png"));
@@ -554,21 +606,117 @@ namespace Client
         {
             if (move)
             {
+                moveVideoPlayerBarBased = false;
                 ((Slider)sender).ToolTip = null;
-                _ = await Video.Stop();
+                _ = await Video.Pause();
                 Play.Source = new BitmapImage(new Uri("pack://application:,,,/res/MediaPlayNormal.png"));
                 double timeSpan = ((Slider)sender).Value;
                 await Task.Delay(250);
                 if (((Slider)sender).Value == timeSpan)
                 {
-                    Video.Position = new TimeSpan(0, 0, 0, 0, (int)(Video.NaturalDuration.Value.TotalMilliseconds * ((Slider)sender).Value));
+                    int fish = (int)(Video.NaturalDuration.Value.TotalMilliseconds * ((Slider)sender).Value) + 1000;
+                    if (fish < 2000)
+                    {
+                        Video.Position = new TimeSpan(0, 0, 2);
+                    }
+                    else if (fish > Video.NaturalDuration.Value.TotalMilliseconds + 1000)
+                    {
+                        Video.Position = (TimeSpan)(Video.NaturalDuration + TimeSpan.FromSeconds(1));
+                    }
+                    else
+                    {
+                        _ = await Video.Seek(new TimeSpan(0, 0, 0, 0, fish));
+                    }
                     _ = await Video.Play();
                     StopIcon.Source = new BitmapImage(new Uri("pack://application:,,,/res/Stop1.png"));
                     Play.Source = new BitmapImage(new Uri("pack://application:,,,/res/MediaPauseNormal.png"));
                     ((Slider)sender).ToolTip = "Seek";
+                    moveVideoPlayerBarBased = true;
                 }
             }
-            move = true;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Closing -= Window_Closing;
+            _ = Video.Close();
+            load = false;
+            ((Grid)Content).Children.Clear();
+            GC.SuppressFinalize(this);
+        }
+
+        private void MediaSpeedNorm_Checked(object sender, RoutedEventArgs e)
+        {
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "mediaSpeed", "1");
+            Video.SpeedRatio = 1;
+        }
+
+        private void MediaSpeedSlow_Checked(object sender, RoutedEventArgs e)
+        {
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "mediaSpeed", "0.5");
+            Video.SpeedRatio = 0.5;
+        }
+
+        private void MediaSpeedFast_Checked(object sender, RoutedEventArgs e)
+        {
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "mediaSpeed", "2");
+            Video.SpeedRatio = 2;
+        }
+
+        private void Video_MediaReady(object sender, EventArgs e)
+        {
+            rect.Visibility = Visibility.Visible;
+            string fuckkk = HKCU_GetString(@"SOFTWARE\LonghornBluesky", "mediaSpeed");
+            if (fuckkk != null)
+            {
+                Video.SpeedRatio = double.Parse(fuckkk);
+            }
+        }
+
+        private void Download_Click(object sender, RoutedEventArgs e)
+        {
+            string oldThing = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "joined.ts");
+            _ = FFMpeg.Join(oldThing, videoString.ToArray());
+            Stream myStream;
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog
+            {
+                Filter = "MPEG-2 TS Video|*.ts",
+                DefaultExt = ".ts",
+                RestoreDirectory = true
+            };
+
+            if (saveFileDialog1.ShowDialog() == true)
+            {
+                if ((myStream = saveFileDialog1.OpenFile()) != null)
+                {
+                    FileStream fileStream = new FileStream(Path.Combine(Path.GetDirectoryName(saveFileDialog1.FileName), Path.GetFileNameWithoutExtension(saveFileDialog1.FileName) + ".tmp"), FileMode.Create, FileAccess.Write);
+                    FileStream streamGot = File.OpenRead(oldThing);
+                    streamGot.CopyTo(fileStream);
+                    fileStream.Close();
+                    myStream.Close();
+                    UpdateFile(saveFileDialog1.FileName);
+                }
+            }
+        }
+
+        private void ContextRepeat_Checked(object sender, RoutedEventArgs e)
+        {
+            repeat = true;
+            Video.LoopingBehavior = repeat ? MediaPlaybackState.Play : MediaPlaybackState.Stop;
+            RepeatIcon.Source = repeat
+                ? new BitmapImage(new Uri("pack://application:,,,/res/Repeat1.png"))
+                : new BitmapImage(new Uri("pack://application:,,,/res/Repeat0.png"));
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "mediaRepeat", repeat.ToString());
+        }
+
+        private void ContextRepeat_Unchecked(object sender, RoutedEventArgs e)
+        {
+            repeat = false;
+            Video.LoopingBehavior = repeat ? MediaPlaybackState.Play : MediaPlaybackState.Stop;
+            RepeatIcon.Source = repeat
+                ? new BitmapImage(new Uri("pack://application:,,,/res/Repeat1.png"))
+                : new BitmapImage(new Uri("pack://application:,,,/res/Repeat0.png"));
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "mediaRepeat", repeat.ToString());
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using FishyFlip;
 using FishyFlip.Lexicon;
@@ -178,6 +179,17 @@ namespace Client
                             Feed feed = new Feed(postdata, dashboard, aTProtocol);
                             _ = stackPanel.Children.Add(feed);
                             feeds.Add(feed);
+                        }
+                        if (feedlist.Count == 0 && stackPanel.Children.Count == 0)
+                        {
+                            Label label = new Label
+                            {
+                                HorizontalAlignment = HorizontalAlignment.Center,
+                                Content = "It looks like there's nothing here",
+                                Padding = new Thickness(10),
+                                Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF0D467A"))
+                            };
+                            _ = stackPanel.Children.Add(label);
                         }
                         cursors[numb] = postresultparse["cursor"] != null ? postresultparse["cursor"].ToString() : "fish";
                     }

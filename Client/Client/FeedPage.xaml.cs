@@ -33,8 +33,8 @@ namespace Client
             this.feed = feed;
             try
             {
-                Name.Text = feed["displayName"].ToString();
-                Name.ToolTip = feed["displayName"].ToString();
+                FeedName.Text = feed["displayName"].ToString();
+                FeedName.ToolTip = feed["displayName"].ToString();
             }
             catch
             {

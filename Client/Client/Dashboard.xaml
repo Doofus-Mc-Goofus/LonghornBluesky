@@ -276,7 +276,7 @@
                     </Grid>
                 </Grid>
             </StackPanel>
-            <Frame x:Name="PageFrame" Margin="260,0,0,0" NavigationUIVisibility="Hidden" Background="Transparent"/>
+            <Frame x:Name="PageFrame" Margin="260,0,0,0" NavigationUIVisibility="Hidden" Background="Transparent" Navigated="PageFrame_Navigated"/>
         </Grid>
     </Grid>
 </Page>

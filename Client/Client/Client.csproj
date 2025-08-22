@@ -240,8 +240,8 @@
     <Reference Include="System.Memory.Data, Version=9.0.0.6, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.Data.9.0.6\lib\net462\System.Memory.Data.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Net.Http.4.3.0\lib\net46\System.Net.Http.dll</HintPath>
+    <Reference Include="System.Net.Http, Version=4.1.1.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.4.3.4\lib\net46\System.Net.Http.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
@@ -309,7 +309,7 @@
       <HintPath>..\packages\System.Text.Json.9.0.6\lib\net462\System.Text.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Text.RegularExpressions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Text.RegularExpressions.4.3.0\lib\net463\System.Text.RegularExpressions.dll</HintPath>
+      <HintPath>..\packages\System.Text.RegularExpressions.4.3.1\lib\net463\System.Text.RegularExpressions.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
@@ -734,6 +734,11 @@
     <Resource Include="res\Bitmap602.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="res\SoundPlay.png" />
+    <Resource Include="res\SoundSaved.png" />
+    <Resource Include="res\SoundStop.png" />
+    <Resource Include="res\SoundUnsaved.png" />
+    <Resource Include="res\SoundWarn.png" />
     <Resource Include="res\PlayerBarEmptyEdge.png" />
     <Resource Include="res\PlayerBarEmptyFill.png" />
     <Resource Include="res\PlayerBarFullEdge.png" />

@@ -18,7 +18,6 @@ namespace Client
         private readonly Dashboard dashboard;
         private readonly JObject feed;
         private readonly ATProtocol aTProtocol;
-        private readonly ATDid ATDid;
         public Feed(JObject feed, Dashboard dashboard, ATProtocol aTProtocol)
         {
             InitializeComponent();
@@ -33,8 +32,8 @@ namespace Client
         {
             try
             {
-                Name.Text = feed["displayName"].ToString();
-                Name.ToolTip = feed["displayName"].ToString();
+                FeedName.Text = feed["displayName"].ToString();
+                FeedName.ToolTip = feed["displayName"].ToString();
             }
             catch
             {
@@ -84,9 +83,9 @@ namespace Client
             SelectPost.MouseEnter -= SelectPost_MouseEnter;
             SelectPost.MouseLeave -= SelectPost_MouseLeave;
             SelectPost.MouseUp -= SelectPost_MouseUp;
-            Name.MouseEnter -= SelectPost_MouseEnter;
-            Name.MouseLeave -= SelectPost_MouseLeave;
-            Name.MouseUp -= SelectPost_MouseUp;
+            FeedName.MouseEnter -= SelectPost_MouseEnter;
+            FeedName.MouseLeave -= SelectPost_MouseLeave;
+            FeedName.MouseUp -= SelectPost_MouseUp;
             Author.MouseEnter -= SelectPost_MouseEnter;
             Author.MouseLeave -= SelectPost_MouseLeave;
             Author.MouseUp -= SelectPost_MouseUp;

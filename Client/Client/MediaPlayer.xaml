@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ffme="clr-namespace:Unosquare.FFME;assembly=ffme.win"
         mc:Ignorable="d"
-        Title="Media Player" Height="360" Width="480" Background="Transparent" UseLayoutRounding="True" MinWidth="400" MinHeight="360" Icon="/res/MediaPlayerIcon.png" Unloaded="Window_Unloaded" KeyUp="Window_KeyUp" Loaded="Window_Loaded" Activated="Window_Focus" Deactivated="Window_Focus" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI">
+        Title="Media Player" Height="360" Width="480" Background="Transparent" UseLayoutRounding="True" MinWidth="400" MinHeight="360" Icon="/res/MediaPlayerIcon.png" KeyUp="Window_KeyUp" Loaded="Window_Loaded" Activated="Window_Focus" Deactivated="Window_Focus" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI" Closing="Window_Closing">
     <Window.Resources>
         <Style x:Key="SliderRepeatButton" TargetType="RepeatButton">
             <Setter Property="SnapsToDevicePixels" Value="true" />
@@ -98,6 +98,60 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <Style x:Key="ItemcontainerStyle" TargetType="MenuItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate  TargetType="{x:Type MenuItem}">
+                        <Border x:Name="templateRoot" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                            <Grid Margin="-1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MinWidth="22" SharedSizeGroup="MenuItemIconColumnGroup" Width="Auto"/>
+                                    <ColumnDefinition Width="13"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition SharedSizeGroup="MenuItemIGTColumnGroup" Width="Auto"/>
+                                    <ColumnDefinition Width="20"/>
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter x:Name="Icon" Content="{TemplateBinding Icon}" ContentSource="Icon" HorizontalAlignment="Center" Height="16" Margin="3" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center" Width="16"/>
+                                <Border x:Name="GlyphPanel" BorderBrush="#FF26A0DA" BorderThickness="1" Background="#3D26A0DA" ClipToBounds="False" HorizontalAlignment="Center" Height="22" Margin="-1,0,0,0" Visibility="Hidden" VerticalAlignment="Center" Width="22">
+                                    <RadioButton x:Name="Glyph" IsChecked="{TemplateBinding IsChecked}" GroupName="a"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Border>
+                                <ContentPresenter x:Name="menuHeaderContainer" ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" Grid.Column="2" ContentStringFormat="{TemplateBinding HeaderStringFormat}" ContentSource="Header" HorizontalAlignment="Left" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="menuGestureText" Grid.Column="4" Margin="{TemplateBinding Padding}" Opacity="0.7" Text="{TemplateBinding InputGestureText}" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Icon" Value="{x:Null}">
+                                <Setter Property="Visibility" TargetName="Icon" Value="Collapsed"/>
+                            </Trigger>
+                            <Trigger  Property="IsChecked" Value="True">
+                                <Setter Property="Visibility" TargetName="GlyphPanel" Value="Visible"/>
+                                <Setter Property="Visibility" TargetName="Icon" Value="Collapsed"/>
+                            </Trigger>
+                            <Trigger SourceName="Glyph"  Property="IsChecked" Value="False">
+                                <Setter Property="Visibility" TargetName="GlyphPanel" Value="Hidden"/>
+                                <Setter Property="Visibility" TargetName="Glyph" Value="Collapsed"/>
+                            </Trigger>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter Property="Background" TargetName="templateRoot" Value="#3D26A0DA"/>
+                                <Setter Property="BorderBrush" TargetName="templateRoot" Value="#FF26A0DA"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="TextElement.Foreground" TargetName="templateRoot" Value="#FF707070"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsHighlighted" Value="True"/>
+                                    <Condition Property="IsEnabled" Value="False"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" TargetName="templateRoot" Value="#0A000000"/>
+                                <Setter Property="BorderBrush" TargetName="templateRoot" Value="#21000000"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Grid>
         <Image Source="/res/MediaPlayerBG.png" Stretch="Fill" Margin="0,0,0,71"/>
@@ -106,7 +160,7 @@
                 <DropShadowEffect ShadowDepth="0" BlurRadius="20"/>
             </TextBlock.Effect>
         </TextBlock>
-        <ffme:MediaElement x:Name="Video" Margin="0,0,0,71" UnloadedBehavior="Manual" LoadedBehavior="Manual" MediaFailed="Video_MediaFailed" MediaEnded="Video_MediaEnded" RenderOptions.BitmapScalingMode="Fant" LoopingBehavior="Manual">
+        <ffme:MediaElement x:Name="Video" Margin="0,0,0,71" UnloadedBehavior="Manual" LoadedBehavior="Manual" MediaFailed="Video_MediaFailed" MediaEnded="Video_MediaEnded" RenderOptions.BitmapScalingMode="Fant" LoopingBehavior="Manual" MediaReady="Video_MediaReady">
             <ffme:MediaElement.ToolTip>
                 <ToolTip>
                     <ToolTip.Content>
@@ -115,6 +169,29 @@
                 </ToolTip>
             </ffme:MediaElement.ToolTip>
         </ffme:MediaElement>
+        <Rectangle x:Name="rect" Margin="0,0,0,71" Fill="Black" Opacity="0" Visibility="Collapsed">
+            <Rectangle.ContextMenu>
+                <ContextMenu>
+                    <MenuItem x:Name="contextRepeat" Header="Repeat" IsCheckable="True" Checked="ContextRepeat_Checked" Unchecked="ContextRepeat_Unchecked"/>
+                    <Separator Margin="0,-3,0,-2"/>
+                    <MenuItem Header="Video fit settings" Visibility="Collapsed">
+                        <MenuItem Header="Fit Player to video" IsCheckable="True"/>
+                        <Separator/>
+                        <MenuItem Header="50%" IsCheckable="True"/>
+                        <MenuItem Header="100%" IsCheckable="True"/>
+                        <MenuItem Header="200%" IsCheckable="True"/>
+                    </MenuItem>
+                    <MenuItem Header="Play speed settings" ItemContainerStyle="{StaticResource ItemcontainerStyle}">
+                        <MenuItem x:Name="mediaSpeedSlow" Header="Slow (0.5x)" IsCheckable="True" Checked="MediaSpeedSlow_Checked"/>
+                        <MenuItem x:Name="mediaSpeedNorm" Header="Normal (1x)" IsCheckable="True" Checked="MediaSpeedNorm_Checked"/>
+                        <MenuItem x:Name="mediaSpeedFast" Header="Fast (2x)" IsCheckable="True" Checked="MediaSpeedFast_Checked"/>
+                    </MenuItem>
+                    <Separator x:Name="SeperatorDownload" Visibility="Collapsed" Margin="0,-3,0,-2"/>
+                    <MenuItem x:Name="Download" Header="Download" Click="Download_Click" Visibility="Collapsed"/>
+
+                </ContextMenu>
+            </Rectangle.ContextMenu>
+        </Rectangle>
         <Grid x:Name="Controls">
             <Grid x:Name="TimeHolder" VerticalAlignment="Bottom" Margin="7,0,7,57" Height="9">
                 <Image Source="/res/PlayerBarEmptyEdge.png" Stretch="None" HorizontalAlignment="Left"/>

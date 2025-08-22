@@ -22,11 +22,6 @@ namespace Client
             this.settings = settings;
             this.dashboard = dashboard;
             dialog.Filter = "WAV Files|*.wav"; // Filter files by extension
-            IniFile myIni = new IniFile("config.ini");
-            if (File.Exists("config.ini") && myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "2")
-            {
-                Secret.Visibility = Visibility.Visible;
-            }
         }
         private void Rectangle_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -71,6 +66,8 @@ namespace Client
             HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "showMenu", showMenu.IsChecked);
             HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "showNavigation", showNavigation.IsChecked);
             HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "fillLayout", fillLayout.IsChecked);
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "isTrans", basicCheck.IsChecked.ToString());
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "themeFont", allowFontChange.IsChecked.ToString());
             dashboard.UpdateDashboardLayout();
         }
         public void HKCU_AddKey(string path, string key, object value)
@@ -140,6 +137,8 @@ namespace Client
             showMenu.IsChecked = bool.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "showMenu"));
             showNavigation.IsChecked = bool.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "showNavigation"));
             fillLayout.IsChecked = bool.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "fillLayout"));
+            basicCheck.IsChecked = bool.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "isTrans"));
+            allowFontChange.IsChecked = bool.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "themeFont"));
         }
         private string OpenWAV()
         {

@@ -3,10 +3,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using FishyFlip;
-using FishyFlip.Lexicon.App.Bsky.Graph;
-using FishyFlip.Lexicon.Com.Atproto.Repo;
 using FishyFlip.Models;
 using Newtonsoft.Json.Linq;
 namespace Client
@@ -19,7 +16,6 @@ namespace Client
         private readonly Dashboard dashboard;
         private readonly JObject trending;
         private readonly ATProtocol aTProtocol;
-        private readonly ATDid ATDid;
         private readonly byte i;
         public Trending(JObject trending, Dashboard dashboard, ATProtocol aTProtocol, byte i)
         {
@@ -34,8 +30,8 @@ namespace Client
         private async Task Load()
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-            Name.Text = i + ". " + trending["displayName"].ToString();
-            Name.ToolTip = trending["displayName"].ToString();
+            TrendName.Text = i + ". " + trending["displayName"].ToString();
+            TrendName.ToolTip = trending["displayName"].ToString();
             Details.Text = trending["postCount"].ToString() + " posts - " + trending["category"].ToString();
             Details.ToolTip = trending["postCount"].ToString() + " posts - " + trending["category"].ToString();
         }
@@ -66,12 +62,10 @@ namespace Client
             SelectPost.MouseEnter -= SelectPost_MouseEnter;
             SelectPost.MouseLeave -= SelectPost_MouseLeave;
             SelectPost.MouseUp -= SelectPost_MouseUp;
-            Name.MouseEnter -= SelectPost_MouseEnter;
-            Name.MouseLeave -= SelectPost_MouseLeave;
-            Name.MouseUp -= SelectPost_MouseUp;
+            TrendName.MouseEnter -= SelectPost_MouseEnter;
+            TrendName.MouseLeave -= SelectPost_MouseLeave;
+            TrendName.MouseUp -= SelectPost_MouseUp;
             Details.MouseEnter -= SelectPost_MouseEnter;
-            Name.MouseLeave -= SelectPost_MouseLeave;
-            Name.MouseUp -= SelectPost_MouseUp;
             ((Grid)Content).Children.Clear();
             GC.SuppressFinalize(this);
         }

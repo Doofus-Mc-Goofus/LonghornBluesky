@@ -141,73 +141,7 @@ namespace Client
             GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
             Login loginpage = new Login(this);
             WindowContent.Content = loginpage;
-            HKCU_AddKey(@"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", "Client.exe", 11000);
-            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.2.2b");
-            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "isCanary", "true");
-            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "ALERT") == null)
-            {
-                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Remember", "false");
-                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "RememberUsername", "");
-                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "RememberPassword", "");
-                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "RememberHost", "");
-                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "first", "");
-                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "ALERT", "LH_ALERT.wav");
-                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "DELETE", "LH_DELETE.wav");
-                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "NOTIF", "LH_NOTIF.wav");
-                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "POST", "LH_POST.wav");
-                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "UPDATEALERT", "LH_UPDATEALERT.wav");
-            }
-            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "LOGON") == null)
-            {
-                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "LOGON", "LH_WELCOME.wav");
-                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "LOGOFF", "LH_EXIT.wav");
-            }
-            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "LOGOFF") == "LH_ACCOUNTDELETE.wav")
-            {
-                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "LOGOFF", "LH_EXIT.wav");
-            }
-            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "isLOG") == null)
-            {
-                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "isLOG", "false");
-            }
-            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "showMenu") == null)
-            {
-                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "showMenu", "false");
-            }
-            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "checkUpdates") == null)
-            {
-                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "checkUpdates", "true");
-            }
-            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "fillLayout") == null)
-            {
-                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "fillLayout", "false");
-            }
-            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "showNavigation") == null)
-            {
-                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "showNavigation", "false");
-            }
-            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_left") != null)
-            {
-                Left = double.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_left"));
-                Top = double.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_top"));
-                if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_state") == "Maximized")
-                {
-                    WindowState = WindowState.Maximized;
-                }
-                else
-                {
-                    Width = double.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_width"));
-                    Height = double.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_height"));
-                }
-            }
-            if (File.Exists("config.ini"))
-            {
-                IniFile myIni = new IniFile("config.ini");
-                if (myIni.Read("MSN", "LHbsky") == "1")
-                {
-                    Icon = new BitmapImage(new Uri("pack://application:,,,/res/logo.png"));
-                }
-            }
+
             notifyIcon1.Icon = Properties.Resources.logoicongray;
             notifyIcon1.Text = "Bluesky";
             notifyIcon1.Visible = true;
@@ -225,7 +159,7 @@ namespace Client
 
         public async Task CheckForUpdates()
         {
-            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "checkUpdates") == "true")
+            if (bool.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "checkUpdates")))
             {
                 try
                 {
@@ -376,11 +310,11 @@ namespace Client
                 e.Cancel = true;
                 Visibility = Visibility.Hidden;
                 // IDK
-                await Task.Delay(100);
                 try
                 {
                     SoundPlayer soundPlayer = new SoundPlayer(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "LOGOFF"));
-                    soundPlayer.PlaySync();
+                    // Play the sound synchronously without playing it 
+                    await Task.Run(() => soundPlayer.PlaySync());
                 }
                 catch
                 {
@@ -400,53 +334,53 @@ namespace Client
         }
         private void Back_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Back.Source = !dashboardFrame.CanGoBack
+            Back.Source = (dashboard.index == 0)
                 ? new BitmapImage(new Uri("pack://application:,,,/res/BackDisabled.png"))
                 : new BitmapImage(new Uri("pack://application:,,,/res/BackPressed.png"));
         }
 
         private void Back_MouseEnter(object sender, MouseEventArgs e)
         {
-            Back.Source = !dashboardFrame.CanGoBack
+            Back.Source = (dashboard.index == 0)
                 ? new BitmapImage(new Uri("pack://application:,,,/res/BackDisabled.png"))
                 : new BitmapImage(new Uri("pack://application:,,,/res/BackHover.png"));
         }
 
         private void Back_MouseLeave(object sender, MouseEventArgs e)
         {
-            Back.Source = !dashboardFrame.CanGoBack
+            Back.Source = (dashboard.index == 0)
                 ? new BitmapImage(new Uri("pack://application:,,,/res/BackDisabled.png"))
                 : new BitmapImage(new Uri("pack://application:,,,/res/BackNormal.png"));
         }
         private void Back_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Back.Source = !dashboardFrame.CanGoBack
+            Back.Source = (dashboard.index == 0)
                 ? new BitmapImage(new Uri("pack://application:,,,/res/BackDisabled.png"))
                 : new BitmapImage(new Uri("pack://application:,,,/res/BackHover.png"));
         }
         private void Forward_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Forward.Source = !dashboardFrame.CanGoForward
+            Forward.Source = (dashboard.index == (dashboard.navHist.Count - 1))
                 ? new BitmapImage(new Uri("pack://application:,,,/res/ForwardDisabled.png"))
                 : new BitmapImage(new Uri("pack://application:,,,/res/ForwardPressed.png"));
         }
 
         private void Forward_MouseEnter(object sender, MouseEventArgs e)
         {
-            Forward.Source = !dashboardFrame.CanGoForward
+            Forward.Source = (dashboard.index == (dashboard.navHist.Count - 1))
                 ? new BitmapImage(new Uri("pack://application:,,,/res/ForwardDisabled.png"))
                 : new BitmapImage(new Uri("pack://application:,,,/res/ForwardHover.png"));
         }
 
         private void Forward_MouseLeave(object sender, MouseEventArgs e)
         {
-            Forward.Source = !dashboardFrame.CanGoForward
+            Forward.Source = (dashboard.index == (dashboard.navHist.Count - 1))
                 ? new BitmapImage(new Uri("pack://application:,,,/res/ForwardDisabled.png"))
                 : new BitmapImage(new Uri("pack://application:,,,/res/ForwardNormal.png"));
         }
         private void Forward_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Forward.Source = !dashboardFrame.CanGoForward
+            Forward.Source = (dashboard.index == (dashboard.navHist.Count - 1))
                 ? new BitmapImage(new Uri("pack://application:,,,/res/ForwardDisabled.png"))
                 : new BitmapImage(new Uri("pack://application:,,,/res/ForwardHover.png"));
         }
@@ -511,6 +445,92 @@ namespace Client
 
         private void Grid_LayoutUpdated(object sender, EventArgs e)
         {
+            HKCU_AddKey(@"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", "Client.exe", 11000);
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.3.0a");
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "isCanary", "true");
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "ALERT") == null)
+            {
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Remember", "false");
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "RememberUsername", "");
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "RememberPassword", "");
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "RememberHost", "");
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "first", "");
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "ALERT", "LH_ALERT.wav");
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "DELETE", "LH_DELETE.wav");
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "NOTIF", "LH_NOTIF.wav");
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "POST", "LH_POST.wav");
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "UPDATEALERT", "LH_UPDATEALERT.wav");
+            }
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "LOGON") == null)
+            {
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "LOGON", "LH_WELCOME.wav");
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "LOGOFF", "LH_EXIT.wav");
+            }
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "LOGOFF") == "LH_ACCOUNTDELETE.wav")
+            {
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "LOGOFF", "LH_EXIT.wav");
+            }
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "isLOG") == null)
+            {
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "isLOG", "false");
+            }
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "showMenu") == null)
+            {
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "showMenu", "false");
+            }
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "checkUpdates") == null)
+            {
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "checkUpdates", "true");
+            }
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "fillLayout") == null)
+            {
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "fillLayout", "false");
+            }
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "showNavigation") == null)
+            {
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "showNavigation", "false");
+            }
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_left") != null)
+            {
+                Left = double.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_left"));
+                Top = double.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_top"));
+                if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_state") == "Maximized")
+                {
+                    WindowState = WindowState.Maximized;
+                }
+                else
+                {
+                    Width = double.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_width"));
+                    Height = double.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_height"));
+                }
+            }
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "fontNormalDisplayName") == null)
+            {
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "fontNormalDisplayName", "Segoe UI");
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "fontNormalUri", "pack://application:,,,/SegoeUI7/segoeui_0.ttf");
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "fontBoldDisplayName", "Segoe UI Semibold");
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "fontBoldUri", "pack://application:,,,/SegoeUI7/seguisb_0.ttf");
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "fontLightDisplayName", "Segoe UI Semilight");
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "fontLightUri", "pack://application:,,,/SegoeUI7/segoeuisl_0.ttf");
+            }
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "isTrans") == null)
+            {
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "isTrans", "true");
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "themeFont", "true");
+            }
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "mediaSpeed") == null)
+            {
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "mediaSpeed", "1");
+            }
+
+            if (File.Exists("config.ini"))
+            {
+                IniFile myIni = new IniFile("config.ini");
+                if (myIni.Read("MSN", "LHbsky") == "1")
+                {
+                    Icon = new BitmapImage(new Uri("pack://application:,,,/res/logo.png"));
+                }
+            }
             MinHeight = 650;
             try
             {

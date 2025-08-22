@@ -22,7 +22,7 @@
                 </Image.Effect>
             </Image>
             <Image x:Name="Frame" Source="/res/PFPFrameSmal.png" Width="32" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top"/>
-            <TextBlock x:Name="Name" Margin="40,9,0,0" Foreground="#FF0D467A" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="SelectPost_MouseEnter" MouseLeave="SelectPost_MouseLeave" MouseUp="SelectPost_MouseUp" Text="FEED NAME"/>
+            <TextBlock x:Name="FeedName" Margin="40,9,0,0" Foreground="#FF0D467A" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="SelectPost_MouseEnter" MouseLeave="SelectPost_MouseLeave" MouseUp="SelectPost_MouseUp" Text="FEED NAME"/>
             <TextBlock x:Name="Author" FontFamily="/SegoeUI7/segoeuii_0.ttf#Segoe UI" Foreground="#FF9AA6B1" Margin="40,26,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="SelectPost_MouseEnter" MouseLeave="SelectPost_MouseLeave" MouseUp="SelectPost_MouseUp" Text="Feed by @fuck.you"/>
             <Button x:Name="Pin" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,10,0,0" Content="This button will kill you" Padding="16,1,16,1" Visibility="Collapsed"/>
             <TextBlock x:Name="Desc" Margin="0,46,0,8" TextWrapping="Wrap" Width="{Binding ActualWidth, ElementName=wrapPanel, Mode=OneWay}" MouseEnter="SelectPost_MouseEnter" MouseLeave="SelectPost_MouseLeave" MouseUp="SelectPost_MouseUp" Text="BITCH"/>

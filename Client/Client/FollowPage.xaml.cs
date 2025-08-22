@@ -5,7 +5,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using FishyFlip;
-using FishyFlip.Lexicon;
 using FishyFlip.Lexicon.App.Bsky.Feed;
 using FishyFlip.Lexicon.App.Bsky.Graph;
 using FishyFlip.Models;
@@ -34,25 +33,20 @@ namespace Client
             this.aTProtocol = aTProtocol;
             this.isBy = isBy;
             this.dashboard = dashboard;
-            if (isBy == 0)
+            switch (isBy)
             {
-                Number.Text = number.ToString() + " followers";
-            }
-            else if (isBy == 1)
-            {
-                Number.Text = number.ToString() + " following";
-            }
-            else if (isBy == 2)
-            {
-                Number.Text = number.ToString() + " reposts";
-            }
-            else if (isBy == 3)
-            {
-                Number.Text = number.ToString() + " likes";
-            }
-            else
-            {
-                Number.Text = number.ToString();
+                case 0:
+                    Number.Text = number.ToString() + " followers";
+                    break;
+                case 1:
+                    Number.Text = number.ToString() + " following";
+                    break;
+                case 2:
+                    Number.Text = number.ToString() + " reposts";
+                    break;
+                default:
+                    Number.Text = isBy == 3 ? number.ToString() + " likes" : number.ToString();
+                    break;
             }
         }
         private async Task Load()

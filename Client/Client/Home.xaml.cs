@@ -127,14 +127,9 @@ namespace Client
             canEdit = true;
             // Old code (DO NOT UNCOMMENT!)
             // FeedTabControl.SelectionChanged += (s, ee) => LoadFeed((StackPanel)((TabItem)FeedTabControl.SelectedItem).Tag, false);
-            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "selectedIndex") != null)
-            {
-                FeedTabControl.SelectedIndex = int.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "selectedIndex"));
-            }
-            else
-            {
-                FeedTabControl.SelectedIndex = 1;
-            } 
+            FeedTabControl.SelectedIndex = HKCU_GetString(@"SOFTWARE\LonghornBluesky", "selectedIndex") != null
+                ? int.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "selectedIndex"))
+                : 1;
         }
 
         private async Task LoadFeed(StackPanel stackPanel)

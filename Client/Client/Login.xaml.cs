@@ -88,18 +88,11 @@ namespace Client
             {
                 ShowPageAgain();
                 Error.Visibility = Visibility.Visible;
-                if (identifier[0].ToString() == "@")
-                {
-                    Error.Content = "Your username cannot start with @";
-                }
-                else if (identifier == string.Empty || password == string.Empty)
-                {
-                    Error.Content = "An identifier and password is required to sign in";
-                }
-                else
-                {
-                    Error.Content = error.Detail.Message;
-                }
+                Error.Content = identifier[0].ToString() == "@"
+                    ? "Your username cannot start with @"
+                    : identifier == string.Empty || password == string.Empty
+                        ? "An identifier and password is required to sign in"
+                        : error.Detail.Message;
                 return;
             }
             // _ = MessageBox.Show("Authenticated.");

@@ -65,7 +65,7 @@ namespace Client
             if (!isRoot)
             {
                 isRoot = true;
-                Title.Text = "Settings";
+                PageTitle.Text = "Settings";
                 PageFrame.Visibility = Visibility.Collapsed;
                 homie.Visibility = Visibility.Visible;
             }
@@ -259,7 +259,7 @@ namespace Client
             HideOthersSidebar();
             isRoot = false;
             Back.Source = new BitmapImage(new Uri("pack://application:,,,/res/BackNormal.png"));
-            Title.Text = "Appearance and Personalization";
+            PageTitle.Text = "Appearance and Personalization";
             PageFrame.Visibility = Visibility.Visible;
             homie.Visibility = Visibility.Collapsed;
             Personalization usororer = new Personalization(this, dashboard);
@@ -421,10 +421,10 @@ namespace Client
             Moderation.MouseLeave -= Moderation_MouseLeave;
             Moderation.MouseUp -= Moderation_MouseUp;
             Moderation.Children.Clear();
-            Content.MouseEnter -= CAM_MouseEnter;
-            Content.MouseLeave -= CAM_MouseLeave;
-            Content.MouseUp -= CAM_MouseUp;
-            Content.Children.Clear();
+            SettingsContent.MouseEnter -= CAM_MouseEnter;
+            SettingsContent.MouseLeave -= CAM_MouseLeave;
+            SettingsContent.MouseUp -= CAM_MouseUp;
+            SettingsContent.Children.Clear();
             Personalization.MouseEnter -= Personalization_MouseEnter;
             Personalization.MouseLeave -= Personalization_MouseLeave;
             Personalization.MouseUp -= Personalization_MouseUp;
@@ -433,10 +433,10 @@ namespace Client
             Accessibility.MouseLeave -= Accessibility_MouseLeave;
             Accessibility.MouseUp -= Accessibility_MouseUp;
             Accessibility.Children.Clear();
-            Language.MouseEnter -= Language_MouseEnter;
-            Language.MouseLeave -= Language_MouseLeave;
-            Language.MouseUp -= Language_MouseUp;
-            Language.Children.Clear();
+            SettingsLanguage.MouseEnter -= Language_MouseEnter;
+            SettingsLanguage.MouseLeave -= Language_MouseLeave;
+            SettingsLanguage.MouseUp -= Language_MouseUp;
+            SettingsLanguage.Children.Clear();
             Help.MouseEnter -= Help_MouseEnter;
             Help.MouseLeave -= Help_MouseLeave;
             Help.MouseUp -= Help_MouseUp;

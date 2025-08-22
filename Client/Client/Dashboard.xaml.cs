@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Media;
 using System.Runtime.InteropServices;
@@ -8,7 +9,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using FishyFlip;
 using FishyFlip.Lexicon.App.Bsky.Actor;
 using FishyFlip.Lexicon.App.Bsky.Embed;
@@ -29,6 +29,9 @@ namespace Client
         private JArray feeds;
         private byte selectobjectsidebar;
         private readonly MainWindow mw;
+        public List<string> navHist = new List<string>();
+        public List<string> navArgs = new List<string>();
+        public int index = 0;
 
         [DllImport("urlmon.dll")]
         [PreserveSig]
@@ -65,6 +68,8 @@ namespace Client
             this.feeds = feeds;
             Home homePage = new Home(feeds, aTProtocol, this);
             _ = PageFrame.NavigationService.Navigate(homePage);
+            navHist.Add("Home");
+            navArgs.Add(string.Empty);
             Result<ProfileViewDetailed> result = await aTProtocol.GetProfileAsync(session.Did);
             result.Switch(
             success =>
@@ -115,7 +120,7 @@ namespace Client
         public void NavigateToProfile(string Did)
         {
             Profile ProfilePage = new Profile(ATDid.Create(Did), aTProtocol, session, this);
-            PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+            PageFrame.NavigationService.Navigated += (s, ee) => NavServiceOnNavigated(true);
             _ = PageFrame.NavigationService.Navigate(ProfilePage);
             if (session.Did.ToString() == ATDid.Create(Did).ToString())
             {
@@ -134,7 +139,7 @@ namespace Client
         public void NavigateToFollow(string Did, byte isBy, int number)
         {
             FollowPage ProfilePage = new FollowPage(aTProtocol, isBy, this, number, ATDid.Create(Did));
-            PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+            PageFrame.NavigationService.Navigated += (s, ee) => NavServiceOnNavigated(true);
             _ = PageFrame.NavigationService.Navigate(ProfilePage);
             selectobjectsidebar = 0;
             HideOthersSidebar();
@@ -142,7 +147,7 @@ namespace Client
         public void NavigateToEngage(string Uri, byte isBy, int number)
         {
             FollowPage ProfilePage = new FollowPage(aTProtocol, isBy, this, number, null, ATUri.Create(Uri));
-            PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+            PageFrame.NavigationService.Navigated += (s, ee) => NavServiceOnNavigated(true);
             _ = PageFrame.NavigationService.Navigate(ProfilePage);
             selectobjectsidebar = 0;
             HideOthersSidebar();
@@ -150,7 +155,7 @@ namespace Client
         public void NavigateToQuotes(string Uri, int number)
         {
             QuotePage QuotePage = new QuotePage(ATUri.Create(Uri), aTProtocol, this, number);
-            PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+            PageFrame.NavigationService.Navigated += (s, ee) => NavServiceOnNavigated(true);
             _ = PageFrame.NavigationService.Navigate(QuotePage);
             selectobjectsidebar = 0;
             HideOthersSidebar();
@@ -162,14 +167,14 @@ namespace Client
         public void NavigateToPost(string Uri)
         {
             PostPage PostPage = new PostPage(Uri, aTProtocol, this);
-            PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+            PageFrame.NavigationService.Navigated += (s, ee) => NavServiceOnNavigated(true);
             _ = PageFrame.NavigationService.Navigate(PostPage);
             selectobjectsidebar = 0;
             HideOthersSidebar();
         }
         public void NavigateToProfileEdit(EditProf Did)
         {
-            PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+            PageFrame.NavigationService.Navigated += (s, ee) => NavServiceOnNavigated(true);
             _ = PageFrame.NavigationService.Navigate(Did);
             selectobjectsidebar = 0;
             HideOthersSidebar();
@@ -183,7 +188,7 @@ namespace Client
             HideOthersSidebar();
             Home homePage = new Home(feeds, aTProtocol, this);
             homePage.Transfer(embedRecord);
-            PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+            PageFrame.NavigationService.Navigated += (s, ee) => NavServiceOnNavigated(true);
             _ = PageFrame.NavigationService.Navigate(homePage);
         }
         private void Label_MouseEnter(object sender, MouseEventArgs e)
@@ -232,7 +237,7 @@ namespace Client
             selectobjectsidebar = 1;
             HideOthersSidebar();
             Home homePage = new Home(feeds, aTProtocol, this);
-            PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+            PageFrame.NavigationService.Navigated += (s, ee) => NavServiceOnNavigated(true);
             _ = PageFrame.NavigationService.Navigate(homePage);
         }
 
@@ -261,7 +266,7 @@ namespace Client
             selectobjectsidebar = 2;
             HideOthersSidebar();
             Explore explore = new Explore(aTProtocol, this);
-            PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+            PageFrame.NavigationService.Navigated += (s, ee) => NavServiceOnNavigated(true);
             _ = PageFrame.NavigationService.Navigate(explore);
         }
         private void Notifs_MouseEnter(object sender, MouseEventArgs e)
@@ -289,7 +294,7 @@ namespace Client
             selectobjectsidebar = 3;
             HideOthersSidebar();
             HandleableError usororer = new HandleableError(new ATError(418, new ErrorDetail("", "I'm a teapot")));
-            PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+            PageFrame.NavigationService.Navigated += (s, ee) => NavServiceOnNavigated(true);
             _ = PageFrame.NavigationService.Navigate(usororer);
         }
         private void HideOthersSidebar()
@@ -361,7 +366,7 @@ namespace Client
             Chat_Text.FontFamily = new FontFamily(new Uri("pack://application:,,,/SegoeUI7/seguisb_0.ttf"), "Segoe UI Semibold");
             HideOthersSidebar();
             HandleableError usororer = new HandleableError(new ATError(418, new ErrorDetail("", "I'm a teapot")));
-            PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+            PageFrame.NavigationService.Navigated += (s, ee) => NavServiceOnNavigated(true);
             _ = PageFrame.NavigationService.Navigate(usororer);
         }
 
@@ -390,7 +395,7 @@ namespace Client
             selectobjectsidebar = 5;
             HideOthersSidebar();
             HandleableError usororer = new HandleableError(new ATError(418, new ErrorDetail("", "I'm a teapot")));
-            PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+            PageFrame.NavigationService.Navigated += (s, ee) => NavServiceOnNavigated(true);
             _ = PageFrame.NavigationService.Navigate(usororer);
         }
 
@@ -419,7 +424,7 @@ namespace Client
             selectobjectsidebar = 6;
             HideOthersSidebar();
             HandleableError usororer = new HandleableError(new ATError(418, new ErrorDetail("", "I'm a teapot")));
-            PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+            PageFrame.NavigationService.Navigated += (s, ee) => NavServiceOnNavigated(true);
             _ = PageFrame.NavigationService.Navigate(usororer);
         }
 
@@ -448,16 +453,16 @@ namespace Client
             selectobjectsidebar = 7;
             HideOthersSidebar();
             Profile myProfilePage = new Profile(session.Did, aTProtocol, session, this);
-            PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+            PageFrame.NavigationService.Navigated += (s, ee) => NavServiceOnNavigated(true);
             _ = PageFrame.NavigationService.Navigate(myProfilePage);
         }
-        private void NavServiceOnNavigated(object sender, NavigationEventArgs args)
+        private void NavServiceOnNavigated(bool moveForward)
         {
             _ = PageFrame.NavigationService.RemoveBackEntry();
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
-            PageFrame.NavigationService.Navigated -= NavServiceOnNavigated;
+            PageFrame.NavigationService.Navigated -= (s, ee) => NavServiceOnNavigated(true);
         }
 
         private void Settings_MouseEnter(object sender, MouseEventArgs e)
@@ -485,7 +490,7 @@ namespace Client
             selectobjectsidebar = 8;
             HideOthersSidebar();
             Settings CPL = new Settings(aTProtocol, session, this);
-            PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+            PageFrame.NavigationService.Navigated += (s, ee) => NavServiceOnNavigated(true);
             _ = PageFrame.NavigationService.Navigate(CPL);
         }
 
@@ -599,7 +604,7 @@ namespace Client
                 selectobjectsidebar = 1;
                 HideOthersSidebar();
                 Home homePage = new Home(feeds, aTProtocol, this);
-                PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+                PageFrame.NavigationService.Navigated += (s, ee) => NavServiceOnNavigated(true);
                 _ = PageFrame.NavigationService.Navigate(homePage);
             }
         }
@@ -614,7 +619,7 @@ namespace Client
                 selectobjectsidebar = 2;
                 HideOthersSidebar();
                 Explore explore = new Explore(aTProtocol, this);
-                PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+                PageFrame.NavigationService.Navigated += (s, ee) => NavServiceOnNavigated(true);
                 _ = PageFrame.NavigationService.Navigate(explore);
             }
         }
@@ -629,7 +634,7 @@ namespace Client
                 selectobjectsidebar = 1;
                 HideOthersSidebar();
                 Home homePage = new Home(feeds, aTProtocol, this);
-                PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+                PageFrame.NavigationService.Navigated += (s, ee) => NavServiceOnNavigated(true);
                 _ = PageFrame.NavigationService.Navigate(homePage);
             }
         }
@@ -639,7 +644,7 @@ namespace Client
             selectobjectsidebar = 0;
             HideOthersSidebar();
             FeedPage feedPage = new FeedPage(ATUri.Create(Uri), aTProtocol, this, feed);
-            PageFrame.NavigationService.Navigated += NavServiceOnNavigated;
+            PageFrame.NavigationService.Navigated += (s, ee) => NavServiceOnNavigated(true);
             _ = PageFrame.NavigationService.Navigate(feedPage);
         }
 
@@ -688,6 +693,12 @@ namespace Client
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void PageFrame_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
+        {
+            navHist.Add(e.Content.GetType().Name);
+            index++;
         }
     }
 }

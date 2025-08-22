@@ -16,7 +16,7 @@
         </Rectangle>
         <Grid>
             <Rectangle x:Name="SelectPost" Margin="-15,1,-15,1" Fill="#3FFFFFFF" MouseEnter="SelectPost_MouseEnter" MouseLeave="SelectPost_MouseLeave" MouseUp="SelectPost_MouseUp" Opacity="0"/>
-            <TextBlock x:Name="Name" Margin="0,9,0,0" Foreground="#FF0D467A" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="SelectPost_MouseEnter" MouseLeave="SelectPost_MouseLeave" MouseUp="SelectPost_MouseUp" Text="1. #fishisoverparty"/>
+            <TextBlock x:Name="TrendName" Margin="0,9,0,0" Foreground="#FF0D467A" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="SelectPost_MouseEnter" MouseLeave="SelectPost_MouseLeave" MouseUp="SelectPost_MouseUp" Text="1. #fishisoverparty"/>
             <TextBlock x:Name="Details" FontFamily="/SegoeUI7/segoeuii_0.ttf#Segoe UI" Foreground="#FF9AA6B1" Margin="0,26,0,10" HorizontalAlignment="Left" VerticalAlignment="Top" MouseEnter="SelectPost_MouseEnter" MouseLeave="SelectPost_MouseLeave" MouseUp="SelectPost_MouseUp" Text="-99 posts - politics"/>
         </Grid>
     </Grid>

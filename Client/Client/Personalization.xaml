@@ -18,109 +18,209 @@
                 </LinearGradientBrush>
             </Rectangle.Fill>
         </Rectangle>
-        <StackPanel Margin="10,10,10,42">
-            <StackPanel x:Name="Secret" Visibility="Collapsed">
-                <Expander>
-                    <Expander.Header>
-                        <TextBlock Text="Themes" Foreground="#FF0D467A" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold"/>
-                    </Expander.Header>
-                    <StackPanel Margin="0,10,0,0">
-                        <Label Content="Visual Styles:" Padding="0,0,0,5" />
-                        <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
-                            <Grid>
-                                <Rectangle Fill="White" Stroke="#FFABADB3"/>
-                                <StackPanel x:Name="VisualStyleStack" Orientation="Horizontal" Margin="5">
-                                    <Grid Width="48" Margin="5,0,5,0" Visibility="Collapsed">
-                                        <Rectangle Fill="#CCFF5A5A">
-                                            <Rectangle.OpacityMask>
-                                                <ImageBrush ImageSource="/res/ThemeFrameMask.png"/>
-                                            </Rectangle.OpacityMask>
-                                        </Rectangle>
-                                        <Image Source="/res/ThemeFrame.png"/>
-                                        <Image Source="/res/JadeIcon.png" Width="32" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
-                                    </Grid>
-                                    <StackPanel Width="48" Margin="5" ToolTip="Jade">
-                                        <Image Source="/res/JadeIcon.png" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
-                                        <TextBlock VerticalAlignment="Bottom" Text="Jade" HorizontalAlignment="Center" MaxWidth="48" TextWrapping="Wrap" TextAlignment="Center" Margin="0,5,0,0"/>
-                                    </StackPanel>
-                                </StackPanel>
+        <Rectangle x:Name="rect2" RadiusX="3" RadiusY="3" Stroke="#FF9FBDD2" MouseUp="Rectangle_MouseUp" Margin="10,36,10,45">
+            <Rectangle.Fill>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#BFDCF0FF"/>
+                    <GradientStop Color="#7FCDE9FF" Offset="1"/>
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+        <TabControl x:Name="FeedTabControl" Padding="0" ScrollViewer.CanContentScroll="True" BorderThickness="0" Background="{x:Null}" Panel.ZIndex="1" Margin="10,10,10,45">
+            <TabItem Header="Themes" Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="#FF9FBDD2">
+                <StackPanel Margin="10">
+                    <Label Content="My Themes:" Padding="0,0,0,5"/>
+                    <Grid>
+                        <Rectangle Fill="White" Stroke="#FFABADB3"/>
+                        <WrapPanel x:Name="MyThemeStack" Orientation="Horizontal" Margin="5">
+                            <StackPanel Width="64" Margin="5" ToolTip="Custom Theme">
+                                <Image Source="/res/JadeIcon.png" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+                                <TextBlock VerticalAlignment="Bottom" Text="Custom Theme" HorizontalAlignment="Center" MaxWidth="64" TextWrapping="Wrap" TextAlignment="Center" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </WrapPanel>
+                    </Grid>
+                    <Label Content="Aero Themes:" Padding="0,5,0,5"/>
+                    <Grid>
+                        <Rectangle Fill="White" Stroke="#FFABADB3"/>
+                        <WrapPanel x:Name="AeroThemeStack" Orientation="Horizontal" Margin="5">
+                            <StackPanel Width="64" Margin="5" ToolTip="Diamond">
+                                <Image Source="/res/JadeIcon.png" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+                                <TextBlock VerticalAlignment="Bottom" Text="Diamond" HorizontalAlignment="Center" MaxWidth="64" TextWrapping="Wrap" TextAlignment="Center" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </WrapPanel>
+                    </Grid>
+                    <StackPanel x:Name="InstalledThemes" Visibility="Collapsed">
+                        <Label Content="Installed Themes:" Padding="0,5,0,5"/>
+                        <Grid>
+                            <Rectangle Fill="White" Stroke="#FFABADB3"/>
+                            <WrapPanel x:Name="InstalledThemeStack" Orientation="Horizontal" Margin="5"/>
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Visual Styles" Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="#FF9FBDD2">
+                <StackPanel Margin="10">
+                    <Label Content="Visual Styles:" Padding="0,0,0,5"/>
+                    <Grid>
+                        <Rectangle Fill="White" Stroke="#FFABADB3"/>
+                        <WrapPanel x:Name="VisualStyleStack" Orientation="Horizontal" Margin="5">
+                            <StackPanel Width="64" Margin="5" ToolTip="Diamond">
+                                <Image Source="/res/JadeIcon.png" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+                                <TextBlock VerticalAlignment="Bottom" Text="Diamond" HorizontalAlignment="Center" MaxWidth="64" TextWrapping="Wrap" TextAlignment="Center" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </WrapPanel>
+                    </Grid>
+                    <CheckBox x:Name="basicCheck" Margin="0,10,0,48" Content="Enable transparency" VerticalAlignment="Bottom"/>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Layout" Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="#FF9FBDD2">
+                <StackPanel Margin="10">
+                    <CheckBox x:Name="allowFontChange" Margin="0,0,0,7" Content="Allow themes to change font"/>
+                    <CheckBox x:Name="showMenu" Margin="0,0,0,7" Content="Enable menu bar"/>
+                    <CheckBox x:Name="showNavigation" Margin="0,0,0,7" Content="Enable navigation bar (Experimental)"/>
+                    <CheckBox x:Name="fillLayout" Margin="0,0,0,7" Content="Fill dashboard layout (Experimental)"/>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Sounds" Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="#FF9FBDD2">
+                <Grid Margin="10">
+                    <Label Content="Sound Scheme:" Padding="0" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="SOUNDSCHEME" SelectedIndex="0" Margin="0,21,154,0" VerticalAlignment="Top">
+                        <ComboBoxItem Content="Longhorn"/>
+                        <ComboBoxItem Content="No Sounds"/>
+                    </ComboBox>
+                    <Button x:Name="SOUNDSCHEMESAVE" VerticalAlignment="Top" HorizontalAlignment="Right" Content="Save As..." Padding="0,1,0,1" Margin="0,21,77,0" Width="70"/>
+                    <Button x:Name="SOUNDSCHEMEDELETE" VerticalAlignment="Top" HorizontalAlignment="Right" Content="Delete" Padding="0,1,0,1" Margin="0,21,0,0" Width="70"/>
+                    <ListView Margin="0,53,0,74">
+                        <ListViewItem>
+                            <ListViewItem.Content>
+                                <Grid Margin="5">
+                                    <Image Source="/res/SoundSaved.png" HorizontalAlignment="Left"/>
+                                    <Label Content="Notification" Padding="0" Margin="21,0,0,0"/>
+                                </Grid>
+                            </ListViewItem.Content>
+                        </ListViewItem>
+                        <ListViewItem>
+                            <ListViewItem.Content>
+                                <Grid Margin="5">
+                                    <Image Source="/res/SoundSaved.png" HorizontalAlignment="Left"/>
+                                    <Label Content="Alert" Padding="0" Margin="21,0,0,0"/>
+                                </Grid>
+                            </ListViewItem.Content>
+                        </ListViewItem>
+                        <ListViewItem>
+                            <ListViewItem.Content>
+                                <Grid Margin="5">
+                                    <Image Source="/res/SoundSaved.png" HorizontalAlignment="Left"/>
+                                    <Label Content="Important Alert" Padding="0" Margin="21,0,0,0"/>
+                                </Grid>
+                            </ListViewItem.Content>
+                        </ListViewItem>
+                        <ListViewItem>
+                            <ListViewItem.Content>
+                                <Grid Margin="5">
+                                    <Image Source="/res/SoundSaved.png" HorizontalAlignment="Left"/>
+                                    <Label Content="Posting" Padding="0" Margin="21,0,0,0"/>
+                                </Grid>
+                            </ListViewItem.Content>
+                        </ListViewItem>
+                        <ListViewItem>
+                            <ListViewItem.Content>
+                                <Grid Margin="5">
+                                    <Image Source="/res/SoundSaved.png" HorizontalAlignment="Left"/>
+                                    <Label Content="Deleting" Padding="0" Margin="21,0,0,0"/>
+                                </Grid>
+                            </ListViewItem.Content>
+                        </ListViewItem>
+                        <ListViewItem>
+                            <ListViewItem.Content>
+                                <Grid Margin="5">
+                                    <Image Source="/res/SoundSaved.png" HorizontalAlignment="Left"/>
+                                    <Label Content="Logon" Padding="0" Margin="21,0,0,0"/>
+                                </Grid>
+                            </ListViewItem.Content>
+                        </ListViewItem>
+                        <ListViewItem>
+                            <ListViewItem.Content>
+                                <Grid Margin="5">
+                                    <Image Source="/res/SoundSaved.png" HorizontalAlignment="Left"/>
+                                    <Label Content="Logoff" Padding="0" Margin="21,0,0,0"/>
+                                </Grid>
+                            </ListViewItem.Content>
+                        </ListViewItem>
+                    </ListView>
+                    <CheckBox x:Name="logcheck" Margin="0,0,0,48" Content="Play logon and logoff sounds" Checked="LogCheck" Unchecked="LogUncheck" VerticalAlignment="Bottom"/>
+                    <Label Content="Sound:" Padding="0" VerticalAlignment="Bottom" Margin="0,0,0,25"/>
+                    <ComboBox x:Name="SOUND" SelectedIndex="0" Margin="0,21,154,0" VerticalAlignment="Bottom">
+                        <ComboBoxItem Content="(None)"/>
+                        <ComboBoxItem Content="Longhorn Notification"/>
+                    </ComboBox>
+                    <Button x:Name="SOUNDTEST" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Test" Padding="0,1,0,1" Margin="0,21,77,0" Width="70"/>
+                    <Button x:Name="SOUNDBROWSE" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Margin="0,21,0,0" Width="70"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Legacy" Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="#FF9FBDD2">
+                <StackPanel Margin="10,10,10,42">
+                    <Expander>
+                        <Expander.Header>
+                            <TextBlock Text="Sounds" Foreground="#FF0D467A" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold"/>
+                        </Expander.Header>
+                        <StackPanel Margin="0,10,0,0">
+                            <Label Content="Notification Sound:" Padding="0,0,0,5"/>
+                            <Grid Margin="0,0,0,10">
+                                <ComboBox x:Name="NOTIFBOX" SelectedIndex="0" Margin="0,0,77,0">
+                                    <ComboBoxItem Content="Longhorn Notification" ToolTip="LH_NOTIF.wav"/>
+                                </ComboBox>
+                                <Button x:Name="NOTIFBUTTON" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Width="70" Click="NotifBrowse_Click"/>
                             </Grid>
-                        </ScrollViewer>
-                    </StackPanel>
-                </Expander>
-                <Separator/>
-            </StackPanel>
-            <Expander>
-                <Expander.Header>
-                    <TextBlock Text="Layout" Foreground="#FF0D467A" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold"/>
-                </Expander.Header>
-                <StackPanel Margin="0,10,0,0">
-                    <CheckBox x:Name="showMenu" Margin="0,0,0,7" Content="Menu Bar"/>
-                    <CheckBox x:Name="showNavigation" Margin="0,0,0,7" Content="Navigation Bar (Experimental)"/>
-                    <CheckBox x:Name="fillLayout" Margin="0,0,0,7" Content="Fill Dashboard Layout (Experimental)"/>
+                            <Label Content="Alert Sound:" Padding="0,0,0,5"/>
+                            <Grid Margin="0,0,0,10">
+                                <ComboBox x:Name="ALERTBOX" Margin="0,0,77,0" SelectedIndex="0">
+                                    <ComboBoxItem Content="Longhorn Alert" ToolTip="LH_ALERT.wav"/>
+                                </ComboBox>
+                                <Button x:Name="ALERTBUTTON" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Width="70" Click="AlertBrowse_Click"/>
+                            </Grid>
+                            <Label Content="Important Alert Sound:" Padding="0,0,0,5"/>
+                            <Grid Margin="0,0,0,10" >
+                                <ComboBox x:Name="IMPORTANTALERTBOX" SelectedIndex="0" Margin="0,0,77,0">
+                                    <ComboBoxItem Content="Longhorn Important Alert" ToolTip="LH_UPDATEALERT.wav"/>
+                                </ComboBox>
+                                <Button x:Name="IMPORTANTALERTBUTTON" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Width="70" Click="ImportantAlertBrowse_Click"/>
+                            </Grid>
+                            <Label Content="Posting Sound:" Padding="0,0,0,5"/>
+                            <Grid Margin="0,0,0,10" >
+                                <ComboBox x:Name="POSTBOX" SelectedIndex="0" Margin="0,0,77,0">
+                                    <ComboBoxItem Content="Longhorn Posting" ToolTip="LH_POST.wav"/>
+                                </ComboBox>
+                                <Button x:Name="POSTBUTTON" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Width="70" Click="PostBrowse_Click"/>
+                            </Grid>
+                            <Label Content="Deleting Sound:" Padding="0,0,0,5"/>
+                            <Grid Margin="0,0,0,10">
+                                <ComboBox x:Name="DELETEBOX" SelectedIndex="0" Margin="0,0,77,0">
+                                    <ComboBoxItem Content="Longhorn Deleting" ToolTip="LH_DELETE.wav"/>
+                                </ComboBox>
+                                <Button x:Name="DELETEBUTTON" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Width="70" Click="DeleteBrowse_Click"/>
+                            </Grid>
+                            <StackPanel x:Name="LogSounds" Visibility="Collapsed">
+                                <Label Content="Logon Sound:" Padding="0,0,0,5"/>
+                                <Grid Margin="0,0,0,10">
+                                    <ComboBox x:Name="LOGONBOX" Margin="0,0,77,0" SelectedIndex="0">
+                                        <ComboBoxItem Content="Longhorn Logon" ToolTip="LH_WELCOME.wav"/>
+                                    </ComboBox>
+                                    <Button x:Name="LOGONBUTTON" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Width="70" Click="LogonBrowse_Click"/>
+                                </Grid>
+                                <Label Content="Logoff Sound:" Padding="0,0,0,5"/>
+                                <Grid Margin="0,0,0,10">
+                                    <ComboBox x:Name="LOGOFFBOX" Margin="0,0,77,0" SelectedIndex="0">
+                                        <ComboBoxItem Content="Longhorn Logoff" ToolTip="LH_EXIT.wav"/>
+                                    </ComboBox>
+                                    <Button x:Name="LOGOFFBUTTON" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Width="70" Click="LogoffBrowse_Click"/>
+                                </Grid>
+                            </StackPanel>
+                        </StackPanel>
+                    </Expander>
                 </StackPanel>
-            </Expander>
-            <Separator/>
-            <Expander>
-                <Expander.Header>
-                    <TextBlock Text="Sounds" Foreground="#FF0D467A" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold"/>
-                </Expander.Header>
-                <StackPanel Margin="0,10,0,0">
-                    <Label Content="Notification Sound:" Padding="0,0,0,5" />
-                    <Grid Margin="0,0,0,10">
-                        <ComboBox x:Name="NOTIFBOX" SelectedIndex="0" Margin="0,0,77,0">
-                            <ComboBoxItem Content="Longhorn Notification" ToolTip="LH_NOTIF.wav"/>
-                        </ComboBox>
-                        <Button x:Name="NOTIFBUTTON" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Width="70" Click="NotifBrowse_Click"/>
-                    </Grid>
-                    <Label Content="Alert Sound:" Padding="0,0,0,5" />
-                    <Grid Margin="0,0,0,10">
-                        <ComboBox x:Name="ALERTBOX" Margin="0,0,77,0" SelectedIndex="0">
-                            <ComboBoxItem Content="Longhorn Alert" ToolTip="LH_ALERT.wav"/>
-                        </ComboBox>
-                        <Button x:Name="ALERTBUTTON" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Width="70" Click="AlertBrowse_Click"/>
-                    </Grid>
-                    <Label Content="Important Alert Sound:" Padding="0,0,0,5" />
-                    <Grid Margin="0,0,0,10" >
-                        <ComboBox x:Name="IMPORTANTALERTBOX" SelectedIndex="0" Margin="0,0,77,0">
-                            <ComboBoxItem Content="Longhorn Important Alert" ToolTip="LH_UPDATEALERT.wav"/>
-                        </ComboBox>
-                        <Button x:Name="IMPORTANTALERTBUTTON" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Width="70" Click="ImportantAlertBrowse_Click"/>
-                    </Grid>
-                    <Label Content="Posting Sound:" Padding="0,0,0,5" />
-                    <Grid Margin="0,0,0,10" >
-                        <ComboBox x:Name="POSTBOX" SelectedIndex="0" Margin="0,0,77,0">
-                            <ComboBoxItem Content="Longhorn Posting" ToolTip="LH_POST.wav"/>
-                        </ComboBox>
-                        <Button x:Name="POSTBUTTON" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Width="70" Click="PostBrowse_Click"/>
-                    </Grid>
-                    <Label Content="Deleting Sound:" Padding="0,0,0,5" />
-                    <Grid Margin="0,0,0,10">
-                        <ComboBox x:Name="DELETEBOX" SelectedIndex="0" Margin="0,0,77,0">
-                            <ComboBoxItem Content="Longhorn Deleting" ToolTip="LH_DELETE.wav"/>
-                        </ComboBox>
-                        <Button x:Name="DELETEBUTTON" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Width="70" Click="DeleteBrowse_Click"/>
-                    </Grid>
-                    <CheckBox x:Name="logcheck" Margin="0,0,0,7" Content="Playing logon and logoff sounds" Checked="LogCheck" Unchecked="LogUncheck"/>
-                    <StackPanel x:Name="LogSounds" Visibility="Collapsed">
-                        <Label Content="Logon Sound:" Padding="0,0,0,5" />
-                        <Grid Margin="0,0,0,10">
-                            <ComboBox x:Name="LOGONBOX" Margin="0,0,77,0" SelectedIndex="0">
-                                <ComboBoxItem Content="Longhorn Logon" ToolTip="LH_WELCOME.wav"/>
-                            </ComboBox>
-                            <Button x:Name="LOGONBUTTON" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Width="70" Click="LogonBrowse_Click"/>
-                        </Grid>
-                        <Label Content="Logoff Sound:" Padding="0,0,0,5" />
-                        <Grid Margin="0,0,0,10">
-                            <ComboBox x:Name="LOGOFFBOX" Margin="0,0,77,0" SelectedIndex="0">
-                                <ComboBoxItem Content="Longhorn Logoff" ToolTip="LH_EXIT.wav"/>
-                            </ComboBox>
-                            <Button x:Name="LOGOFFBUTTON" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Width="70" Click="LogoffBrowse_Click"/>
-                        </Grid>
-                    </StackPanel>
-                </StackPanel>
-            </Expander>
-        </StackPanel>
+            </TabItem>
+        </TabControl>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
             <Button x:Name="OK" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="OK" Padding="0,1,0,1" Width="70" Click="OK_Click" Margin="0,0,7,0"/>
             <Button x:Name="Cancel" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Cancel" Padding="0,1,0,1" Width="70" Click="Cancel_Click" Margin="0,0,7,0"/>

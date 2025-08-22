@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using FishyFlip;
 using FishyFlip.Lexicon.App.Bsky.Feed;
-using FishyFlip.Lexicon.App.Bsky.Graph;
 using FishyFlip.Models;
 using Newtonsoft.Json.Linq;
 
