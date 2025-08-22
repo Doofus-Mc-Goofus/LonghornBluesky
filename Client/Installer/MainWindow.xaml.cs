@@ -18,7 +18,7 @@ namespace Installer
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly App app = (App)Application.Current;
+        private App app = (App)Application.Current;
         private byte progress = 0;
         private byte total = 4;
         private bool isDispose = false;
@@ -108,18 +108,6 @@ namespace Installer
                 Dispatcher.UnhandledException += OnDispatcherUnhandledException;
             }
             InitializeComponent();
-            if (SystemParameters.PrimaryScreenHeight < 768 || SystemParameters.PrimaryScreenWidth < 1024 || System.Windows.Forms.Screen.PrimaryScreen.BitsPerPixel < 32)
-            {
-                _ = MessageBox.Show("Longhorn Bluesky requires a monitor with a resolution of at least 1024x768 and 32-bit color.", "Installation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                Application.Current.Shutdown();
-            }
-            if (!Environment.Is64BitOperatingSystem)
-            {
-                _ = MessageBox.Show("Longhorn Bluesky requires a 64-bit CPU to run.", "Installation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                Application.Current.Shutdown();
-            }
-            app = (App)Application.Current;
-            app.ChangeTheme(new Uri("pack://application:,,,/PresentationFramework.Aero;V4.0.0.0;31bf3856ad364e35;component/themes/aero.normalcolor.xaml"));
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
@@ -382,6 +370,22 @@ namespace Installer
         private void CheckBox_Click(object sender, RoutedEventArgs e)
         {
             ((CheckBox)sender).IsChecked = true;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (SystemParameters.PrimaryScreenHeight < 768 || SystemParameters.PrimaryScreenWidth < 1024 || System.Windows.Forms.Screen.PrimaryScreen.BitsPerPixel < 32)
+            {
+                _ = MessageBox.Show("Longhorn Bluesky requires a monitor with a resolution of at least 1024x768 and 32-bit color.", "Installation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Application.Current.Shutdown();
+            }
+            if (!Environment.Is64BitOperatingSystem)
+            {
+                _ = MessageBox.Show("Longhorn Bluesky requires a 64-bit CPU to run.", "Installation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Application.Current.Shutdown();
+            }
+            app = (App)Application.Current;
+            app.ChangeTheme(new Uri("pack://application:,,,/PresentationFramework.Aero;V4.0.0.0;31bf3856ad364e35;component/themes/aero.normalcolor.xaml"));
         }
     }
 }
