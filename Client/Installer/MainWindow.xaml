@@ -13,7 +13,7 @@
             </LinearGradientBrush>
         </Grid.Background>
         <Image x:Name="BG" Source="BG.png" Opacity="0.33" Focusable="True" Stretch="Fill" MouseDown="BG_MouseDown"/>
-        <Grid x:Name="SelectPage">
+        <Grid x:Name="SelectPage" Visibility="Collapsed">
             <Label Content="Choose the components you want to install" FontSize="20" Margin="15,50,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" Foreground="#FF0D467A" MouseDown="BG_MouseDown"/>
             <TextBlock Margin="15,80,15,0" Text="Hover on each component name for details" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" MouseDown="BG_MouseDown"/>
             <CheckBox Margin="15,104,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Longhorn Bluesky" ToolTip="This cannot be disabled" IsChecked="True" Click="CheckBox_Click" Foreground="#FF404040"/>
@@ -34,7 +34,7 @@
             <Label x:Name="DownloadText" Padding="0" Content="Please wait..." Margin="15,0,15,18" VerticalAlignment="Bottom"/>
             <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Cancel" Padding="0,1,0,1" Width="80" Click="Cancel_Click" Margin="0,0,15,15"/>
         </Grid>
-        <Grid x:Name="Finish" Visibility="Collapsed">
+        <Grid x:Name="Finish">
             <Label Content="Longhorn Bluesky Setup" FontSize="20" Margin="15,50,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="0" Foreground="#FF0D467A"/>
             <TextBlock x:Name="TexBex" Margin="15,80,15,0" Text="Longhorn Bluesky has succesfully installed. Click &quot;Finish&quot; to exit setup." HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap"/>
             <CheckBox x:Name="RunCheck" Margin="15,104,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Run Longhorn Bluesky after finishing setup"/>
