@@ -16,7 +16,6 @@ A third-party Bluesky client with a Windows Longhorn theme.
 3. Locate the "bin" folder, and copy it to the same directory as the client
 
 ## Upcoming Features (in no specific order)
-- Video playback
 - Proper high-DPI support (no bugs, just low quality icons)
 - 2FA support
 - Attaching alt text
@@ -30,7 +29,6 @@ A third-party Bluesky client with a Windows Longhorn theme.
 - Tenor GIF support
 - Viewing as a guest
 - Finishing Help and Support
-- Client themes
 - Profile themes?
 - ...and the remaining Bluesky features
 
