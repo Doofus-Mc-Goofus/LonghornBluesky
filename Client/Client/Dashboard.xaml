@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="800"
-      Title="Bluesky" UseLayoutRounding="True" Loaded="Page_Loaded" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI">
+      Title="Bluesky" UseLayoutRounding="True" Loaded="Page_Loaded" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI" Foreground="{StaticResource readText}">
     <Grid>
         <Grid x:Name="FrameMask" Margin="260,0,0,0" MaxWidth="540">
             <Rectangle Fill="Black" Margin="0,20,0,20"/>
@@ -27,15 +27,8 @@
             </Rectangle>
             <Rectangle HorizontalAlignment="Right" Width="16" Fill="Black"/>
         </Grid>
-        <Rectangle>
-            <Rectangle.Fill>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FF6691B3"/>
-                    <GradientStop Color="#FFCFEAFF" Offset="1"/>
-                </LinearGradientBrush>
-            </Rectangle.Fill>
-        </Rectangle>
-        <Image x:Name="BG" Source="/res/Windows Vista Beta 1 Speech Tutorial.png" Opacity="0.25" Focusable="True" MouseUp="BG_MouseUp" Stretch="Fill"/>
+        <Rectangle Fill="{StaticResource bgUnderlay}"/>
+        <Image x:Name="BG" Source="{StaticResource bg}" Opacity="{StaticResource bgOpacity}" RenderOptions.BitmapScalingMode="HighQuality" Focusable="True" MouseUp="BG_MouseUp" Stretch="Fill"/>
         <Menu x:Name="Menu" VerticalAlignment="Top" Height="20" LayoutUpdated="Menu_LayoutUpdated" Padding="2,0,2,0" Visibility="Collapsed">
             <MenuItem Header="File" Padding="7,0,8,3">
                 <MenuItem Header="Sign out" Click="Logoff"/>
@@ -53,16 +46,10 @@
         <Grid x:Name="LayoutLayout" MaxWidth="800">
             <StackPanel Margin="20,20,0,20" HorizontalAlignment="Left" Width="240">
                 <Grid Width="240" Height="80" Margin="0,0,0,20">
-                    <Rectangle RadiusX="3" RadiusY="3" Stroke="#54E0F6FF">
+                    <Rectangle RadiusX="3" RadiusY="3" Stroke="{StaticResource dashUnderlayOutline}" Fill="{StaticResource dashUnderlay2}">
                         <Rectangle.Effect>
                             <DropShadowEffect ShadowDepth="5" Opacity="0.33" BlurRadius="10" Direction="270"/>
                         </Rectangle.Effect>
-                        <Rectangle.Fill>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="#CCCEEAFF"/>
-                                <GradientStop Color="#54CDE9FF" Offset="1"/>
-                            </LinearGradientBrush>
-                        </Rectangle.Fill>
                     </Rectangle>
                     <Image Source="/res/PFPShadow.png" Stretch="Fill" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,40,0,0" Width="64" Height="29"/>
                     <Image x:Name="PFP" Source="/res/usertile7.png" VerticalAlignment="Center" HorizontalAlignment="Left" Width="52" Margin="16,0,0,0" RenderTransformOrigin="0.5,0.5" RenderOptions.BitmapScalingMode="Fant">
@@ -78,7 +65,7 @@
                             </TransformGroup>
                         </Image.RenderTransform>
                     </Image>
-                    <Image x:Name="PFPFrame" Source="/res/PFPFrameSmal.png" VerticalAlignment="Center" HorizontalAlignment="Left" Width="52" Margin="16,0,0,0" RenderTransformOrigin="0.5,0.5" Cursor="Hand" MouseUp="PFPFrame_MouseUp">
+                    <Image x:Name="PFPFrame" Source="{StaticResource PFPBorder}" VerticalAlignment="Center" HorizontalAlignment="Left" Width="52" Margin="16,0,0,0" RenderTransformOrigin="0.5,0.5" Cursor="Hand" MouseUp="PFPFrame_MouseUp">
                         <Image.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Sign out" Click="Logoff"/>
@@ -93,70 +80,34 @@
                             </TransformGroup>
                         </Image.RenderTransform>
                     </Image>
-                    <TextBlock x:Name="Username" Text="USERNAMEUSERNAME" FontSize="14" Margin="75,0,10,15" VerticalAlignment="Center" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold" Foreground="#FF0D467A" TextTrimming="CharacterEllipsis"/>
-                    <TextBlock x:Name="Fullname" Text="@usernameusername.bsky.social" FontSize="11" Margin="75,20,10,0" VerticalAlignment="Center" FontFamily="/SegoeUI7/segoeuii_0.ttf#Segoe UI" Foreground="#FF0D467A" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock x:Name="Username" Text="USERNAMEUSERNAME" FontSize="14" Margin="75,0,10,15" VerticalAlignment="Center" FontFamily="Segoe UI Semibold" Foreground="{StaticResource menuText}" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock x:Name="Fullname" Text="@usernameusername.bsky.social" FontSize="11" Margin="75,20,10,0" VerticalAlignment="Center" FontFamily="/SegoeUI7/segoeuii_0.ttf#Segoe UI" Foreground="{StaticResource menuText}" TextTrimming="CharacterEllipsis"/>
                 </Grid>
-                <Grid Width="240" Height="306" Margin="0,0,0,20">
-                    <Rectangle RadiusX="3" RadiusY="3" Stroke="#54E0F6FF">
+                <Grid Width="240" Margin="0,0,0,20" Height="322">
+                    <Rectangle RadiusX="3" RadiusY="3" Stroke="{StaticResource dashUnderlayOutline}" Fill="{StaticResource dashUnderlay}">
                         <Rectangle.Effect>
                             <DropShadowEffect ShadowDepth="5" Opacity="0.33" BlurRadius="10" Direction="270"/>
                         </Rectangle.Effect>
-                        <Rectangle.Fill>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="#CCCEEAFF"/>
-                                <GradientStop Color="#7FCDE9FF" Offset="1"/>
-                            </LinearGradientBrush>
-                        </Rectangle.Fill>
                     </Rectangle>
-                    <Rectangle RadiusX="3" RadiusY="3" Height="26" VerticalAlignment="Top">
-                        <Rectangle.Fill>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="#FFA2C1DA"/>
-                                <GradientStop Color="#FF9CBAD2" Offset="1"/>
-                            </LinearGradientBrush>
-                        </Rectangle.Fill>
+                    <Rectangle RadiusX="3" RadiusY="3" Height="26" VerticalAlignment="Top" Fill="{StaticResource menuBG}">
                     </Rectangle>
-                    <Label Foreground="#FF0D467A" Content="Menu" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold" Padding="10,5,5,5"/>
+                    <Label Foreground="{StaticResource menuText}" Content="Menu" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold" Padding="10,5,5,5"/>
                     <StackPanel Margin="0,28,0,0">
-                        <Grid x:Name="Home" Width="240" Height="32" Margin="0,0,0,2" MouseEnter="Home_MouseEnter" MouseLeave="Home_MouseLeave" MouseUp="Home_MouseUp">
+                        <Grid x:Name="Home" Width="240" Height="30" Margin="0,0,0,2" MouseEnter="Home_MouseEnter" MouseLeave="Home_MouseLeave" MouseUp="Home_MouseUp">
                             <Button Content="Home" Opacity="0"/>
-                            <Rectangle x:Name="Home_BG" Margin="2,0,2,0" Stroke="#540D467A" RadiusY="3" RadiusX="3">
-                                <Rectangle.Fill>
-                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                        <GradientStop Color="#7FFFFFFF"/>
-                                        <GradientStop Color="#7FFFFFFF" Offset="1"/>
-                                        <GradientStop Color="#3FFFFFFF" Offset="0.654"/>
-                                    </LinearGradientBrush>
-                                </Rectangle.Fill>
-                            </Rectangle>
+                            <Rectangle x:Name="Home_BG" Margin="2,0,2,0" Stroke="{StaticResource sideBarItemSelectOutline}" RadiusY="3" RadiusX="3" Fill="{StaticResource sideBarItemSelect}"/>
                             <Image Source="/res/HomeIcon.png" Height="24" HorizontalAlignment="Left" Margin="14,0,0,0"/>
-                            <Label x:Name="Home_Text" Foreground="#FF0D467A" Content="Home" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold" VerticalContentAlignment="Center" Margin="42,0,0,0"/>
+                            <Label x:Name="Home_Text" Foreground="{StaticResource menuText2}" Content="Home" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold" VerticalContentAlignment="Center" Margin="42,0,0,0"/>
                         </Grid>
-                        <Grid x:Name="Explore" Width="240" Height="32" Margin="0,0,0,2" MouseEnter="Explore_MouseEnter" MouseLeave="Explore_MouseLeave" MouseUp="Explore_MouseUp">
+                        <Grid x:Name="Explore" Width="240" Height="30" Margin="0,0,0,2" MouseEnter="Explore_MouseEnter" MouseLeave="Explore_MouseLeave" MouseUp="Explore_MouseUp">
                             <Button Content="Explore" Opacity="0"/>
-                            <Rectangle x:Name="Explore_BG" Margin="2,0,2,0" Stroke="#540D467A" RadiusY="3" RadiusX="3" Visibility="Collapsed">
-                                <Rectangle.Fill>
-                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                        <GradientStop Color="#7FFFFFFF"/>
-                                        <GradientStop Color="#7FFFFFFF" Offset="1"/>
-                                        <GradientStop Color="#3FFFFFFF" Offset="0.654"/>
-                                    </LinearGradientBrush>
-                                </Rectangle.Fill>
-                            </Rectangle>
+                            <Rectangle x:Name="Explore_BG" Margin="2,0,2,0" Stroke="{StaticResource sideBarItemSelectOutline}" RadiusY="3" RadiusX="3" Visibility="Collapsed" Fill="{StaticResource sideBarItemSelect}"/>
                             <Image Source="/res/SearchIconAlt.png" Height="24" HorizontalAlignment="Left" Margin="14,0,0,0"/>
-                            <Label x:Name="Explore_Text" Foreground="#FF0D467A" Content="Explore" VerticalContentAlignment="Center" Margin="42,0,0,0"/>
+                            <Label x:Name="Explore_Text" Foreground="{StaticResource menuText2}" Content="Explore" VerticalContentAlignment="Center" Margin="42,0,0,0"/>
                         </Grid>
-                        <Grid x:Name="Notifs" Width="240" Height="32" Margin="0,0,0,2" MouseEnter="Notifs_MouseEnter" MouseLeave="Notifs_MouseLeave" MouseUp="Notifs_MouseUp">
+                        <Grid x:Name="Notifs" Width="240" Height="30" Margin="0,0,0,2" MouseEnter="Notifs_MouseEnter" MouseLeave="Notifs_MouseLeave" MouseUp="Notifs_MouseUp">
                             <Button Content="Notifications" Opacity="0"/>
-                            <Rectangle x:Name="Notifs_BG" Margin="2,0,2,0" Stroke="#540D467A" RadiusY="3" RadiusX="3" Visibility="Collapsed">
-                                <Rectangle.Fill>
-                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                        <GradientStop Color="#7FFFFFFF"/>
-                                        <GradientStop Color="#7FFFFFFF" Offset="1"/>
-                                        <GradientStop Color="#3FFFFFFF" Offset="0.654"/>
-                                    </LinearGradientBrush>
-                                </Rectangle.Fill>
-                            </Rectangle>
+                            <Rectangle x:Name="Notifs_BG" Margin="2,0,2,0" Stroke="{StaticResource sideBarItemSelectOutline}" RadiusY="3" RadiusX="3" Visibility="Collapsed" Fill="{StaticResource sideBarItemSelect}"/>
                             <Image Source="/res/MailIcon.png" Height="24" HorizontalAlignment="Left" Margin="14,0,0,0"/>
                             <Grid x:Name="NotifNumbGrid" Margin="26,0,0,0" Height="16" VerticalAlignment="Top" HorizontalAlignment="Left" Visibility="Collapsed">
                                 <Grid.Background>
@@ -168,111 +119,71 @@
                                     </Label.Effect>
                                 </Label>
                             </Grid>
-                            <Label x:Name="Notifs_Text" Foreground="#FF0D467A" Content="Notifications" VerticalContentAlignment="Center" Margin="42,0,0,0"/>
+                            <Label x:Name="Notifs_Text" Foreground="{StaticResource menuText2}" Content="Notifications" VerticalContentAlignment="Center" Margin="42,0,0,0"/>
                         </Grid>
-                        <Grid x:Name="Chat" Width="240" Height="32" Margin="0,0,0,2" MouseEnter="Chat_MouseEnter" MouseLeave="Chat_MouseLeave" MouseUp="Chat_MouseUp">
+                        <Grid x:Name="Chat" Width="240" Height="30" Margin="0,0,0,2" MouseEnter="Chat_MouseEnter" MouseLeave="Chat_MouseLeave" MouseUp="Chat_MouseUp">
                             <Button Content="Chat" Opacity="0"/>
-                            <Rectangle x:Name="Chat_BG" Margin="2,0,2,0" Stroke="#540D467A" RadiusY="3" RadiusX="3" Visibility="Collapsed">
-                                <Rectangle.Fill>
-                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                        <GradientStop Color="#7FFFFFFF"/>
-                                        <GradientStop Color="#7FFFFFFF" Offset="1"/>
-                                        <GradientStop Color="#3FFFFFFF" Offset="0.654"/>
-                                    </LinearGradientBrush>
-                                </Rectangle.Fill>
-                            </Rectangle>
+                            <Rectangle x:Name="Chat_BG" Margin="2,0,2,0" Stroke="{StaticResource sideBarItemSelectOutline}" RadiusY="3" RadiusX="3" Visibility="Collapsed" Fill="{StaticResource sideBarItemSelect}"/>
                             <Image Source="/res/ChatIcon.png" Height="24" HorizontalAlignment="Left" Margin="14,0,0,0"/>
-                            <Label x:Name="Chat_Text" Foreground="#FF0D467A" Content="Chat" VerticalContentAlignment="Center" Margin="42,0,0,0"/>
+                            <Label x:Name="Chat_Text" Foreground="{StaticResource menuText2}" Content="Chat" VerticalContentAlignment="Center" Margin="42,0,0,0"/>
                         </Grid>
-                        <Grid x:Name="Feeds" Width="240" Height="32" Margin="0,0,0,2" MouseEnter="Feeds_MouseEnter" MouseLeave="Feeds_MouseLeave" MouseUp="Feeds_MouseUp">
+                        <Grid x:Name="Feeds" Width="240" Height="30" Margin="0,0,0,2" MouseEnter="Feeds_MouseEnter" MouseLeave="Feeds_MouseLeave" MouseUp="Feeds_MouseUp">
                             <Button Content="Feeds" Opacity="0"/>
-                            <Rectangle x:Name="Feeds_BG" Margin="2,0,2,0" Stroke="#540D467A" RadiusY="3" RadiusX="3" Visibility="Collapsed">
-                                <Rectangle.Fill>
-                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                        <GradientStop Color="#7FFFFFFF"/>
-                                        <GradientStop Color="#7FFFFFFF" Offset="1"/>
-                                        <GradientStop Color="#3FFFFFFF" Offset="0.654"/>
-                                    </LinearGradientBrush>
-                                </Rectangle.Fill>
-                            </Rectangle>
+                            <Rectangle x:Name="Feeds_BG" Margin="2,0,2,0" Stroke="{StaticResource sideBarItemSelectOutline}" RadiusY="3" RadiusX="3" Visibility="Collapsed" Fill="{StaticResource sideBarItemSelect}"/>
                             <Image Source="/res/FeedsIcon.png" Height="24" HorizontalAlignment="Left" Margin="14,0,0,0"/>
-                            <Label x:Name="Feeds_Text" Foreground="#FF0D467A" Content="Feeds" VerticalContentAlignment="Center" Margin="42,0,0,0"/>
+                            <Label x:Name="Feeds_Text" Foreground="{StaticResource menuText2}" Content="Feeds" VerticalContentAlignment="Center" Margin="42,0,0,0"/>
                         </Grid>
-                        <Grid x:Name="Lists" Width="240" Height="32" Margin="0,0,0,2" MouseEnter="Lists_MouseEnter" MouseLeave="Lists_MouseLeave" MouseUp="Lists_MouseUp">
+                        <Grid x:Name="Lists" Width="240" Height="30" Margin="0,0,0,2" MouseEnter="Lists_MouseEnter" MouseLeave="Lists_MouseLeave" MouseUp="Lists_MouseUp">
                             <Button Content="Lists" Opacity="0"/>
-                            <Rectangle x:Name="Lists_BG" Margin="2,0,2,0" Stroke="#540D467A" RadiusY="3" RadiusX="3" Visibility="Collapsed">
-                                <Rectangle.Fill>
-                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                        <GradientStop Color="#7FFFFFFF"/>
-                                        <GradientStop Color="#7FFFFFFF" Offset="1"/>
-                                        <GradientStop Color="#3FFFFFFF" Offset="0.654"/>
-                                    </LinearGradientBrush>
-                                </Rectangle.Fill>
-                            </Rectangle>
+                            <Rectangle x:Name="Lists_BG" Margin="2,0,2,0" Stroke="{StaticResource sideBarItemSelectOutline}" RadiusY="3" RadiusX="3" Visibility="Collapsed" Fill="{StaticResource sideBarItemSelect}"/>
                             <Image Source="/res/ListIcon.png" Height="24" HorizontalAlignment="Left" Margin="14,0,0,0"/>
-                            <Label x:Name="Lists_Text" Foreground="#FF0D467A" Content="Lists" VerticalContentAlignment="Center" Margin="42,0,0,0"/>
+                            <Label x:Name="Lists_Text" Foreground="{StaticResource menuText2}" Content="Lists" VerticalContentAlignment="Center" Margin="42,0,0,0"/>
                         </Grid>
-                        <Grid x:Name="Profile" Width="240" Height="32" Margin="0,0,0,2" MouseEnter="Profile_MouseEnter" MouseLeave="Profile_MouseLeave" MouseUp="Profile_MouseUp">
+                        <Grid x:Name="Bookmark" Width="240" Height="30" Margin="0,0,0,2" MouseEnter="Bookmark_MouseEnter" MouseLeave="Bookmark_MouseLeave" MouseUp="Bookmark_MouseUp">
+                            <Button Content="Bookmarks" Opacity="0"/>
+                            <Rectangle x:Name="Bookmark_BG" Margin="2,0,2,0" Stroke="{StaticResource sideBarItemSelectOutline}" RadiusY="3" RadiusX="3" Visibility="Collapsed" Fill="{StaticResource sideBarItemSelect}"/>
+                            <Image Source="/res/BookmarkLarge.png" Height="24" HorizontalAlignment="Left" Margin="14,0,0,0"/>
+                            <Label x:Name="Bookmark_Text" Foreground="{StaticResource menuText2}" Content="Bookmarks" VerticalContentAlignment="Center" Margin="42,0,0,0"/>
+                        </Grid>
+                        <Grid x:Name="Profile" Width="240" Height="30" Margin="0,0,0,2" MouseEnter="Profile_MouseEnter" MouseLeave="Profile_MouseLeave" MouseUp="Profile_MouseUp">
                             <Button Content="My Profile" Opacity="0"/>
-                            <Rectangle x:Name="Profile_BG" Margin="2,0,2,0" Stroke="#540D467A" RadiusY="3" RadiusX="3" Visibility="Collapsed">
-                                <Rectangle.Fill>
-                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                        <GradientStop Color="#7FFFFFFF"/>
-                                        <GradientStop Color="#7FFFFFFF" Offset="1"/>
-                                        <GradientStop Color="#3FFFFFFF" Offset="0.654"/>
-                                    </LinearGradientBrush>
-                                </Rectangle.Fill>
-                            </Rectangle>
+                            <Rectangle x:Name="Profile_BG" Margin="2,0,2,0" Stroke="{StaticResource sideBarItemSelectOutline}" RadiusY="3" RadiusX="3" Visibility="Collapsed" Fill="{StaticResource sideBarItemSelect}"/>
                             <Image Source="/res/ProfileIcon.png" Height="24" HorizontalAlignment="Left" Margin="14,0,0,0"/>
-                            <Label x:Name="Profile_Text" Foreground="#FF0D467A" Content="My Profile" VerticalContentAlignment="Center" Margin="42,0,0,0"/>
+                            <Label x:Name="Profile_Text" Foreground="{StaticResource menuText2}" Content="My Profile" VerticalContentAlignment="Center" Margin="42,0,0,0"/>
                         </Grid>
-                        <Grid x:Name="Settings" Width="240" Height="32" Margin="0,0,0,2" MouseEnter="Settings_MouseEnter" MouseLeave="Settings_MouseLeave" MouseUp="Settings_MouseUp">
+                        <Grid x:Name="Settings" Width="240" Height="30" Margin="0,0,0,2" MouseEnter="Settings_MouseEnter" MouseLeave="Settings_MouseLeave" MouseUp="Settings_MouseUp">
                             <Button Content="Settings" Opacity="0"/>
-                            <Rectangle x:Name="Settings_BG" Margin="2,0,2,0" Stroke="#540D467A" RadiusY="3" RadiusX="3" Visibility="Collapsed">
-                                <Rectangle.Fill>
-                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                        <GradientStop Color="#7FFFFFFF"/>
-                                        <GradientStop Color="#7FFFFFFF" Offset="1"/>
-                                        <GradientStop Color="#3FFFFFFF" Offset="0.654"/>
-                                    </LinearGradientBrush>
-                                </Rectangle.Fill>
-                            </Rectangle>
+                            <Rectangle x:Name="Settings_BG" Margin="2,0,2,0" Stroke="{StaticResource sideBarItemSelectOutline}" RadiusY="3" RadiusX="3" Visibility="Collapsed" Fill="{StaticResource sideBarItemSelect}"/>
                             <Image Source="/res/CPLIcon.png" Height="24" HorizontalAlignment="Left" Margin="14,0,0,0"/>
-                            <Label x:Name="Settings_Text" Foreground="#FF0D467A" Content="Settings" VerticalContentAlignment="Center" Margin="42,0,0,0"/>
+                            <Label x:Name="Settings_Text" Foreground="{StaticResource menuText2}" Content="Settings" VerticalContentAlignment="Center" Margin="42,0,0,0"/>
                         </Grid>
                     </StackPanel>
                 </Grid>
                 <Grid Width="240" Height="66">
-                    <Rectangle RadiusX="3" RadiusY="3" Stroke="#54E0F6FF">
+                    <Rectangle RadiusX="3" RadiusY="3" Stroke="{StaticResource dashUnderlayOutline}" Fill="{StaticResource dashUnderlay2}">
                         <Rectangle.Effect>
                             <DropShadowEffect ShadowDepth="5" Opacity="0.33" BlurRadius="10" Direction="270"/>
                         </Rectangle.Effect>
-                        <Rectangle.Fill>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="#CCCEEAFF"/>
-                                <GradientStop Color="#54CDE9FF" Offset="1"/>
-                            </LinearGradientBrush>
-                        </Rectangle.Fill>
                     </Rectangle>
                     <Grid x:Name="Feedback" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="14,10,0,0" MouseDown="Feedback_MouseDown">
                         <Button Content="Feedback" Opacity="0" Height="2"/>
                         <Image Source="/res/Feedback.png" Height="16" HorizontalAlignment="Left" Margin="0,0,0,0"/>
-                        <TextBlock x:Name="Feedback_Text" Foreground="#FF0D467A" Text="Feedback" Margin="26,0,0,0" HorizontalAlignment="Left" Padding="0" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Cursor="Hand"/>
+                        <TextBlock x:Name="Feedback_Text" Foreground="{StaticResource menuText}" Text="Feedback" Margin="26,0,0,0" HorizontalAlignment="Left" Padding="0" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Cursor="Hand"/>
                     </Grid>
                     <Grid x:Name="PrivacyPolicy" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="120,10,0,0" MouseDown="PrivacyPolicy_MouseDown">
                         <Button Content="Privacy Policy" Opacity="0" Height="2"/>
                         <Image Source="/res/LockIcon.png" Height="16" HorizontalAlignment="Left" Margin="0,0,0,0"/>
-                        <TextBlock x:Name="PrivacyPolicy_Text" Foreground="#FF0D467A" Text="Privacy Policy" Margin="26,0,0,0" HorizontalAlignment="Left" Padding="0" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Cursor="Hand"/>
+                        <TextBlock x:Name="PrivacyPolicy_Text" Foreground="{StaticResource menuText}" Text="Privacy Policy" Margin="26,0,0,0" HorizontalAlignment="Left" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Cursor="Hand"/>
                     </Grid>
                     <Grid x:Name="Terms" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="14,40,0,0" MouseDown="Terms_MouseDown">
                         <Button Content="Terms" Opacity="0" Height="2"/>
                         <Image Source="/res/TermsIcon.png" Height="16" HorizontalAlignment="Left" Margin="0,0,0,0"/>
-                        <TextBlock x:Name="Terms_Text" Foreground="#FF0D467A" Text="Terms" Margin="26,0,0,0" HorizontalAlignment="Left" Padding="0" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Cursor="Hand"/>
+                        <TextBlock x:Name="Terms_Text" Foreground="{StaticResource menuText}" Text="Terms" Margin="26,0,0,0" HorizontalAlignment="Left" Padding="0" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Cursor="Hand"/>
                     </Grid>
                     <Grid x:Name="Help" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="120,40,0,0" MouseDown="Help_MouseDown">
                         <Button Content="Help" Opacity="0" Height="2"/>
                         <Image Source="/res/HelpIcon.png" Height="16" HorizontalAlignment="Left" Margin="0,0,0,0"/>
-                        <TextBlock x:Name="Help_Text" Foreground="#FF0D467A" Text="Help" Margin="26,0,0,0" HorizontalAlignment="Left" Padding="0" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Cursor="Hand"/>
+                        <TextBlock x:Name="Help_Text" Foreground="{StaticResource menuText}" Text="Help" Margin="26,0,0,0" HorizontalAlignment="Left" Padding="0" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Cursor="Hand"/>
                     </Grid>
                 </Grid>
             </StackPanel>

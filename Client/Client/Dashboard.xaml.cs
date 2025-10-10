@@ -79,7 +79,7 @@ namespace Client
                 Fullname.Text = "@" + success.Handle.Handle;
                 Fullname.ToolTip = "@" + success.Handle.Handle;
                 PFP.Source = success.Avatar == null
-                    ? new BitmapImage(new Uri("pack://application:,,,/res/usertile.png"))
+                    ? new BitmapImage(new Uri(Application.Current.Resources["defPFP"].ToString()))
                     : new BitmapImage(new Uri(success.Avatar));
             },
             error =>
@@ -339,6 +339,11 @@ namespace Client
                 Settings_BG.Visibility = Visibility.Collapsed;
                 Settings_Text.FontFamily = new FontFamily("Segoe UI");
             }
+            if (selectobjectsidebar != 9)
+            {
+                Bookmark_BG.Visibility = Visibility.Collapsed;
+                Bookmark_Text.FontFamily = new FontFamily("Segoe UI");
+            }
         }
 
         private void Chat_MouseEnter(object sender, MouseEventArgs e)
@@ -575,7 +580,8 @@ namespace Client
         public void UpdateDashboardLayout()
         {
             _ = new IniFile("config.ini");
-            mw.grid.Visibility = HKCU_GetString(@"SOFTWARE\LonghornBluesky", "showNavigation") == "True" ? Visibility.Visible : Visibility.Collapsed;
+            bool navShow = HKCU_GetString(@"SOFTWARE\LonghornBluesky", "showNavigation") == "True";
+            mw.grid.Visibility = navShow ? Visibility.Visible : Visibility.Collapsed;
             switch (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "fillLayout"))
             {
                 case "True":
@@ -699,6 +705,35 @@ namespace Client
         {
             navHist.Add(e.Content.GetType().Name);
             index++;
+        }
+
+        private void Bookmark_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (selectobjectsidebar != 9)
+            {
+                Bookmark_BG.Visibility = Visibility.Visible;
+                Bookmark_BG.Opacity = 0.5;
+            }
+        }
+
+        private void Bookmark_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (selectobjectsidebar != 9)
+            {
+                Bookmark_BG.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void Bookmark_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Bookmark_Text.FontFamily = new FontFamily(new Uri("pack://application:,,,/SegoeUI7/seguisb_0.ttf"), "Segoe UI Semibold");
+            Bookmark_BG.Visibility = Visibility.Visible;
+            Bookmark_BG.Opacity = 1;
+            selectobjectsidebar = 9;
+            HideOthersSidebar();
+            BookmarkPage bookmarkPage = new BookmarkPage(aTProtocol, this);
+            PageFrame.NavigationService.Navigated += (s, ee) => NavServiceOnNavigated(true);
+            _ = PageFrame.NavigationService.Navigate(bookmarkPage);
         }
     }
 }

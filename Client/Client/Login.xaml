@@ -38,12 +38,12 @@
             <CheckBox x:Name="RememberCheckBox" Content="Remember me" Margin="0,0,0,5"/>
             <Label x:Name="Error" Content="Error message." Padding="0" Margin="0,0,0,5" Foreground="#FFB33C3C" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold" Visibility="Collapsed"/>
             <StackPanel Orientation="Horizontal">
-                <TextBlock x:Name="CreateAccount" Text="Create account..." Foreground="{DynamicResource ö}" Margin="0,0,20,0" Cursor="Hand" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Visibility="Collapsed"/>
-                <TextBlock x:Name="LoginGuest" Text="Login as guest..." Foreground="{DynamicResource ö}" Margin="0,0,20,0" Cursor="Hand" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Visibility="Collapsed"/>
-                <TextBlock x:Name="ForgotPassword" Text="I forgot my password." Foreground="{DynamicResource ö}" Cursor="Hand" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Visibility="Collapsed"/>
+                <TextBlock x:Name="CreateAccount" Text="Create account..." Foreground="{StaticResource ö}" Margin="0,0,20,0" Cursor="Hand" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Visibility="Collapsed"/>
+                <TextBlock x:Name="LoginGuest" Text="Login as guest..." Foreground="{StaticResource ö}" Margin="0,0,20,0" Cursor="Hand" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Visibility="Collapsed" MouseUp="LoginGuest_MouseUp"/>
+                <TextBlock x:Name="ForgotPassword" Text="I forgot my password..." Foreground="{StaticResource ö}" Cursor="Hand" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" Visibility="Collapsed"/>
             </StackPanel>
         </StackPanel>
-        <TextBlock x:Name="SupportText" Text="Support" Foreground="{DynamicResource ö}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,15" Cursor="Hand" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" MouseUp="Support_Click" Visibility="Collapsed"/>
+        <TextBlock x:Name="SupportText" Text="Support" Foreground="{StaticResource ö}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,15" Cursor="Hand" MouseEnter="Label_MouseEnter" MouseLeave="Label_MouseLeave" MouseUp="Support_Click" Visibility="Collapsed"/>
         <Image x:Name="PassBoxButton" Source="/res/signinbutton-1.png" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="530,107,0,0" MouseDown="PassBoxButton_MouseDown" MouseEnter="PassBoxButton_MouseEnter" MouseLeave="PassBoxButton_MouseLeave" MouseUp="PassBoxButton_MouseLeave" Visibility="Collapsed"/>
         <Grid x:Name="WelcomePage" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Label x:Name="Welcome" Content="Welcome" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" FontFamily="/SegoeUI7/segoeuisl_0.ttf#Segoe UI Semilight"/>

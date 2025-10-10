@@ -5,6 +5,7 @@ using System.Media;
 using System.Net.Http;
 using System.Runtime;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,6 +15,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+using System.Windows.Resources;
 using System.Windows.Threading;
 using FishyFlip;
 using FishyFlip.Models;
@@ -125,7 +127,7 @@ namespace Client
             grid.Visibility = Visibility.Collapsed;
             if (SystemParameters.PrimaryScreenHeight < 768 || SystemParameters.PrimaryScreenWidth < 1024 || System.Windows.Forms.Screen.PrimaryScreen.BitsPerPixel < 32)
             {
-                _ = MessageBox.Show("Longhorn Bluesky requires a monitor with a resolution of at least 1024x768 and 32-bit color.", "Installation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                _ = MessageBox.Show("Longhorn Bluesky requires a monitor with a resolution of at least 1024x768 and 32-bit color.", "Display Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 Application.Current.Shutdown();
             }
             if ((RenderCapability.Tier >> 16) < 2)
@@ -137,7 +139,12 @@ namespace Client
                 }
             }
             app = (App)Application.Current;
-            app.ChangeTheme(new Uri("pack://application:,,,/PresentationFramework.Aero;V4.0.0.0;31bf3856ad364e35;component/themes/aero.normalcolor.xaml"));
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "themeXAML") == null || HKCU_GetString(@"SOFTWARE\LonghornBluesky", "themeXAML") == string.Empty)
+            {
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "themeXAML", "pack://application:,,,/Themes/Diamond.xaml");
+            }
+            app.ChangeTheme(new Uri(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "themeXAML")));
+            app.AddTheme(new Uri(Application.Current.Resources["PresentationFramework"].ToString()));
             GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
             Login loginpage = new Login(this);
             WindowContent.Content = loginpage;
@@ -446,7 +453,7 @@ namespace Client
         private void Grid_LayoutUpdated(object sender, EventArgs e)
         {
             HKCU_AddKey(@"SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", "Client.exe", 11000);
-            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.3.0a");
+            HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "Ver", "0.3.0b");
             HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "isCanary", "true");
             if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "ALERT") == null)
             {
@@ -490,20 +497,7 @@ namespace Client
             {
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "showNavigation", "false");
             }
-            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_left") != null)
-            {
-                Left = double.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_left"));
-                Top = double.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_top"));
-                if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_state") == "Maximized")
-                {
-                    WindowState = WindowState.Maximized;
-                }
-                else
-                {
-                    Width = double.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_width"));
-                    Height = double.Parse(HKCU_GetString(@"SOFTWARE\LonghornBluesky", "wnd_height"));
-                }
-            }
+
             if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "fontNormalDisplayName") == null)
             {
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "fontNormalDisplayName", "Segoe UI");
@@ -522,7 +516,10 @@ namespace Client
             {
                 HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "mediaSpeed", "1");
             }
-
+            if (HKCU_GetString(@"SOFTWARE\LonghornBluesky", "usedSounds") == null)
+            {
+                HKCU_AddKey(@"SOFTWARE\LonghornBluesky", "usedSounds", "[\"LH_ALERT.wav\",\"LH_DELETE.wav\",\"LH_EXIT.wav\",\"LH_NOTIF.wav\",\"LH_POST.wav\",\"LH_UPDATEALERT.wav\",\"LH_WELCOME.wav\"]");
+            }
             if (File.Exists("config.ini"))
             {
                 IniFile myIni = new IniFile("config.ini");

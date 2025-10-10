@@ -14,11 +14,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using FishyFlip;
 using FishyFlip.Lexicon;
+using FishyFlip.Lexicon.App.Bsky.Bookmark;
 using FishyFlip.Lexicon.App.Bsky.Feed;
 using FishyFlip.Lexicon.App.Bsky.Graph;
 using FishyFlip.Lexicon.Com.Atproto.Repo;
-using FishyFlip.Lexicon.Community.Lexicon.Interaction;
 using FishyFlip.Models;
+using INI;
 using M3U8Parser;
 using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
@@ -38,6 +39,7 @@ namespace Client
         private bool isLiked;
         private bool isReposted;
         private readonly bool isReply;
+        private bool isBookmark;
         private readonly DispatcherTimer timer = new DispatcherTimer();
         private readonly List<string> bitmapImages = new List<string>();
         private readonly List<string> altTexts = new List<string>();
@@ -107,6 +109,7 @@ namespace Client
         {
             isLiked = post["post"]["viewer"]["like"] != null;
             isReposted = post["post"]["viewer"]["repost"] != null;
+            isBookmark = bool.Parse(post["post"]["viewer"]["bookmarked"].ToString());
             if (isLiked)
             {
                 LikeGlow.Opacity = 100;
@@ -114,6 +117,10 @@ namespace Client
             if (isReposted)
             {
                 RepostGlow.Opacity = 100;
+            }
+            if (isBookmark)
+            {
+                BookmarkGlow.Opacity = 100;
             }
             if (aTProtocol.Session.Did.Handler == post["post"]["author"]["did"].ToString())
             {
@@ -1042,6 +1049,38 @@ namespace Client
         private void Like_Click(object sender, MouseButtonEventArgs e)
         {
             dashboard.NavigateToEngage(post["post"]["uri"].ToString(), 3, int.Parse(post["post"]["likeCount"].ToString()));
+        }
+
+        private async void Bookmark_Click(object sender, MouseButtonEventArgs e)
+        {
+            if (isBookmark)
+            {
+                Result<Success> iwannadie = await aTProtocol.DeleteBookmarkAsync(ATUri.Create(post["post"]["uri"].ToString()));
+                iwannadie.Switch(
+                    success =>
+                    {
+                        BookmarkGlow.Opacity = 0;
+                        isBookmark = false;
+                    },
+                    error =>
+                    {
+                        _ = MessageBox.Show($"Error: {error.StatusCode} {error.Detail}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    });
+            }
+            else
+            {
+                Result<Success> iwannadie = await aTProtocol.CreateBookmarkAsync(ATUri.Create(post["post"]["uri"].ToString()), post["post"]["cid"].ToString());
+                iwannadie.Switch(
+                    success =>
+                    {
+                        BookmarkGlow.Opacity = 100;
+                        isBookmark = true;
+                    },
+                    error =>
+                    {
+                        _ = MessageBox.Show($"Error: {error.StatusCode} {error.Detail}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    });
+            }
         }
     }
 }

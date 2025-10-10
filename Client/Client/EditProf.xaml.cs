@@ -32,14 +32,6 @@ namespace Client
             this.session = session;
             this.aTProtocol = aTProtocol;
             this.dashboard = dashboard;
-            if (File.Exists("config.ini"))
-            {
-                IniFile myIni = new IniFile("config.ini");
-                if (myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "2")
-                {
-                    SecretFeatures.Visibility = Visibility.Visible;
-                }
-            }
             _ = Load();
         }
         private async Task Load()

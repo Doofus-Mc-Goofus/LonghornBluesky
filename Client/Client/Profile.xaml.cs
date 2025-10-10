@@ -56,6 +56,10 @@ namespace Client
         }
         private async Task Load()
         {
+            // evil and broken code for custom profile themes
+            // App app = (App)Application.Current;
+            // app.ChangeTheme(new Uri("pack://application:,,,/Themes/Slate.xaml"));
+            // dashboard.UpdateLayout();
             Result<ProfileViewDetailed> result = await aTProtocol.GetProfileAsync(ATDid);
             result.Switch(
             async success =>
@@ -123,7 +127,10 @@ namespace Client
                     }
                     if (success.Viewer.FollowedBy != null)
                     {
-                        Follow.Content = "Follow Back";
+                        if (!isFollowing)
+                        {
+                            Follow.Content = "Follow Back";
+                        }
                         isbeingFollowed = true;
                     }
                 }

@@ -8,16 +8,10 @@
       Title="Post" UseLayoutRounding="True" Unloaded="Page_Unloaded">
     <ScrollViewer VerticalScrollBarVisibility="Auto" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI">
         <Grid Margin="20">
-            <Rectangle RadiusX="3" RadiusY="3" Stroke="#54E0F6FF" Height="{Binding ActualHeight, ElementName=PostStack, Mode=OneWay}" VerticalAlignment="Top">
+            <Rectangle RadiusX="3" RadiusY="3" Stroke="#54E0F6FF" Height="{Binding ActualHeight, ElementName=PostStack, Mode=OneWay}" VerticalAlignment="Top" Fill="{StaticResource dashUnderlay}">
                 <Rectangle.Effect>
                     <DropShadowEffect ShadowDepth="5" Opacity="0.33" BlurRadius="10" Direction="270"/>
                 </Rectangle.Effect>
-                <Rectangle.Fill>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                        <GradientStop Color="#CCCEEAFF"/>
-                        <GradientStop Color="#7FCDE9FF" Offset="1"/>
-                    </LinearGradientBrush>
-                </Rectangle.Fill>
             </Rectangle>
             <StackPanel x:Name="Stackie" VerticalAlignment="Top">
                 <TabControl Background="{x:Null}" Padding="0" BorderThickness="0" VerticalAlignment="Top" Margin="0,-2,0,0">
@@ -30,20 +24,14 @@
             </StackPanel>
             <Grid x:Name="FeedGrid" Focusable="True" Margin="0,0,0,0" Visibility="Collapsed">
                 <TabControl x:Name="FeedTabControl" Padding="0" ScrollViewer.CanContentScroll="True" BorderThickness="0" Background="{x:Null}" Panel.ZIndex="1">
-                    <TabItem x:Name="Tab" Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="#FF9FBDD2" Visibility="Collapsed">
+                    <TabItem x:Name="Tab" Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="{StaticResource dashTabOutline}" Visibility="Collapsed">
                         <StackPanel x:Name="ReplyStack" Margin="0,24,0,0"/>
                     </TabItem>
                 </TabControl>
-                <Rectangle RadiusX="3" RadiusY="3" Stroke="#54E0F6FF" Margin="0,26,0,0">
+                <Rectangle RadiusX="3" RadiusY="3" Stroke="{StaticResource dashUnderlayOutline}" Margin="0,26,0,0" Fill="{StaticResource dashUnderlay}">
                     <Rectangle.Effect>
                         <DropShadowEffect ShadowDepth="5" Opacity="0.33" BlurRadius="10" Direction="270"/>
                     </Rectangle.Effect>
-                    <Rectangle.Fill>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="#CCCEEAFF"/>
-                            <GradientStop Color="#7FCDE9FF" Offset="1"/>
-                        </LinearGradientBrush>
-                    </Rectangle.Fill>
                 </Rectangle>
             </Grid>
         </Grid>

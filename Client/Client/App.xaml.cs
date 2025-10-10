@@ -14,6 +14,11 @@ namespace Client
         public void ChangeTheme(Uri uri)
         {
             ThemeDictionary.MergedDictionaries.Clear();
+            AddTheme(uri);
+        }
+
+        public void AddTheme(Uri uri)
+        {
             ThemeDictionary.MergedDictionaries.Add(new ResourceDictionary() { Source = uri });
         }
     }

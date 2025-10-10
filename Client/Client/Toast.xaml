@@ -4,23 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="130" d:DesignWidth="240" UseLayoutRounding="True" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI">
+             d:DesignHeight="130" d:DesignWidth="240" UseLayoutRounding="True" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI" Foreground="{StaticResource readText}">
     <Grid MinHeight="120" Margin="0,10,0,0" MaxWidth="240">
-        <Rectangle RadiusX="3" RadiusY="3" Stroke="#54E0F6FF" MouseUp="MouseUp">
+        <Rectangle RadiusX="3" RadiusY="3" Stroke="{StaticResource dashUnderlayOutline}" MouseUp="MouseUp" Fill="{StaticResource toastBG}">
             <Rectangle.Effect>
                 <DropShadowEffect ShadowDepth="5" Opacity="0.33" BlurRadius="10" Direction="270"/>
             </Rectangle.Effect>
-            <Rectangle.Fill>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#CCCEEAFF"/>
-                    <GradientStop Color="#A8CDE9FF" Offset="1"/>
-                </LinearGradientBrush>
-            </Rectangle.Fill>
         </Rectangle>
         <Image x:Name="Close" Source="/res/CloseNormal.png" Stretch="None" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="5,5,6,5" MouseDown="Close_MouseDown" MouseEnter="Close_MouseEnter" MouseLeave="Close_MouseLeave" MouseUp="Close_MouseUp"/>
-        <TextBlock x:Name="Title" Margin="5,5,26,0" VerticalAlignment="Top" Foreground="#FF0D467A" TextTrimming="CharacterEllipsis" MouseUp="MouseUp"/>
-        <ProgressBar x:Name="Progress" HorizontalAlignment="Right" Background="#FFB1BED2" Foreground="#FF94C832" Orientation="Vertical" Width="17" Margin="0,26,0,5" BorderThickness="0" Value="100" MouseUp="MouseUp"/>
-        <Rectangle RadiusX="3" RadiusY="3" Stroke="#FF9FBDD2" Margin="5,26,5,5" Fill="White" MouseUp="MouseUp"/>
+        <TextBlock x:Name="Title" Margin="5,5,26,0" VerticalAlignment="Top" Foreground="{StaticResource menuText}" TextTrimming="CharacterEllipsis" MouseUp="MouseUp"/>
+        <ProgressBar x:Name="Progress" HorizontalAlignment="Right" Background="{StaticResource toastProgressEmpty}" Foreground="{StaticResource toastProgressFull}" Orientation="Vertical" Width="17" Margin="0,26,0,5" BorderThickness="0" Value="100" MouseUp="MouseUp" BorderBrush="{StaticResource toastProgressBorder}"/>
+        <Rectangle RadiusX="3" RadiusY="3" Stroke="{StaticResource postOutline}" Margin="5,26,5,5" Fill="{StaticResource toastTextBG}" MouseUp="MouseUp"/>
         <TextBlock x:Name="Text" VerticalAlignment="Top" Margin="10,29,10,5" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" MouseUp="MouseUp"/>
     </Grid>
 </UserControl>

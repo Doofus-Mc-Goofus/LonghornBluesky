@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="540"
-      Title="Error" UseLayoutRounding="True" Unloaded="Page_Unloaded" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI">
+      Title="Error" UseLayoutRounding="True" Unloaded="Page_Unloaded" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI" Foreground="{StaticResource readText}">
     <Grid>
         <Image x:Name="logo" Source="/res/logomondy.png" Margin="0,0,0,80" HorizontalAlignment="Center" VerticalAlignment="Center" Width="116"/>
         <Label x:Name="ErrorText" Content="Error 0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" FontFamily="/SegoeUI7/segoeuisl_0.ttf#Segoe UI Semilight" Margin="0,60,0,0"/>

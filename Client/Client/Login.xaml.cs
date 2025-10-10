@@ -273,5 +273,10 @@ namespace Client
                 return false;
             }
         }
+
+        private void LoginGuest_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+
+        }
     }
 }

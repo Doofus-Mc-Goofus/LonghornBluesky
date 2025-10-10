@@ -60,7 +60,7 @@ namespace Client
                             Header = "Following",
                             Padding = new Thickness(10, 2, 10, 4),
                             Margin = new Thickness(-2, -2, -2, 0),
-                            BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF9FBDD2")),
+                            BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(Application.Current.Resources["dashTabOutline"].ToString())),
                             Content = new StackPanel()
                         };
                         // feed me
@@ -95,7 +95,7 @@ namespace Client
                             // item.ToolTip = obj2["description"];
                             item.Padding = new Thickness(10, 2, 10, 4);
                             item.Margin = new Thickness(-2, -2, -2, 0);
-                            item.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF9FBDD2"));
+                            item.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(Application.Current.Resources["dashTabOutline"].ToString()));
                             // feed me
                             Grid feedgrid = new Grid();
                             StackPanel stacker = new StackPanel

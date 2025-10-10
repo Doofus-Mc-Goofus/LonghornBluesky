@@ -22,6 +22,11 @@ namespace Client
             this.settings = settings;
             this.dashboard = dashboard;
             dialog.Filter = "WAV Files|*.wav"; // Filter files by extension
+            IniFile myIni = new IniFile("config.ini");
+            if (myIni.Read("ICanHasSecretBeytahFeatures", "LHbsky") == "2")
+            {
+                showNavigation.Visibility = Visibility.Visible;
+            }
         }
         private void Rectangle_MouseUp(object sender, MouseButtonEventArgs e)
         {

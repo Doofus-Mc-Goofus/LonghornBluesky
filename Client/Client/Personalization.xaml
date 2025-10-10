@@ -5,29 +5,16 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="500"
-      Title="Personalization" UseLayoutRounding="True" Unloaded="Page_Unloaded" Loaded="Page_Loaded" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI">
+      Title="Personalization" UseLayoutRounding="True" Unloaded="Page_Unloaded" Loaded="Page_Loaded" FontFamily="/SegoeUI7/segoeui_0.ttf#Segoe UI" Foreground="{StaticResource readText}">
     <Grid Margin="20">
-        <Rectangle x:Name="rect" RadiusX="3" RadiusY="3" Stroke="#54E0F6FF" MouseUp="Rectangle_MouseUp" Focusable="True">
+        <Rectangle x:Name="rect" RadiusX="3" RadiusY="3" Stroke="{StaticResource dashUnderlayOutline}" MouseUp="Rectangle_MouseUp" Focusable="True" Fill="{StaticResource dashUnderlay}">
             <Rectangle.Effect>
                 <DropShadowEffect ShadowDepth="5" Opacity="0.33" BlurRadius="10" Direction="270"/>
             </Rectangle.Effect>
-            <Rectangle.Fill>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#CCCEEAFF"/>
-                    <GradientStop Color="#7FCDE9FF" Offset="1"/>
-                </LinearGradientBrush>
-            </Rectangle.Fill>
         </Rectangle>
-        <Rectangle x:Name="rect2" RadiusX="3" RadiusY="3" Stroke="#FF9FBDD2" MouseUp="Rectangle_MouseUp" Margin="10,36,10,45">
-            <Rectangle.Fill>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#BFDCF0FF"/>
-                    <GradientStop Color="#7FCDE9FF" Offset="1"/>
-                </LinearGradientBrush>
-            </Rectangle.Fill>
-        </Rectangle>
+        <Rectangle x:Name="rect2" RadiusX="3" RadiusY="3" Stroke="{StaticResource postOutline}" MouseUp="Rectangle_MouseUp" Margin="10,36,10,45" Fill="{StaticResource postBG}"/>
         <TabControl x:Name="FeedTabControl" Padding="0" ScrollViewer.CanContentScroll="True" BorderThickness="0" Background="{x:Null}" Panel.ZIndex="1" Margin="10,10,10,45">
-            <TabItem Header="Themes" Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="#FF9FBDD2">
+            <TabItem Header="Themes" Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="{StaticResource dashTabOutline}">
                 <StackPanel Margin="10">
                     <Label Content="My Themes:" Padding="0,0,0,5"/>
                     <Grid>
@@ -58,7 +45,7 @@
                     </StackPanel>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="Visual Styles" Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="#FF9FBDD2">
+            <TabItem Header="Visual Styles" Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="{StaticResource dashTabOutline}">
                 <StackPanel Margin="10">
                     <Label Content="Visual Styles:" Padding="0,0,0,5"/>
                     <Grid>
@@ -73,15 +60,15 @@
                     <CheckBox x:Name="basicCheck" Margin="0,10,0,48" Content="Enable transparency" VerticalAlignment="Bottom"/>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="Layout" Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="#FF9FBDD2">
+            <TabItem Header="Layout" Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="{StaticResource dashTabOutline}">
                 <StackPanel Margin="10">
                     <CheckBox x:Name="allowFontChange" Margin="0,0,0,7" Content="Allow themes to change font"/>
                     <CheckBox x:Name="showMenu" Margin="0,0,0,7" Content="Enable menu bar"/>
-                    <CheckBox x:Name="showNavigation" Margin="0,0,0,7" Content="Enable navigation bar (Experimental)"/>
+                    <CheckBox x:Name="showNavigation" Margin="0,0,0,7" Content="Enable navigation bar (Experimental)" Visibility="Collapsed"/>
                     <CheckBox x:Name="fillLayout" Margin="0,0,0,7" Content="Fill dashboard layout (Experimental)"/>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="Sounds" Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="#FF9FBDD2">
+            <TabItem Header="Sounds" Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="{StaticResource dashTabOutline}">
                 <Grid Margin="10">
                     <Label Content="Sound Scheme:" Padding="0" VerticalAlignment="Top"/>
                     <ComboBox x:Name="SOUNDSCHEME" SelectedIndex="0" Margin="0,21,154,0" VerticalAlignment="Top">
@@ -90,7 +77,7 @@
                     </ComboBox>
                     <Button x:Name="SOUNDSCHEMESAVE" VerticalAlignment="Top" HorizontalAlignment="Right" Content="Save As..." Padding="0,1,0,1" Margin="0,21,77,0" Width="70"/>
                     <Button x:Name="SOUNDSCHEMEDELETE" VerticalAlignment="Top" HorizontalAlignment="Right" Content="Delete" Padding="0,1,0,1" Margin="0,21,0,0" Width="70"/>
-                    <ListView Margin="0,53,0,74">
+                    <ListView Margin="0,53,0,74" SelectedIndex="0">
                         <ListViewItem>
                             <ListViewItem.Content>
                                 <Grid Margin="5">
@@ -158,11 +145,11 @@
                     <Button x:Name="SOUNDBROWSE" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Browse..." Padding="0,1,0,1" Margin="0,21,0,0" Width="70"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Legacy" Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="#FF9FBDD2">
+            <TabItem Header="Legacy" Padding="10,2,10,4" Margin="-2,-2,-2,0" BorderBrush="{StaticResource dashTabOutline}">
                 <StackPanel Margin="10,10,10,42">
                     <Expander>
                         <Expander.Header>
-                            <TextBlock Text="Sounds" Foreground="#FF0D467A" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold"/>
+                            <TextBlock Text="Sounds" Foreground="{StaticResource defText}" FontFamily="/SegoeUI7/seguisb_0.ttf#Segoe UI Semibold"/>
                         </Expander.Header>
                         <StackPanel Margin="0,10,0,0">
                             <Label Content="Notification Sound:" Padding="0,0,0,5"/>
