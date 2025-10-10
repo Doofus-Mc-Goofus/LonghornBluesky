@@ -1,0 +1,73 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:s="clr-namespace:System;assembly=mscorlib">
+    <!-- General -->
+    
+    <!-- me when the .NET WPF PresentationFramework.Luna.dll-->
+    <!-- <s:String x:Key="PresentationFramework">pack://application:,,,/PresentationFramework.Luna;V4.0.0.0;31bf3856ad364e35;component/themes/Luna.NormalColor.xaml</s:String> -->
+    
+    <s:String x:Key="PresentationFramework">pack://application:,,,/PresentationFramework.Aero;V4.0.0.0;31bf3856ad364e35;component/themes/aero.normalcolor.xaml</s:String>
+    <SolidColorBrush x:Key="defText" Color="#FF6F7988"/>
+    <SolidColorBrush x:Key="fadeText" Color="#FF313946"/>
+    <SolidColorBrush x:Key="readText" Color="Black"/>
+    <SolidColorBrush x:Key="profDescText" Color="#FFF1F1F3"/>
+    <SolidColorBrush x:Key="statText" Color="#FF313946"/>
+    <SolidColorBrush x:Key="menuText" Color="#FFF1F1F3"/>
+    <SolidColorBrush x:Key="menuText2" Color="#FF373738"/>
+    <SolidColorBrush x:Key="textBoxPreview" Color="Gray"/>
+    <LinearGradientBrush x:Key="dashUnderlay" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FFFFF8E5"/>
+        <GradientStop Color="#FFFFF8E5" Offset="1"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="dashUnderlay2" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#CC586062"/>
+        <GradientStop Color="#A82D3537" Offset="1"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="dashUnderlayOutline" Color="#5497A1A4"/>
+    <SolidColorBrush x:Key="dashTabOutline" Color="#FFFFBF84"/>
+
+    <!-- Dashboard -->
+    <BitmapImage x:Key="bg" UriSource="pack://application:,,,/res/themes/slate.png"/>
+    <s:Double x:Key="bgOpacity">1</s:Double>
+    <LinearGradientBrush x:Key="bgUnderlay" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FF6691B3"/>
+        <GradientStop Color="#FFCFEAFF" Offset="1"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="menuBG" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#A8121417"/>
+        <GradientStop Color="#CC586062" Offset="1"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="sideBarItemSelect" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#7FFFFFFF"/>
+        <GradientStop Color="#7FFFFFFF" Offset="1"/>
+        <GradientStop Color="#3FFFFFFF" Offset="0.654"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="sideBarItemSelectOutline" Color="#5456636F"/>
+
+    <!-- Posts / Mini-Users / Feeds / Whatever -->
+    <SolidColorBrush x:Key="postBG" Color="#FFFFF8E5"/>
+    <LinearGradientBrush x:Key="quoteBG" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#00FFBF84"/>
+        <GradientStop Color="#23FFBF84" Offset="1"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="postOutline" Color="#FFFFBF84"/>
+    
+    <!-- Toast -->
+    <LinearGradientBrush x:Key="toastBG" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#CC4F5763"/>
+        <GradientStop Color="#A8121417" Offset="1"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="toastProgressEmpty" Color="#FFD2BFB1"/>
+    <SolidColorBrush x:Key="toastProgressFull" Color="#FFC84732"/>
+    <LinearGradientBrush x:Key="toastProgressBorder" EndPoint="0,1">
+        <GradientStop Color="#FFB2B2B2"/>
+        <GradientStop Color="#FF8C8C8C" Offset="1"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="toastTextBG" Color="White"/>
+    
+    <!-- Icons and Images -->
+    <BitmapImage x:Key="defPFP" UriSource="pack://application:,,,/res/themes/LH_usertile.png"/>
+    <BitmapImage x:Key="defBan" UriSource="pack://application:,,,/res/Windows Vista Beta 1 Speech Tutorial.png"/>
+    <BitmapImage x:Key="defFeed" UriSource="pack://application:,,,/res/FeedIcon.png"/>
+    <BitmapImage x:Key="PFPBorder" UriSource="pack://application:,,,/res/PFPFrameSmal.png"/>
+</ResourceDictionary>
