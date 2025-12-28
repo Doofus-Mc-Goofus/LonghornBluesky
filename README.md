@@ -1,3 +1,35 @@
+
+<div align="right">
+  <details>
+    <summary >🌐 Language</summary>
+    <div>
+      <div align="center">
+        <a href="https://openaitx.github.io/view.html?user=Doofus-Mc-Goofus&project=LonghornBluesky&lang=en">English</a>
+        | <a href="https://openaitx.github.io/view.html?user=Doofus-Mc-Goofus&project=LonghornBluesky&lang=zh-CN">简体中文</a>
+        | <a href="https://openaitx.github.io/view.html?user=Doofus-Mc-Goofus&project=LonghornBluesky&lang=zh-TW">繁體中文</a>
+        | <a href="https://openaitx.github.io/view.html?user=Doofus-Mc-Goofus&project=LonghornBluesky&lang=ja">日本語</a>
+        | <a href="https://openaitx.github.io/view.html?user=Doofus-Mc-Goofus&project=LonghornBluesky&lang=ko">한국어</a>
+        | <a href="https://openaitx.github.io/view.html?user=Doofus-Mc-Goofus&project=LonghornBluesky&lang=hi">हिन्दी</a>
+        | <a href="https://openaitx.github.io/view.html?user=Doofus-Mc-Goofus&project=LonghornBluesky&lang=th">ไทย</a>
+        | <a href="https://openaitx.github.io/view.html?user=Doofus-Mc-Goofus&project=LonghornBluesky&lang=fr">Français</a>
+        | <a href="https://openaitx.github.io/view.html?user=Doofus-Mc-Goofus&project=LonghornBluesky&lang=de">Deutsch</a>
+        | <a href="https://openaitx.github.io/view.html?user=Doofus-Mc-Goofus&project=LonghornBluesky&lang=es">Español</a>
+        | <a href="https://openaitx.github.io/view.html?user=Doofus-Mc-Goofus&project=LonghornBluesky&lang=it">Italiano</a>
+        | <a href="https://openaitx.github.io/view.html?user=Doofus-Mc-Goofus&project=LonghornBluesky&lang=ru">Русский</a>
+        | <a href="https://openaitx.github.io/view.html?user=Doofus-Mc-Goofus&project=LonghornBluesky&lang=pt">Português</a>
+        | <a href="https://openaitx.github.io/view.html?user=Doofus-Mc-Goofus&project=LonghornBluesky&lang=nl">Nederlands</a>
+        | <a href="https://openaitx.github.io/view.html?user=Doofus-Mc-Goofus&project=LonghornBluesky&lang=pl">Polski</a>
+        | <a href="https://openaitx.github.io/view.html?user=Doofus-Mc-Goofus&project=LonghornBluesky&lang=ar">العربية</a>
+        | <a href="https://openaitx.github.io/view.html?user=Doofus-Mc-Goofus&project=LonghornBluesky&lang=fa">فارسی</a>
+        | <a href="https://openaitx.github.io/view.html?user=Doofus-Mc-Goofus&project=LonghornBluesky&lang=tr">Türkçe</a>
+        | <a href="https://openaitx.github.io/view.html?user=Doofus-Mc-Goofus&project=LonghornBluesky&lang=vi">Tiếng Việt</a>
+        | <a href="https://openaitx.github.io/view.html?user=Doofus-Mc-Goofus&project=LonghornBluesky&lang=id">Bahasa Indonesia</a>
+        | <a href="https://openaitx.github.io/view.html?user=Doofus-Mc-Goofus&project=LonghornBluesky&lang=as">অসমীয়া</
+      </div>
+    </div>
+  </details>
+</div>
+
 # Longhorn Bluesky
 A third-party Bluesky client with a Windows Longhorn theme.  
     ![A Bluesky client with a skeuomorphic design reminiscent of Windows Longhorn. The login screen is being shown.](tease1.png)
